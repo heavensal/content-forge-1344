@@ -85,6 +85,6 @@ Rails.application.configure do
     config.hosts << host if host.present?
   end
 
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # Skip host authorization for /up so Kamal health checks (Host: container-id) succeed.
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
