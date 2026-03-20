@@ -1,0 +1,39 @@
+<% content_for :title, "Websites — ContentForge" %>
+
+<div class="mx-auto w-full max-w-5xl">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div class="min-w-0">
+      <h1 class="text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl">Websites</h1>
+      <p class="mt-1 text-sm text-zinc-500">Manage brochure sites and API access for each domain.</p>
+    </div>
+    <%= link_to "New website", new_website_path, class: primary_button_classes %>
+  </div>
+
+  <% if @websites.empty? %>
+    <div class="<%= content_section_card_classes %> mt-10 text-center">
+      <p class="text-zinc-400">No websites yet.</p>
+      <p class="mt-2 text-sm text-zinc-500">Create one to start publishing articles, FAQs, and reviews.</p>
+      <%= link_to "Create your first website", new_website_path, class: "#{primary_button_classes} mt-6" %>
+    </div>
+  <% else %>
+    <ul class="mt-10 space-y-3">
+      <% @websites.each do |website| %>
+        <li class="<%= content_section_card_classes %> flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="min-w-0 flex-1">
+            <%= link_to website.name, website, class: "text-lg font-semibold text-zinc-100 hover:text-emerald-400 transition" %>
+            <p class="mt-0.5 text-sm text-emerald-500/80"><%= website.domain %></p>
+            <% if website.description.present? %>
+              <p class="mt-2 line-clamp-2 text-sm text-zinc-500"><%= website.description %></p>
+            <% end %>
+            <p class="mt-2 text-xs uppercase tracking-wide text-zinc-600"><%= website.status %></p>
+          </div>
+          <div class="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
+            <%= link_to "Open", website, class: secondary_button_classes %>
+            <%= link_to "Edit", edit_website_path(website), class: secondary_button_classes %>
+            <%= button_to "Delete", website, method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: "Delete this website and all its content?" } }, class: danger_button_classes %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

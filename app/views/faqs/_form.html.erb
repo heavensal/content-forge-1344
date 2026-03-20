@@ -1,0 +1,39 @@
+<%= render "shared/model_errors", model: faq %>
+
+<%= form_with model: [@website, faq], class: "space-y-6" do |f| %>
+  <div>
+    <%= f.label :question, class: label_classes %>
+    <%= f.text_field :question, class: input_classes, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :slug, class: label_classes %>
+    <%= f.text_field :slug, class: input_classes %>
+    <p class="mt-1 text-xs text-zinc-500">Optional override; otherwise generated from the question on create.</p>
+  </div>
+
+  <div>
+    <%= f.label :answer, class: label_classes %>
+    <%= f.text_area :answer, class: "#{input_classes} min-h-[140px]", rows: 6 %>
+  </div>
+
+  <div>
+    <%= f.label :position, class: label_classes %>
+    <%= f.number_field :position, class: input_classes, min: 0, step: 1 %>
+  </div>
+
+  <div>
+    <%= f.label :status, class: label_classes %>
+    <%= f.select :status, Faq.statuses.keys.map { |k| [k.humanize, k] }, {}, class: input_classes %>
+  </div>
+
+  <div>
+    <%= f.label :published_at, class: label_classes %>
+    <%= f.datetime_field :published_at, class: input_classes %>
+  </div>
+
+  <div class="<%= form_footer_actions_classes %> pt-2">
+    <%= f.submit class: primary_button_classes %>
+    <%= link_to "Cancel", faq.persisted? ? [@website, faq] : website_faqs_path(@website), class: secondary_button_classes %>
+  </div>
+<% end %>

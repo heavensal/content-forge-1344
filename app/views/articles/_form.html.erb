@@ -1,0 +1,41 @@
+<%= render "shared/model_errors", model: article %>
+
+<%= form_with model: [@website, article], class: "space-y-6" do |f| %>
+  <div>
+    <%= f.label :title, class: label_classes %>
+    <%= f.text_field :title, class: input_classes, required: true %>
+  </div>
+
+  <div>
+    <%= f.label :slug, class: label_classes %>
+    <%= f.text_field :slug, class: input_classes, placeholder: "auto from title if left blank on create" %>
+    <p class="mt-1 text-xs text-zinc-500">URL segment for your public site. Leave blank on create to generate from the title.</p>
+  </div>
+
+  <div>
+    <%= f.label :description, class: label_classes %>
+    <%= f.text_area :description, class: "#{input_classes} min-h-[120px]", rows: 5 %>
+  </div>
+
+  <div>
+    <%= f.label :status, class: label_classes %>
+    <%= f.select :status, Article.statuses.keys.map { |k| [k.humanize, k] }, {}, class: input_classes %>
+  </div>
+
+  <div>
+    <%= f.label :published_at, class: label_classes %>
+    <%= f.datetime_field :published_at, class: input_classes %>
+    <p class="mt-1 text-xs text-zinc-500">Required when status is published.</p>
+  </div>
+
+
+  <div class="min-w-0 overflow-x-auto">
+    <%= f.label :content, class: label_classes %>
+    <%= f.rich_text_area :content, class: "max-w-full rounded-lg border border-zinc-600 bg-zinc-900/80 text-zinc-100 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/40" %>
+  </div>
+
+  <div class="<%= form_footer_actions_classes %> pt-2">
+    <%= f.submit class: primary_button_classes %>
+    <%= link_to "Cancel", article.persisted? ? [@website, article] : website_articles_path(@website), class: secondary_button_classes %>
+  </div>
+<% end %>

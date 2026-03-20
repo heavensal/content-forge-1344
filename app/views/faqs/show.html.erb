@@ -1,0 +1,23 @@
+<% content_for :title, "FAQ — #{@website.name}" %>
+
+<div class="mx-auto w-full max-w-3xl">
+  <%= link_to "← FAQs", website_faqs_path(@website), class: "inline-flex min-h-11 items-center text-sm text-emerald-500/90 touch-manipulation hover:text-emerald-400" %>
+
+  <header class="mt-6">
+    <p class="text-xs font-medium uppercase tracking-wider text-zinc-500"><%= @faq.status %> · <span class="break-all sm:break-normal"><%= @faq.slug %></span> · position <%= @faq.position %></p>
+    <h1 class="mt-2 break-words text-xl font-semibold tracking-tight text-zinc-50 sm:text-2xl"><%= @faq.question %></h1>
+    <% if @faq.published_at.present? %>
+      <p class="mt-2 text-sm text-zinc-500">Published <%= l @faq.published_at, format: :long %></p>
+    <% end %>
+  </header>
+
+  <div class="<%= content_section_card_classes %> mt-8">
+    <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Answer</h2>
+    <div class="mt-3 break-words text-sm leading-relaxed text-zinc-300 whitespace-pre-wrap"><%= @faq.answer.presence || "—" %></div>
+  </div>
+
+  <div class="mt-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+    <%= link_to "Edit", edit_website_faq_path(@website, @faq), class: primary_button_classes %>
+    <%= button_to "Delete", [@website, @faq], method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: "Delete this FAQ?" } }, class: danger_button_classes %>
+  </div>
+</div>

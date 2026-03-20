@@ -1,0 +1,74 @@
+<aside
+  id="app-sidebar"
+  data-mobile-nav-target="panel"
+  class="fixed inset-y-0 left-0 z-50 flex h-full w-[min(18rem,calc(100vw-2.5rem))] max-w-full -translate-x-full flex-col border-r border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/40 transition-transform duration-200 ease-out lg:static lg:z-auto lg:h-auto lg:min-h-screen lg:w-64 lg:max-w-none lg:translate-x-0 lg:shadow-none"
+  aria-label="Main navigation">
+  <div class="flex shrink-0 items-center justify-between gap-2 border-b border-zinc-800 px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))] lg:pt-5">
+    <%= link_to root_path, class: "min-w-0 flex-1", data: { action: "click->mobile-nav#close" } do %>
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400">ContentForge</p>
+      <p class="text-[11px] text-zinc-500">by 1344</p>
+    <% end %>
+    <button
+      type="button"
+      class="inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-lg border border-zinc-700 text-zinc-400 touch-manipulation hover:bg-zinc-800 hover:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 lg:hidden"
+      data-action="click->mobile-nav#close"
+      aria-label="Close menu">
+      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
+    <div class="px-3 pt-4">
+      <p class="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Websites</p>
+      <nav class="mt-2 space-y-0.5">
+        <%= link_to websites_path, class: nav_item_classes(controller_name == "websites" && %w[index new create].include?(action_name)), data: { action: "click->mobile-nav#close" } do %>
+          <svg class="h-4 w-4 shrink-0 opacity-70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+          <span>All websites</span>
+        <% end %>
+        <% @sidebar_websites.each do |w| %>
+          <%= link_to w, class: nav_item_classes(website_nav_active?(w)), data: { action: "click->mobile-nav#close" } do %>
+            <svg class="h-4 w-4 shrink-0 text-emerald-500/80" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>
+            <span class="truncate"><%= w.name %></span>
+          <% end %>
+        <% end %>
+      </nav>
+    </div>
+
+    <% if show_website_content_nav? %>
+      <div class="mt-4 border-t border-zinc-800/80 px-3 pt-4">
+        <p class="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Content</p>
+        <p class="truncate px-3 text-xs font-medium text-emerald-400/90"><%= @website.name %></p>
+        <nav class="mt-2 space-y-0.5">
+          <%= link_to website_articles_path(@website), class: nav_item_classes(controller_name == "articles"), data: { action: "click->mobile-nav#close" } do %>
+            <span>Articles</span>
+          <% end %>
+          <%= link_to website_faqs_path(@website), class: nav_item_classes(controller_name == "faqs"), data: { action: "click->mobile-nav#close" } do %>
+            <span>FAQs</span>
+          <% end %>
+          <%= link_to website_reviews_path(@website), class: nav_item_classes(controller_name == "reviews"), data: { action: "click->mobile-nav#close" } do %>
+            <span>Reviews</span>
+          <% end %>
+        </nav>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="shrink-0 border-t border-zinc-800 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+    <div class="rounded-lg bg-zinc-900/60 px-3 py-2">
+      <p class="truncate text-xs font-medium text-zinc-200"><%= current_user.name %></p>
+      <p class="truncate text-[11px] text-zinc-500"><%= current_user.email %></p>
+    </div>
+    <nav class="mt-2 space-y-0.5">
+      <%= link_to edit_user_registration_path, class: nav_item_classes(controller_name == "registrations" && %w[edit update].include?(action_name)), data: { action: "click->mobile-nav#close" } do %>
+        <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+        <span>Edit account</span>
+      <% end %>
+      <%= button_to destroy_user_session_path, method: :delete, form: { class: "block w-full" }, class: "#{nav_item_classes(false)} w-full min-h-11 cursor-pointer touch-manipulation border-0 bg-transparent text-left font-inherit", data: { action: "click->mobile-nav#close" } do %>
+        <svg class="h-4 w-4 shrink-0 text-zinc-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
+        <span>Sign out</span>
+      <% end %>
+    </nav>
+  </div>
+</aside>

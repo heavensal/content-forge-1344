@@ -1,0 +1,53 @@
+# Kamal — production VPS (no domain, HTTP on port 3001).
+# Prérequis : voir docs/DEPLOY_VPS.md
+
+service: contentforge_1344_rails
+
+# Image Docker Hub : adam1344/contentforge_1344_rails
+image: adam1344/contentforge_1344_rails
+
+servers:
+  web:
+    hosts:
+      - 51.75.124.208
+
+# Accès SSH (Kamal exige une clé : pas de mot de passe interactif).
+ssh:
+  user: ubuntu
+
+# Pas de nom de domaine : pas de SSL Let's Encrypt.
+# Sans `host`, le proxy accepte les requêtes par IP.
+# http_port hôte 3001 → proxy kamal (port 80 dans le conteneur).
+proxy:
+  ssl: false
+  forward_headers: true
+  run:
+    http_port: 3001
+
+registry:
+  server: docker.io
+  username: adam1344
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  secret:
+    - RAILS_MASTER_KEY
+    - DATABASE_URL
+  clear:
+    SOLID_QUEUE_IN_PUMA: true
+    RAILS_ALLOWED_HOSTS: 51.75.124.208
+
+aliases:
+  console: app exec --interactive --reuse "bin/rails console"
+  shell: app exec --interactive --reuse "bash"
+  logs: app logs -f
+  dbc: app exec --interactive --reuse "bin/rails dbconsole --include-password"
+
+volumes:
+  - "contentforge_1344_rails_storage:/rails/storage"
+
+asset_path: /rails/public/assets
+
+builder:
+  arch: amd64

@@ -1,0 +1,35 @@
+# PostgreSQL. Connection for all environments is driven by DATABASE_URL (Neon, local, or host env).
+#
+# Caution: using the same physical database for development and test can wipe or pollute dev data
+# when running tests. Prefer a separate Neon branch/database for test when possible.
+#
+# Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  url: <%= ENV.fetch("DATABASE_URL") %>
+
+test:
+  <<: *default
+  url: <%= ENV.fetch("DATABASE_URL") %>
+
+# Solid Cache / Queue / Cable use the same Neon database as primary (single URL).
+# Migrations use db/cache_migrate, db/queue_migrate, db/cable_migrate respectively.
+production:
+  primary: &neon_production
+    <<: *default
+    url: <%= ENV.fetch("DATABASE_URL") %>
+  cache:
+    <<: *neon_production
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *neon_production
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *neon_production
+    migrations_paths: db/cable_migrate

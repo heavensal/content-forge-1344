@@ -1,0 +1,18 @@
+<% flash.each do |type, message| %>
+  <% next if message.blank? %>
+  <%
+    base = "mb-4 rounded-lg border px-4 py-3 text-sm"
+    classes =
+      case type.to_sym
+      when :notice, :success
+        "#{base} border-emerald-500/40 bg-emerald-500/10 text-emerald-200"
+      when :alert, :error
+        "#{base} border-red-500/40 bg-red-500/10 text-red-200"
+      else
+        "#{base} border-zinc-600 bg-zinc-900 text-zinc-200"
+      end
+  %>
+  <div class="<%= classes %>" data-turbo-temporary role="status">
+    <%= message %>
+  </div>
+<% end %>

@@ -1,0 +1,15 @@
+<%# locals: (endpoint:, resource_label:) %>
+<div class="<%= content_section_card_classes %> mt-8">
+  <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Public API · <%= resource_label %></h2>
+  <p class="mt-2 text-sm leading-relaxed text-zinc-500">
+    Returns every <strong class="font-medium text-zinc-400">published</strong> item for <span class="break-all text-emerald-500/90 sm:break-normal"><%= @website.domain %></span>.
+    Use your website’s API token (same as on the <%= link_to "website page", @website, class: "text-emerald-400 hover:text-emerald-300 underline decoration-emerald-500/40" %>).
+  </p>
+  <pre class="mt-4 max-h-[min(50vh,24rem)] overflow-auto overscroll-x-contain rounded-lg border border-zinc-700 bg-zinc-950 p-3 text-left font-mono text-[10px] leading-relaxed text-emerald-100/90 shadow-inner sm:p-4 sm:text-[11px]"><code class="break-all whitespace-pre-wrap sm:break-normal sm:whitespace-pre">const response = await fetch(&quot;<%= request.base_url %>/api/v1/<%= endpoint %>&quot;, {
+  headers: {
+    &quot;Authorization&quot;: &quot;Bearer <%= @website.api_token %>&quot;,
+    &quot;Accept&quot;: &quot;application/json&quot;
+  }
+});
+const <%= endpoint %> = await response.json();</code></pre>
+</div>

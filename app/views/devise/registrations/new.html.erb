@@ -1,0 +1,41 @@
+<% content_for :title, "Sign up — ContentForge" %>
+
+<div class="<%= content_section_card_classes %>">
+  <h1 class="text-xl font-semibold text-zinc-50">Create account</h1>
+  <p class="mt-1 text-sm text-zinc-500">Start managing content for your brochure sites.</p>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "mt-8 space-y-5" }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <div>
+      <%= f.label :name, class: label_classes %>
+      <%= f.text_field :name, autofocus: true, autocomplete: "name", class: input_classes, required: true %>
+    </div>
+
+    <div>
+      <%= f.label :email, class: label_classes %>
+      <%= f.email_field :email, autocomplete: "email", class: input_classes %>
+    </div>
+
+    <div>
+      <%= f.label :password, class: label_classes %>
+      <% if @minimum_password_length %>
+        <span class="text-xs text-zinc-500">(<%= @minimum_password_length %> characters minimum)</span>
+      <% end %>
+      <%= f.password_field :password, autocomplete: "new-password", class: input_classes %>
+    </div>
+
+    <div>
+      <%= f.label :password_confirmation, class: label_classes %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: input_classes %>
+    </div>
+
+    <div>
+      <%= f.submit "Sign up", class: primary_button_classes %>
+    </div>
+  <% end %>
+
+  <div class="mt-8 border-t border-zinc-800 pt-6">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

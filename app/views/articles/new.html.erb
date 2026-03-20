@@ -1,0 +1,10 @@
+<% content_for :title, "New article — #{@website.name}" %>
+
+<div class="mx-auto w-full max-w-xl">
+  <h1 class="text-2xl font-semibold tracking-tight text-zinc-50">New article</h1>
+  <p class="mt-1 break-all text-sm text-zinc-500 sm:break-normal"><%= @website.domain %></p>
+
+  <div class="<%= content_section_card_classes %> mt-8">
+    <%= render "form", article: @article %>
+  </div>
+</div>

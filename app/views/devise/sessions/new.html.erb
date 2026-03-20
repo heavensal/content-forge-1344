@@ -1,0 +1,33 @@
+<% content_for :title, "Sign in — ContentForge" %>
+
+<div class="<%= content_section_card_classes %>">
+  <h1 class="text-xl font-semibold text-zinc-50">Sign in</h1>
+  <p class="mt-1 text-sm text-zinc-500">Welcome back to your content hub.</p>
+
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "mt-8 space-y-5" }) do |f| %>
+    <div>
+      <%= f.label :email, class: label_classes %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: input_classes %>
+    </div>
+
+    <div>
+      <%= f.label :password, class: label_classes %>
+      <%= f.password_field :password, autocomplete: "current-password", class: input_classes %>
+    </div>
+
+    <% if devise_mapping.rememberable? %>
+      <div class="flex items-center gap-2">
+        <%= f.check_box :remember_me, class: "h-4 w-4 rounded border-zinc-600 bg-zinc-900 text-emerald-600 focus:ring-emerald-500" %>
+        <%= f.label :remember_me, class: "text-sm text-zinc-400" %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.submit "Sign in", class: primary_button_classes %>
+    </div>
+  <% end %>
+
+  <div class="mt-8 border-t border-zinc-800 pt-6">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

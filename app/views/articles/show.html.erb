@@ -1,0 +1,34 @@
+<% content_for :title, "#{@article.title} — #{@website.name}" %>
+
+<div class="mx-auto w-full max-w-3xl">
+  <%= link_to "← Articles", website_articles_path(@website), class: "inline-flex min-h-11 items-center text-sm text-emerald-500/90 touch-manipulation hover:text-emerald-400" %>
+
+  <header class="mt-6">
+    <p class="text-xs font-medium uppercase tracking-wider text-zinc-500"><%= @article.status %> · <span class="break-all sm:break-normal"><%= @article.slug %></span></p>
+    <h1 class="mt-2 break-words text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl"><%= @article.title %></h1>
+    <% if @article.published_at.present? %>
+      <p class="mt-2 text-sm text-zinc-500">Published <%= l @article.published_at, format: :long %></p>
+    <% end %>
+  </header>
+
+  <% if @article.description.present? %>
+    <div class="<%= content_section_card_classes %> mt-8">
+      <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Description</h2>
+      <div class="mt-3 max-w-none text-sm leading-relaxed text-zinc-300 whitespace-pre-wrap break-words"><%= @article.description %></div>
+    </div>
+  <% end %>
+
+  <% if @article.content.present? %>
+    <div class="<%= content_section_card_classes %> mt-8 overflow-x-auto">
+      <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Content</h2>
+      <div class="trix-content mt-4 min-w-0 max-w-none text-sm leading-relaxed text-zinc-300 [&_a]:text-emerald-400 [&_a:hover]:text-emerald-300 [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:text-zinc-100 [&_ul]:my-3 [&_ol]:my-3 [&_li]:my-1 [&_blockquote]:border-l-2 [&_blockquote]:border-emerald-600/40 [&_blockquote]:pl-4 [&_blockquote]:text-zinc-400 [&_pre]:mt-3 [&_pre]:max-w-full [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-zinc-800 [&_pre]:p-3 [&_pre]:text-zinc-200 [&_img]:max-w-full [&_img]:h-auto">
+        <%= @article.content %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mt-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+    <%= link_to "Edit", edit_website_article_path(@website, @article), class: primary_button_classes %>
+    <%= button_to "Delete", [@website, @article], method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: "Delete this article?" } }, class: danger_button_classes %>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<% content_for :title, "Resend confirmation — ContentForge" %>
+
+<div class="<%= content_section_card_classes %>">
+  <h1 class="text-xl font-semibold text-zinc-50">Resend confirmation</h1>
+
+  <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: "mt-8 space-y-5" }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <div>
+      <%= f.label :email, class: label_classes %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), class: input_classes %>
+    </div>
+
+    <div>
+      <%= f.submit "Resend instructions", class: primary_button_classes %>
+    </div>
+  <% end %>
+
+  <div class="mt-8 border-t border-zinc-800 pt-6">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

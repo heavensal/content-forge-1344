@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <title><%= content_for(:title) || "ContentForge" %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="ContentForge">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="h-full min-h-screen min-h-[100dvh] bg-zinc-950 text-zinc-100 antialiased">
+    <% if use_app_shell? %>
+      <div class="flex min-h-screen min-h-[100dvh]" data-controller="mobile-nav">
+        <div
+          data-mobile-nav-target="backdrop"
+          data-action="click->mobile-nav#close"
+          class="fixed inset-0 z-40 bg-zinc-950/70 backdrop-blur-sm transition-opacity duration-200 opacity-0 pointer-events-none lg:hidden"
+          aria-hidden="true"></div>
+
+        <%= render "shared/sidebar" %>
+
+        <div class="flex min-h-0 w-full min-w-0 flex-1 flex-col">
+          <header class="sticky top-0 z-30 flex items-center gap-3 border-b border-zinc-800/80 bg-zinc-950/95 px-3 py-3 backdrop-blur-md supports-[backdrop-filter]:bg-zinc-950/80 lg:hidden pt-[max(0.75rem,env(safe-area-inset-top))]">
+            <button
+              type="button"
+              class="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-zinc-200 touch-manipulation hover:border-emerald-600/50 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+              data-action="click->mobile-nav#open"
+              aria-label="Open navigation menu"
+              aria-expanded="false"
+              aria-controls="app-sidebar">
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            </button>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-semibold text-emerald-400">ContentForge</p>
+              <% if defined?(@website) && @website.present? %>
+                <p class="truncate text-xs text-zinc-500"><%= @website.name %></p>
+              <% else %>
+                <p class="truncate text-xs text-zinc-500"><%= current_user.name %></p>
+              <% end %>
+            </div>
+          </header>
+          <main class="min-w-0 flex-1 overflow-x-hidden px-3 py-6 sm:px-6 sm:py-8 lg:px-10 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+            <%= render "shared/flash" %>
+            <%= yield %>
+          </main>
+        </div>
+      </div>
+    <% else %>
+      <div class="flex min-h-screen min-h-[100dvh] flex-col items-center justify-center px-4 py-8 sm:py-12 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))]">
+        <div class="mb-8 text-center">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-500/90">ContentForge</p>
+          <p class="mt-1 text-sm text-zinc-500">by 1344</p>
+        </div>
+        <div class="w-full max-w-md">
+          <%= render "shared/flash" %>
+          <%= yield %>
+        </div>
+      </div>
+    <% end %>
+  </body>
+</html>
