@@ -29,16 +29,27 @@ L’image ne peut pas rester sur `localhost` : il faut un registry public (ex. *
 
    Le fichier **`.kamal/secrets`** lit ces valeurs via des commandes `$(bash …)` compatibles Kamal/dotenv. Tu peux toujours exporter les variables à la main dans le terminal si tu préfères.
 
-`RAILS_MASTER_KEY` est lu via `$(cat config/master.key)` dans `.kamal/secrets` — garde **`config/master.key` hors git**.
+`RAILS_MASTER_KEY` est lu depuis `config/master.key` (racine du repo git) dans `.kamal/secrets` — garde **`config/master.key` hors git**.
 
-## 4. Premier déploiement
+## 3. Premier déploiement
 
-Sur la machine qui build (ton Mac, avec Docker lancé) :
+Sur la machine qui build (ton Mac, avec Docker lancé). **Important** : les secrets (`KAMAL_REGISTRY_PASSWORD`, `DATABASE_URL`) doivent être dans l’environnement. Deux options :
+
+**Option A** — script qui charge `.env` automatiquement :
 
 ```bash
 cd /chemin/vers/contentforge-1344-rails
 bundle install
-bin/kamal setup    # installe Docker sur le VPS si besoin + prépare Kamal
+bin/deploy setup    # charge .env puis kamal setup
+bin/deploy deploy   # idem pour deploy
+```
+
+**Option B** — export manuel avant chaque commande :
+
+```bash
+cd /chemin/vers/contentforge-1344-rails
+set -a && source .env && set +a
+bin/kamal setup
 bin/kamal deploy
 ```
 
@@ -48,7 +59,7 @@ Puis migrations (souvent une fois après le premier boot) :
 bin/kamal app exec -i --reuse "bin/rails db:migrate"
 ```
 
-## 5. Pare-feu sur le VPS
+## 4. Pare-feu sur le VPS
 
 Ouvre au moins le port **3001** (HTTP) :
 
@@ -59,6 +70,22 @@ sudo ufw enable   # si pas déjà actif
 ```
 
 Le proxy Kamal peut aussi publier le **443** sur l’hôte (HTTPS désactivé côté app) ; si `ufw` bloque 443, ce n’est en général pas grave pour tester en **HTTP sur 3001** uniquement.
+
+## 5. Docker Hub : `unauthorized: incorrect username or password`
+
+Souvent **mot de passe vide** pour Kamal (`.env` non lu) ou **token / user incorrect**.
+
+1. Lance toujours Kamal **depuis la racine du repo** : `cd …/contentforge-1344-rails && bin/kamal deploy`.
+2. Vérifie que le token est bien chargé (sans l’afficher) :
+
+   ```bash
+   cd /chemin/vers/contentforge-1344-rails
+   bash -c 'ROOT=$(git rev-parse --show-toplevel); set -a; . "$ROOT/.env"; echo "longueur token: ${#KAMAL_REGISTRY_PASSWORD}"'
+   ```
+
+   Si tu vois `longueur token: 0`, corrige `.env` (ligne `KAMAL_REGISTRY_PASSWORD=…`, pas d’espace autour du `=`, token **complet** copié depuis Docker Hub).
+
+3. Test manuel : `docker login docker.io -u adam1344` puis colle le token.
 
 ## 6. Accès
 

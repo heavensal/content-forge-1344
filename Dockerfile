@@ -51,8 +51,9 @@ COPY . .
 # -j 1 disable parallel compilation to avoid a QEMU bug: https://github.com/rails/bootsnap/issues/495
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY.
+# DATABASE_URL is required by database.yml but not used during precompile — dummy value suffices.
+RUN SECRET_KEY_BASE_DUMMY=1 DATABASE_URL=postgresql://localhost/dummy ./bin/rails assets:precompile
 
 
 
