@@ -1,4 +1,18 @@
 <%# locals: (endpoint:, resource_label:) %>
+<%
+  example_responses = {
+    "articles" => [
+      { id: 1, title: "Mon premier article", slug: "mon-premier-article", description: "Un court résumé...", published_at: "2024-03-20T12:00:00Z", content_html: "<p>Contenu HTML riche</p>" }
+    ],
+    "faqs" => [
+      { id: 1, question: "Comment ça marche ?", slug: "comment-ca-marche", answer: "Réponse détaillée...", position: 0, published_at: "2024-03-20T12:00:00Z" }
+    ],
+    "reviews" => [
+      { id: 1, author: "Jean Dupont", content: "Super service !", position: 0, published_at: "2024-03-20T12:00:00Z" }
+    ]
+  }
+  example_json = example_responses[endpoint]&.to_json
+%>
 <div class="<%= content_section_card_classes %> mt-8">
   <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Public API · <%= resource_label %></h2>
   <p class="mt-2 text-sm leading-relaxed text-zinc-500">
@@ -12,4 +26,8 @@
   }
 });
 const <%= endpoint %> = await response.json();</code></pre>
+  <% if example_json.present? %>
+    <p class="mt-4 text-xs font-medium uppercase tracking-wider text-zinc-500">Exemple de réponse</p>
+    <pre class="mt-2 max-h-[min(40vh,20rem)] overflow-auto overscroll-x-contain rounded-lg border border-zinc-700 bg-zinc-950 p-3 text-left font-mono text-[10px] leading-relaxed text-amber-100/90 shadow-inner sm:p-4 sm:text-[11px]"><code class="break-all whitespace-pre-wrap sm:break-normal sm:whitespace-pre"><%= JSON.pretty_generate(JSON.parse(example_json)) %></code></pre>
+  <% end %>
 </div>
