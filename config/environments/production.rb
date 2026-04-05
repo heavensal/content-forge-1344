@@ -79,7 +79,7 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  # Kamal / accès par IP : autorisés via RAILS_ALLOWED_HOSTS (déployé dans deploy.yml).
+  # Déploiement (Kamal, etc.) : autoriser les hôtes via RAILS_ALLOWED_HOSTS.
   ENV.fetch("RAILS_ALLOWED_HOSTS", "").split(",").each do |host|
     host = host.strip
     config.hosts << host if host.present?

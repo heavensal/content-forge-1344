@@ -19,6 +19,6 @@ Things you may want to cover:
 
 * Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions — see [docs/DEPLOY_VPS.md](docs/DEPLOY_VPS.md) (Kamal, VPS, HTTP sur le port 3001).
+* Deployment — configure with `kamal init` (see [Kamal](https://kamal-deploy.org)).
 
 * ...
