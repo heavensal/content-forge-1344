@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
+# Worker Solid Queue — réactiver avec la gem solid_queue (voir docs/SOLID_OPTIONAL.md).
+#
+# require_relative "../config/environment"
+# require "solid_queue/cli"
+# SolidQueue::Cli.start(ARGV)
 
-require_relative "../config/environment"
-require "solid_queue/cli"
-
-SolidQueue::Cli.start(ARGV)
+warn "bin/jobs: Solid Queue n’est pas activé. Voir docs/SOLID_OPTIONAL.md"
+exit 1

@@ -3,14 +3,7 @@
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
-  # db:prepare can leave queue tables unloaded when primary already exists (solid_queue#365).
-  # Explicitly load queue schema if solid_queue_recurring_tasks is missing.
-  ./bin/rails runner "
-    ActiveRecord::Base.establish_connection(:queue)
-    unless ActiveRecord::Base.connection.table_exists?('solid_queue_recurring_tasks')
-      load Rails.root.join('db', 'queue_schema.rb')
-    end
-  "
+  # Avec Solid Queue : voir docs/SOLID_OPTIONAL.md (chargement schéma queue si besoin).
 fi
 
 exec "${@}"

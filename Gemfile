@@ -25,7 +25,8 @@ gem "jbuilder"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
-# Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
+# --- Solid (Rails 8 default: cache + jobs + cable in PostgreSQL) — désactivé pour l’instant.
+# Décommenter les 3 gems + restaurer config (voir docs/SOLID_OPTIONAL.md).
 # gem "solid_cache"
 # gem "solid_queue"
 # gem "solid_cable"

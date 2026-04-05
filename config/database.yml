@@ -18,18 +18,22 @@ test:
   <<: *default
   url: <%= ENV.fetch("DATABASE_URL") %>
 
-# Solid Cache / Queue / Cable use the same Neon database as primary (single URL).
-# Migrations use db/cache_migrate, db/queue_migrate, db/cable_migrate respectively.
+# Production: une seule base (Solid multi-DB désactivé — voir docs/SOLID_OPTIONAL.md).
 production:
-  primary: &neon_production
-    <<: *default
-    url: <%= ENV.fetch("DATABASE_URL") %>
-  cache:
-    <<: *neon_production
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *neon_production
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *neon_production
-    migrations_paths: db/cable_migrate
+  <<: *default
+  url: <%= ENV.fetch("DATABASE_URL") %>
+
+# --- Solid (désactivé) — cache / queue / cable sur la même URL Neon + migrations séparées :
+# production:
+#   primary: &neon_production
+#     <<: *default
+#     url: <%= ENV.fetch("DATABASE_URL") %>
+#   cache:
+#     <<: *neon_production
+#     migrations_paths: db/cache_migrate
+#   queue:
+#     <<: *neon_production
+#     migrations_paths: db/queue_migrate
+#   cable:
+#     <<: *neon_production
+#     migrations_paths: db/cable_migrate
