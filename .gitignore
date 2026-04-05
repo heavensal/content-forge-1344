@@ -12,6 +12,8 @@
 
 # Ignore all environment files.
 /.env
+# Kamal (secrets de déploiement — ne pas versionner)
+/.kamal/secrets
 
 # Ignore all logfiles and tempfiles.
 /log/*
