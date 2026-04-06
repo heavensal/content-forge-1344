@@ -26,6 +26,8 @@ servers:
 proxy:  
   ssl: true
   host: contentforge.1344.fr
+  dns: 127.0.0.11  # Docker's embedded resolver
+
   # Port *inside* the app container that kamal-proxy and healthchecks use (not the host's public port).
   # Thruster listens on HTTP_PORT, default 80 — must match. Wrong app_port => healthcheck never succeeds.
   # Same path as config/routes.rb (rails/health#show). Explicit default for kamal-proxy deploy checks.
@@ -39,6 +41,7 @@ proxy:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
   # username: my-user
+
 registry:
   # Always use an access token rather than real password (pulled from .kamal/secrets).
   username: adam1344
