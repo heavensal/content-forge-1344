@@ -76,4 +76,10 @@ ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start server via Thruster by default, this can be overwritten at runtime
 EXPOSE 80
+
+# Populate Docker .State.Health (otherwise null) so Kamal / inspect-based tooling see a real status.
+# Thruster listens on :80; Puma is behind it on 3000. Align start-period with slow db:prepare + first DB connect.
+HEALTHCHECK --interval=10s --timeout=3s --start-period=120s --retries=5 \
+  CMD curl -fsS http://127.0.0.1:80/up || exit 1
+
 CMD ["./bin/thrust", "./bin/rails", "server"]

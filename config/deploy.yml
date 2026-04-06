@@ -29,6 +29,9 @@ proxy:
   # Port *inside* the app container that kamal-proxy and healthchecks use (not the host's public port).
   # Thruster listens on HTTP_PORT, default 80 — must match. Wrong app_port => healthcheck never succeeds.
   app_port: 80
+  # Same path as config/routes.rb (rails/health#show). Explicit default for kamal-proxy deploy checks.
+  healthcheck:
+    path: /up
 
 # Credentials for your image host.
 registry:
