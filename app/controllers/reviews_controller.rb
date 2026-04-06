@@ -18,7 +18,7 @@ class ReviewsController < ApplicationController
   def create
     @review = @website.reviews.build(review_params)
     if @review.save
-      redirect_to [@website, @review], notice: "Review was successfully created."
+      redirect_to [ @website, @review ], notice: "Review was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class ReviewsController < ApplicationController
 
   def update
     if @review.update(review_params)
-      redirect_to [@website, @review], notice: "Review was successfully updated."
+      redirect_to [ @website, @review ], notice: "Review was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end

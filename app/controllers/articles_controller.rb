@@ -18,7 +18,7 @@ class ArticlesController < ApplicationController
   def create
     @article = @website.articles.build(article_params)
     if @article.save
-      redirect_to [@website, @article], notice: "Article was successfully created."
+      redirect_to [ @website, @article ], notice: "Article was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -29,7 +29,7 @@ class ArticlesController < ApplicationController
 
   def update
     if @article.update(article_params)
-      redirect_to [@website, @article], notice: "Article was successfully updated."
+      redirect_to [ @website, @article ], notice: "Article was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end

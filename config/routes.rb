@@ -8,9 +8,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :articles, only: [:index]
-      resources :faqs, only: [:index]
-      resources :reviews, only: [:index]
+      resources :articles, only: [ :index ]
+      resources :faqs, only: [ :index ]
+      resources :reviews, only: [ :index ]
     end
   end
 
