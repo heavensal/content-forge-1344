@@ -36,8 +36,6 @@ proxy:
 # Credentials for your image host.
 registry:
   username: adam1344
-  password:
-  - KAMAL_REGISTRY_PASSWORD
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
   # username: my-user
