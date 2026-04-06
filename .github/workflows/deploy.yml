@@ -1,0 +1,65 @@
+# Deploy to production (Kamal → VPS) on every push to master.
+#
+# Required GitHub repository secrets:
+#   SSH_PRIVATE_KEY          — private key for ssh ubuntu@51.75.124.208 (no passphrase, or use ssh-agent with passphrase secret)
+#   KAMAL_REGISTRY_PASSWORD  — Docker Hub access token (push/pull adam1344/contentforge_1344)
+#   RAILS_MASTER_KEY         — same as config/master.key (32-char hex)
+#   DATABASE_URL             — production PostgreSQL URL (e.g. Neon), same as local .kamal/secrets
+#
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+
+concurrency:
+  group: kamal-deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Trust VPS host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -T 15 -H 51.75.124.208 >> ~/.ssh/known_hosts
+
+      - name: Write Kamal secrets
+        env:
+          KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          mkdir -p .kamal
+          ruby -e '
+            lines = %w[KAMAL_REGISTRY_PASSWORD RAILS_MASTER_KEY DATABASE_URL].map do |k|
+              v = ENV[k] or abort("Missing required secret: #{k}")
+              raise "#{k} is empty" if v.strip.empty?
+              %(#{k}=#{v.gsub("\n", "")})
+            end
+            File.write(".kamal/secrets", lines.join("\n") + "\n")
+          '
+
+      - name: Kamal deploy
+        env:
+          DOCKER_BUILDKIT: 1
+        run: bin/kamal deploy
