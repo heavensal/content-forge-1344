@@ -4,9 +4,11 @@ service: contentforge_1344
 # Name of the container image.
 image: adam1344/contentforge_1344
 
+# How long kamal-proxy waits for GET /up => 200 on the app container (default 30s).
+# bin/docker-entrypoint runs db:prepare before Puma; first DB connection (e.g. Neon) can exceed 30s.
+deploy_timeout: 120
 
 # my vps is 51.75.124.208
-# i want to deploy to port 3100 
 # url must be contentforge.1344.fr
 # Deploy to these servers.
 servers:
@@ -24,8 +26,9 @@ servers:
 proxy:  
   ssl: true
   host: contentforge.1344.fr
-  # Proxy connects to your container on port 80 by default.
-  app_port: 3100
+  # Port *inside* the app container that kamal-proxy and healthchecks use (not the host's public port).
+  # Thruster listens on HTTP_PORT, default 80 — must match. Wrong app_port => healthcheck never succeeds.
+  app_port: 80
 
 # Credentials for your image host.
 registry:
@@ -45,14 +48,20 @@ builder:
   # args:
   #   RUBY_VERSION: <%= ENV["RBENV_VERSION"] || ENV["rvm_ruby_string"] || "#{RUBY_ENGINE}-#{RUBY_ENGINE_VERSION}" %>
 
-# Inject ENV variables into containers (secrets come from .kamal/secrets).
+# Inject ENV into app containers. List secret *names* here; values live in `.kamal/secrets`
+# (one KEY=value per line). Do not commit `.kamal/secrets`.
 #
-# env:
-#   clear:
-#     DB_HOST: 51.75.124.208
-#   secret:
-#     - RAILS_MASTER_KEY
-#     - DATABASE_URL
+# RAILS_MASTER_KEY — Required in production. The Docker image ships `config/credentials.yml.enc`
+# but `.dockerignore` excludes `config/master.key`, so the running container has no key file.
+# Rails needs this env var to decrypt credentials at boot (e.g. secret_key_base). Use the same
+# 32-char hex string as in `config/master.key` on your machine.
+#
+# DATABASE_URL — PostgreSQL URL for production (`config/database.yml` uses ENV["DATABASE_URL"]).
+#
+env:
+  secret:
+    - RAILS_MASTER_KEY
+    - DATABASE_URL
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal app logs -r job" will tail logs from the first server in the job section.

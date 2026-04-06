@@ -4,6 +4,7 @@
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
 # docker build -t contentforge_1344_rails .
 # docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name contentforge_1344_rails contentforge_1344_rails
+# (Kamal: set RAILS_MASTER_KEY in `.kamal/secrets` — see comments in config/deploy.yml `env.secret`.)
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
