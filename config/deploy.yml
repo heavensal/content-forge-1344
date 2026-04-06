@@ -1,123 +1,29 @@
-# Name of your application. Used to uniquely configure containers.
 service: contentforge_1344
 
-# Name of the container image.
 image: adam1344/contentforge_1344
 
-# How long kamal-proxy waits for GET /up => 200 on the app container (default 30s).
-# bin/docker-entrypoint runs db:prepare before Puma; first DB connection (e.g. Neon) can exceed 30s.
 deploy_timeout: 120
 
-# my vps is 51.75.124.208
-# url must be contentforge.1344.fr
-# Deploy to these servers.
 servers:
   web:
     - 51.75.124.208
-  # job:
-  #   hosts:
-  #     - 192.168.0.1
-  #   cmd: bin/jobs
 
-# Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
-# Remove this section when using multiple web servers and ensure you terminate SSL at your load balancer.
-#
-# Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
-proxy:  
+proxy:
   ssl: true
   host: contentforge.1344.fr
-  dns: 127.0.0.11  # Docker's embedded resolver
-
-  # Port *inside* the app container that kamal-proxy and healthchecks use (not the host's public port).
-  # Thruster listens on HTTP_PORT, default 80 — must match. Wrong app_port => healthcheck never succeeds.
-  # Same path as config/routes.rb (rails/health#show). Explicit default for kamal-proxy deploy checks.
-  # On some Ubuntu VPS, the kamal-proxy container inherits resolv.conf with 127.0.0.53 (systemd-resolved).
-  # Healthchecks then try to resolve the app container hostname via that stub → DNS failures. Docker’s
-  # embedded resolver (127.0.0.11) knows names on the `kamal` network — force it for the proxy container.
-
-
-# Credentials for your image host.
-
-  # Specify the registry server, if you're not using Docker Hub
-  # server: registry.digitalocean.com / ghcr.io / ...
-  # username: my-user
 
 registry:
-  # Always use an access token rather than real password (pulled from .kamal/secrets).
   username: adam1344
   password:
     - KAMAL_REGISTRY_PASSWORD
 
-# Configure builder setup.
 builder:
   arch: amd64
-  # Pass in additional build args needed for your Dockerfile.
-  # args:
-  #   RUBY_VERSION: <%= ENV["RBENV_VERSION"] || ENV["rvm_ruby_string"] || "#{RUBY_ENGINE}-#{RUBY_ENGINE_VERSION}" %>
 
-# Inject ENV into app containers. List secret *names* here; values live in `.kamal/secrets`
-# (one KEY=value per line). Do not commit `.kamal/secrets`.
-#
-# RAILS_MASTER_KEY — Required in production. The Docker image ships `config/credentials.yml.enc`
-# but `.dockerignore` excludes `config/master.key`, so the running container has no key file.
-# Rails needs this env var to decrypt credentials at boot (e.g. secret_key_base). Use the same
-# 32-char hex string as in `config/master.key` on your machine.
-#
-# DATABASE_URL — PostgreSQL URL for production (`config/database.yml` uses ENV["DATABASE_URL"]).
-#
 env:
   secret:
     - RAILS_MASTER_KEY
     - DATABASE_URL
 
-# Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
-# "bin/kamal app logs -r job" will tail logs from the first server in the job section.
-#
-# aliases:
-#   shell: app exec --interactive --reuse "bash"
-
-# Use a different ssh user than root
-#
 ssh:
   user: ubuntu
-
-# Use a persistent storage volume.
-#
-# volumes:
-#   - "app_storage:/app/storage"
-
-# Bridge fingerprinted assets, like JS and CSS, between versions to avoid
-# hitting 404 on in-flight requests. Combines all files from new and old
-# version inside the asset_path.
-#
-# asset_path: /app/public/assets
-
-# Configure rolling deploys by setting a wait time between batches of restarts.
-#
-# boot:
-#   limit: 10 # Can also specify as a percentage of total hosts, such as "25%"
-#   wait: 2
-
-# Use accessory services (secrets come from .kamal/secrets).
-#
-# accessories:
-#   db:
-#     image: mysql:8.0
-#     host: 192.168.0.2
-#     port: 3306
-#     env:
-#       clear:
-#         MYSQL_ROOT_HOST: '%'
-#       secret:
-#         - MYSQL_ROOT_PASSWORD
-#     files:
-#       - config/mysql/production.cnf:/etc/mysql/my.cnf
-#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
-#     directories:
-#       - data:/var/lib/mysql
-#   redis:
-#     image: valkey/valkey:8
-#     host: 192.168.0.2
-#     port: 6379
-#     directories:
-#       - data:/data
