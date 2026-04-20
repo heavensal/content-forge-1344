@@ -24,9 +24,12 @@ env:
   secret:
     - RAILS_MASTER_KEY
     - DATABASE_URL
-    # Outbound mail (see .env.example) — add lines to .kamal/secrets, e.g.:
-    # SMTP_ADDRESS SMTP_PORT SMTP_USER_NAME SMTP_PASSWORD MAILER_FROM
-    # Optional: CORS_ALLOWED_ORIGINS (comma-separated brochure-site origins)
+    - SMTP_ADDRESS
+    - SMTP_PORT
+    - SMTP_USER_NAME
+    - SMTP_PASSWORD
+    - MAILER_FROM
+    - CORS_ALLOWED_ORIGINS
 
 ssh:
   user: ubuntu
