@@ -13,6 +13,12 @@
   </div>
 
   <div>
+    <%= f.label :email, class: label_classes %>
+    <%= f.email_field :email, class: input_classes, autocomplete: "email", placeholder: "contact@example.com", title: "Format: local@domain", pattern: "[^@\\s]+@[^@\\s]+" %>
+    <p class="mt-1 text-xs text-zinc-500">Optional contact email for this site. Must match the same format as account emails (one @, no spaces).</p>
+  </div>
+
+  <div>
     <%= f.label :description, class: label_classes %>
     <%= f.text_area :description, class: "#{input_classes} min-h-[100px]", rows: 4 %>
   </div>

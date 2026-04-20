@@ -1,0 +1,36 @@
+<p><strong>New message for <%= h @website.name %></strong> (<%= h @website.domain %>)</p>
+
+<table style="border-collapse:collapse;width:100%;max-width:640px;margin-top:16px;font-family:system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.45;color:#111">
+  <tbody>
+    <% if @from_name.present? %>
+    <tr>
+      <td style="vertical-align:top;padding:8px 12px 8px 0;border-bottom:1px solid #e5e5e5;width:36%;font-weight:600;color:#333">Name</td>
+      <td style="vertical-align:top;padding:8px 0;border-bottom:1px solid #e5e5e5;word-break:break-word"><%= h @from_name %></td>
+    </tr>
+    <% end %>
+    <% if @from_email.present? %>
+    <tr>
+      <td style="vertical-align:top;padding:8px 12px 8px 0;border-bottom:1px solid #e5e5e5;font-weight:600;color:#333">Email</td>
+      <td style="vertical-align:top;padding:8px 0;border-bottom:1px solid #e5e5e5;word-break:break-all"><%= h @from_email %></td>
+    </tr>
+    <% end %>
+    <% if @inquiry_subject.present? %>
+    <tr>
+      <td style="vertical-align:top;padding:8px 12px 8px 0;border-bottom:1px solid #e5e5e5;font-weight:600;color:#333">Subject</td>
+      <td style="vertical-align:top;padding:8px 0;border-bottom:1px solid #e5e5e5;word-break:break-word"><%= h @inquiry_subject %></td>
+    </tr>
+    <% end %>
+    <tr>
+      <td style="vertical-align:top;padding:8px 12px 8px 0;border-bottom:1px solid #e5e5e5;font-weight:600;color:#333">Message</td>
+      <td style="vertical-align:top;padding:8px 0;border-bottom:1px solid #e5e5e5;white-space:pre-wrap;word-break:break-word"><%= h(@message.presence || "—") %></td>
+    </tr>
+    <% @fields.each do |key, value| %>
+    <tr>
+      <td style="vertical-align:top;padding:8px 12px 8px 0;border-bottom:1px solid #e5e5e5;font-weight:600;color:#333"><%= h key.to_s %></td>
+      <td style="vertical-align:top;padding:8px 0;border-bottom:1px solid #e5e5e5;white-space:pre-wrap;word-break:break-word"><%= h value.to_s %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p style="color:#666;font-size:12px;margin-top:20px">Sent via ContentForge contact API</p>

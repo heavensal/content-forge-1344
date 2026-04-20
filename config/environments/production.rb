@@ -52,21 +52,12 @@ Rails.application.configure do
   #                     # config.solid_queue.connects_to = { database: { writing: :queue } }
   config.active_job.queue_adapter = :async
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  # SMTP via ENV (see config/initializers/action_mailer_smtp.rb). Kamal: inject secrets at deploy.
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = ENV["MAILER_RAISE_DELIVERY_ERRORS"] == "true"
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "contentforge.1344.fr", protocol: "https" }
-
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
-  # config.action_mailer.smtp_settings = {
-  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  #   password: Rails.application.credentials.dig(:smtp, :password),
-  #   address: "smtp.example.com",
-  #   port: 587,
-  #   authentication: :plain
-  # }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

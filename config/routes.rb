@@ -11,10 +11,12 @@ Rails.application.routes.draw do
       resources :articles, only: [ :index ]
       resources :faqs, only: [ :index ]
       resources :reviews, only: [ :index ]
+      post "send_form", to: "send_form#create", as: :send_form
     end
   end
 
   resources :websites do
+    resource :contact_form_integration, only: [ :show ], controller: "contact_form_integrations"
     resources :articles
     resources :faqs
     resources :reviews

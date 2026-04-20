@@ -1,0 +1,18 @@
+New message for <%= @website.name %> (<%= @website.domain %>)
+
+<% w = 20 %>
+<% if @from_name.present? %>
+<%= "Name".ljust(w) %> | <%= @from_name %>
+<% end %>
+<% if @from_email.present? %>
+<%= "Email".ljust(w) %> | <%= @from_email %>
+<% end %>
+<% if @inquiry_subject.present? %>
+<%= "Subject".ljust(w) %> | <%= @inquiry_subject %>
+<% end %>
+<%= "Message".ljust(w) %> | <%= @message.presence || "—" %>
+<% @fields.each do |key, value| %>
+<%= key.to_s.ljust(w) %> | <%= value %>
+<% end %>
+
+— Sent via ContentForge contact API

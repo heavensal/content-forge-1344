@@ -6,10 +6,14 @@
       <p class="text-xs font-medium uppercase tracking-wider text-emerald-500/90">Website</p>
       <h1 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl"><%= @website.name %></h1>
       <p class="mt-1 break-all text-emerald-400/90 sm:break-normal"><%= @website.domain %></p>
+      <% if @website.email.present? %>
+        <p class="mt-1 break-all text-sm text-zinc-400"><%= @website.email %></p>
+      <% end %>
       <p class="mt-2 inline-flex rounded-full bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-400 ring-1 ring-zinc-700"><%= @website.status %></p>
     </div>
     <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
       <%= link_to "Edit", edit_website_path(@website), class: secondary_button_classes %>
+      <%= link_to "Contact form API", website_contact_form_integration_path(@website), class: secondary_button_classes %>
       <%= link_to "Articles", website_articles_path(@website), class: primary_button_classes %>
     </div>
   </div>

@@ -1,0 +1,107 @@
+<% content_for :title, "Contact form API — #{@website.name} — ContentForge" %>
+<% fetch_example = <<~CFETCH.strip
+  await fetch(#{@send_form_url.to_json}, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer #{@example_token}"
+    },
+    body: JSON.stringify({
+      from_email: "client@example.com",
+      from_name: "Jean Client",
+      subject: "Contact site",
+      message: "Message principal",
+      fields: { phone: "0612345678" }
+    })
+  });
+CFETCH
+%>
+<% form_example = <<~CFORM.strip
+  <form id="site-contact">
+    <input name="from_name" required />
+    <input name="from_email" type="email" required />
+    <textarea name="message" required></textarea>
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <script>
+  const API_URL = #{@send_form_url.to_json};
+  const TOKEN = #{@example_token.to_json};
+
+  document.getElementById("site-contact").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + TOKEN
+      },
+      body: JSON.stringify({
+        from_name: fd.get("from_name"),
+        from_email: fd.get("from_email"),
+        subject: "Formulaire site",
+        message: fd.get("message")
+      })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    alert("Merci, message envoyé.");
+  });
+  </script>
+CFORM
+%>
+
+<div class="mx-auto w-full max-w-4xl">
+  <p class="text-xs font-medium uppercase tracking-wider text-emerald-500/90">Website</p>
+  <h1 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl">Contact form API</h1>
+  <p class="mt-2 max-w-2xl text-sm text-zinc-400">
+    Post a JSON payload from your public site (for example <span class="text-zinc-300"><%= h @website.domain %></span>) to ContentForge.
+    The message is emailed to the address saved on this website
+    <% if @website.email.present? %>
+      (<span class="text-emerald-400/90"><%= h @website.email %></span>).
+    <% else %>
+      — <strong class="text-amber-400/90">add a contact email on the website</strong> in ContentForge before using this API.
+    <% end %>
+  </p>
+
+  <div class="<%= content_section_card_classes %> mt-8">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Endpoint</h2>
+    <p class="mt-2 text-sm text-zinc-500">POST JSON with header <code class="rounded bg-zinc-950 px-1.5 py-0.5 font-mono text-xs text-emerald-300/90">Authorization: Bearer &lt;api_token&gt;</code>.</p>
+    <pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs text-emerald-200/90 sm:text-sm" translate="no"><%= h @send_form_url %></pre>
+    <p class="mt-3 text-xs text-zinc-600">
+      Use the exact base URL of your ContentForge deployment (production: <code class="font-mono text-zinc-500">https://contentforge.1344.fr</code>).
+      The route path is always <code class="font-mono text-zinc-500">/api/v1/send_form</code>.
+    </p>
+  </div>
+
+  <div class="<%= content_section_card_classes %> mt-6">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Payload</h2>
+    <p class="mt-2 text-sm text-zinc-500">All keys are optional except you must send a <strong class="text-zinc-300">message</strong> or <strong class="text-zinc-300">body</strong>, or at least one value inside <strong class="text-zinc-300">fields</strong>.</p>
+    <pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs leading-relaxed text-zinc-300 sm:text-sm" translate="no">{
+  "from_email": "visitor@example.com",
+  "from_name": "Marie Dupont",
+  "subject": "Demande depuis arm-services.fr",
+  "message": "Bonjour, je souhaite un devis…",
+  "fields": {
+    "phone": "06 12 34 56 78",
+    "service": "Déménagement"
+  }
+}</pre>
+  </div>
+
+  <div class="<%= content_section_card_classes %> mt-6">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Example (fetch from the browser)</h2>
+    <p class="mt-2 text-sm text-zinc-500">Prefer a server-side proxy so the API token is not embedded in public JavaScript. Below is a minimal client-only example for development.</p>
+    <pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-[11px] leading-relaxed text-zinc-300 sm:text-sm" translate="no"><%= h fetch_example %></pre>
+  </div>
+
+  <div class="<%= content_section_card_classes %> mt-6">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Example (HTML form + small script)</h2>
+    <p class="mt-2 text-sm text-zinc-500">Avoids full page navigation to the API. Map your inputs into <code class="font-mono text-zinc-500">message</code> and/or <code class="font-mono text-zinc-500">fields</code>.</p>
+    <pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-[11px] leading-relaxed text-zinc-300 sm:text-sm" translate="no"><%= h form_example %></pre>
+  </div>
+
+  <p class="mt-8">
+    <%= link_to "← Back to website", @website, class: secondary_button_classes %>
+  </p>
+</div>

@@ -50,6 +50,9 @@
           <%= link_to website_reviews_path(@website), class: nav_item_classes(controller_name == "reviews"), data: { action: "click->mobile-nav#close" } do %>
             <span>Reviews</span>
           <% end %>
+          <%= link_to website_contact_form_integration_path(@website), class: nav_item_classes(controller_name == "contact_form_integrations"), data: { action: "click->mobile-nav#close" } do %>
+            <span>Contact form API</span>
+          <% end %>
         </nav>
       </div>
     <% end %>

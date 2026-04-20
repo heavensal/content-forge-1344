@@ -73,3 +73,5 @@ end
 
 gem "devise"
 gem "cloudinary"
+
+gem "rack-cors", "~> 3.0"
