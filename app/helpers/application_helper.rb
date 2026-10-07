@@ -55,4 +55,16 @@ module ApplicationHelper
   def form_footer_actions_classes
     "flex flex-col-reverse gap-3 sm:flex-row sm:flex-wrap"
   end
+
+  def content_locale_options
+    [ [ "French", "fr" ], [ "English", "en" ] ]
+  end
+
+  def content_locale_label(locale)
+    locale.to_s == "en" ? "English" : "French"
+  end
+
+  def other_content_locale(locale)
+    locale.to_s == "en" ? "fr" : "en"
+  end
 end

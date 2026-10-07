@@ -1,0 +1,5 @@
+<div>
+  <%= form.label :locale, "Language", class: label_classes %>
+  <%= form.select :locale, content_locale_options, {}, class: input_classes %>
+  <p class="mt-1 text-xs text-zinc-500">One language per item. English is optional — keep the site default if this site has no English version.</p>
+</div>

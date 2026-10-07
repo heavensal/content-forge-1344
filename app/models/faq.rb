@@ -2,13 +2,16 @@
 
 class Faq < ApplicationRecord
   belongs_to :website
+  include ContentLocale
+  include RebuildsWebsite
+  rebuilds_website_as "faqs"
 
   enum :status, { draft: "draft", published: "published", archived: "archived" }, validate: true
 
   normalizes :slug, with: ->(s) { s.to_s.parameterize.presence }
 
   validates :question, presence: true
-  validates :slug, presence: true, uniqueness: { scope: :website_id }
+  validates :slug, presence: true, uniqueness: { scope: %i[website_id locale] }
   validates :answer, presence: true, if: :published?
   validate :published_at_present_when_published
 
@@ -37,7 +40,7 @@ class Faq < ApplicationRecord
 
     candidate = base
     suffix = 2
-    while Faq.where(website_id: website_id).exists?(slug: candidate)
+    while Faq.where(website_id: website_id, locale: locale).exists?(slug: candidate)
       candidate = "#{base}-#{suffix}"
       suffix += 1
     end

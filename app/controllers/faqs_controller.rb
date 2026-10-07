@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FaqsController < ApplicationController
+  include ContentTranslation
+
   before_action :set_website
   before_action :set_faq, only: %i[show edit update destroy]
 
@@ -12,7 +14,8 @@ class FaqsController < ApplicationController
   end
 
   def new
-    @faq = @website.faqs.build
+    @faq = @website.faqs.build(locale: chosen_content_locale)
+    prefill_faq_translation
   end
 
   def create
@@ -43,7 +46,7 @@ class FaqsController < ApplicationController
   private
 
   def set_website
-    @website = current_user.websites.find(params[:website_id])
+    @website = accessible_websites.find(params[:website_id])
   end
 
   def set_faq
@@ -51,6 +54,19 @@ class FaqsController < ApplicationController
   end
 
   def faq_params
-    params.require(:faq).permit(:question, :slug, :answer, :status, :published_at, :position)
+    params.require(:faq).permit(:question, :slug, :answer, :status, :published_at, :position, :locale)
+  end
+
+  def prefill_faq_translation
+    source = translation_source(@website.faqs)
+    return unless source
+
+    @faq.assign_attributes(
+      question: source.question,
+      answer: source.answer,
+      slug: source.slug,
+      position: source.position,
+      locale: chosen_content_locale
+    )
   end
 end

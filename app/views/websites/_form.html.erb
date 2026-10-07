@@ -24,8 +24,43 @@
   </div>
 
   <div>
+    <%= f.label :default_locale, "Default language", class: label_classes %>
+    <%= f.select :default_locale, content_locale_options, {}, class: input_classes %>
+    <p class="mt-1 text-xs text-zinc-500">Used when a page asks for a language that has no published content. English items are optional.</p>
+  </div>
+
+  <div>
     <%= f.label :status, class: label_classes %>
     <%= f.select :status, Website.statuses.keys.map { |k| [k.humanize, k] }, {}, class: input_classes %>
+  </div>
+
+  <fieldset class="space-y-3">
+    <legend class="<%= label_classes %>">Content this site displays</legend>
+    <p class="text-xs text-zinc-500">A create, update, or delete rebuilds the site only for a type it fetches at build time. Match <code class="font-mono text-zinc-400">CONTENTFORGE_ARTICLES_ENABLED</code>, <code class="font-mono text-zinc-400">CONTENTFORGE_FAQ_ENABLED</code>, and <code class="font-mono text-zinc-400">CONTENTFORGE_REVIEWS_ENABLED</code>. Unticked types do not trigger a build.</p>
+    <label class="flex items-center gap-3 text-sm text-zinc-200">
+      <%= f.check_box :imports_articles, class: "size-4 rounded border-zinc-600 bg-zinc-900 text-emerald-500 focus:ring-emerald-500/40" %>
+      Blog articles
+    </label>
+    <label class="flex items-center gap-3 text-sm text-zinc-200">
+      <%= f.check_box :imports_faqs, class: "size-4 rounded border-zinc-600 bg-zinc-900 text-emerald-500 focus:ring-emerald-500/40" %>
+      FAQs
+    </label>
+    <label class="flex items-center gap-3 text-sm text-zinc-200">
+      <%= f.check_box :imports_reviews, class: "size-4 rounded border-zinc-600 bg-zinc-900 text-emerald-500 focus:ring-emerald-500/40" %>
+      Reviews
+    </label>
+  </fieldset>
+
+  <div>
+    <%= f.label :rebuild_webhook_url, "Rebuild webhook URL", class: label_classes %>
+    <%= f.url_field :rebuild_webhook_url, class: input_classes, placeholder: "https://api.github.com/repos/OWNER/REPO/dispatches", inputmode: "url" %>
+    <p class="mt-1 text-xs text-zinc-500">HTTPS endpoint that starts the site build. For GitHub Actions, use the repository dispatch URL and listen for <code class="font-mono text-zinc-400">contentforge-rebuild</code>.</p>
+  </div>
+
+  <div>
+    <%= f.label :rebuild_webhook_token, "Rebuild bearer token", class: label_classes %>
+    <%= f.password_field :rebuild_webhook_token, class: input_classes, autocomplete: "off", placeholder: website.rebuild_webhook_token.present? ? "Saved — leave blank to keep it" : "GitHub PAT or other bearer token" %>
+    <p class="mt-1 text-xs text-zinc-500">Sent as <code class="font-mono text-zinc-400">Authorization: Bearer</code>. Required for GitHub (fine-grained PAT with Contents: Read and write). Leave blank to keep the saved token.</p>
   </div>
 
   <div class="<%= form_footer_actions_classes %> pt-2">

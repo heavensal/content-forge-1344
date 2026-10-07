@@ -9,6 +9,7 @@
       <% if @website.email.present? %>
         <p class="mt-1 break-all text-sm text-zinc-400"><%= @website.email %></p>
       <% end %>
+      <p class="mt-2 text-sm text-zinc-400">Default language: <%= content_locale_label(@website.default_locale) %></p>
       <p class="mt-2 inline-flex rounded-full bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-400 ring-1 ring-zinc-700"><%= @website.status %></p>
     </div>
     <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
@@ -22,6 +23,8 @@
     <p class="mt-8 max-w-2xl text-sm leading-relaxed text-zinc-400"><%= @website.description %></p>
   <% end %>
 
+  <%= render "client_access" if current_user.admin? %>
+
   <div class="<%= content_section_card_classes %> mt-10">
     <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">API access</h2>
     <p class="mt-2 text-sm text-zinc-500">Send this value as <code class="rounded bg-zinc-950 px-1.5 py-0.5 font-mono text-xs text-emerald-300/90">Authorization: Bearer &lt;token&gt;</code> from your external site.</p>
@@ -32,6 +35,25 @@
       </button>
     </div>
     <p class="mt-3 text-xs text-zinc-600">Keep this secret — anyone with the token can manage content for this website via the API.</p>
+  </div>
+
+  <div class="<%= content_section_card_classes %> mt-6">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Site rebuild</h2>
+    <p class="mt-2 text-sm text-zinc-500">Creating, updating, or deleting an imported type sends a signed webhook and starts a build. Types this site does not display are ignored.</p>
+    <ul class="mt-4 space-y-1 text-sm text-zinc-300">
+      <li>Blog articles: <%= @website.imports_articles? ? "imported" : "not imported" %></li>
+      <li>FAQs: <%= @website.imports_faqs? ? "imported" : "not imported" %></li>
+      <li>Reviews: <%= @website.imports_reviews? ? "imported" : "not imported" %></li>
+    </ul>
+    <p class="mt-4 break-all text-sm text-zinc-300"><%= @website.rebuild_webhook_url.presence || "No rebuild URL yet." %></p>
+    <p class="mt-1 text-xs text-zinc-500"><%= @website.rebuild_webhook_token.present? ? "Bearer token saved." : "No bearer token." %></p>
+    <p class="mt-4 text-sm text-zinc-500">Signature secret. The request signs <code class="font-mono text-xs text-zinc-400">{timestamp}.{raw body}</code> with HMAC-SHA256. Headers: <code class="font-mono text-xs text-zinc-400">X-ContentForge-Timestamp</code> and <code class="font-mono text-xs text-zinc-400">X-ContentForge-Signature: v1=…</code>.</p>
+    <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+      <input type="text" readonly value="<%= @website.rebuild_webhook_secret %>" class="<%= input_classes %> min-w-0 font-mono text-xs sm:flex-1 sm:text-sm" id="website-rebuild-secret" onclick="this.select()" aria-label="Rebuild webhook secret" />
+      <button type="button" class="<%= secondary_button_classes %> shrink-0" onclick="navigator.clipboard.writeText(document.getElementById('website-rebuild-secret').value)">
+        Copy secret
+      </button>
+    </div>
   </div>
 
   <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

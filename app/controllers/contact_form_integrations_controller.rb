@@ -11,6 +11,6 @@ class ContactFormIntegrationsController < ApplicationController
   private
 
   def set_website
-    @website = current_user.websites.find(params[:website_id])
+    @website = accessible_websites.find(params[:website_id])
   end
 end

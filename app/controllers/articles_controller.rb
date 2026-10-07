@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ArticlesController < ApplicationController
+  include ContentTranslation
+
   before_action :set_website
   before_action :set_article, only: %i[show edit update destroy]
 
@@ -12,7 +14,8 @@ class ArticlesController < ApplicationController
   end
 
   def new
-    @article = @website.articles.build
+    @article = @website.articles.build(locale: chosen_content_locale)
+    prefill_article_translation
   end
 
   def create
@@ -43,7 +46,7 @@ class ArticlesController < ApplicationController
   private
 
   def set_website
-    @website = current_user.websites.find(params[:website_id])
+    @website = accessible_websites.find(params[:website_id])
   end
 
   def set_article
@@ -51,6 +54,19 @@ class ArticlesController < ApplicationController
   end
 
   def article_params
-    params.require(:article).permit(:title, :slug, :description, :status, :published_at, :content)
+    params.require(:article).permit(:title, :slug, :description, :status, :published_at, :content, :locale)
+  end
+
+  def prefill_article_translation
+    source = translation_source(@website.articles)
+    return unless source
+
+    @article.assign_attributes(
+      title: source.title,
+      slug: source.slug,
+      description: source.description,
+      locale: chosen_content_locale
+    )
+    @article.content = source.content.body if source.content.body.present?
   end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewsController < ApplicationController
+  include ContentTranslation
+
   before_action :set_website
   before_action :set_review, only: %i[show edit update destroy]
 
@@ -12,7 +14,8 @@ class ReviewsController < ApplicationController
   end
 
   def new
-    @review = @website.reviews.build
+    @review = @website.reviews.build(locale: chosen_content_locale)
+    prefill_review_translation
   end
 
   def create
@@ -43,7 +46,7 @@ class ReviewsController < ApplicationController
   private
 
   def set_website
-    @website = current_user.websites.find(params[:website_id])
+    @website = accessible_websites.find(params[:website_id])
   end
 
   def set_review
@@ -51,6 +54,19 @@ class ReviewsController < ApplicationController
   end
 
   def review_params
-    params.require(:review).permit(:author, :content, :status, :published_at, :position)
+    params.require(:review).permit(:author, :content, :rating, :status, :published_at, :position, :locale)
+  end
+
+  def prefill_review_translation
+    source = translation_source(@website.reviews)
+    return unless source
+
+    @review.assign_attributes(
+      author: source.author,
+      content: source.content,
+      rating: source.rating,
+      position: source.position,
+      locale: chosen_content_locale
+    )
   end
 end
