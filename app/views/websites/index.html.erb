@@ -6,7 +6,9 @@
       <h1 class="text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl">Websites</h1>
       <p class="mt-1 text-sm text-zinc-500">Manage brochure sites and API access for each domain.</p>
     </div>
-    <%= link_to "New website", new_website_path, class: primary_button_classes %>
+    <% if current_user.can_create_website? %>
+      <%= link_to "New website", new_website_path, class: primary_button_classes %>
+    <% end %>
   </div>
 
   <% if @websites.empty? %>
@@ -30,7 +32,9 @@
           <div class="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
             <%= link_to "Open", website, class: secondary_button_classes %>
             <%= link_to "Edit", edit_website_path(website), class: secondary_button_classes %>
-            <%= button_to "Delete", website, method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: "Delete this website and all its content?" } }, class: danger_button_classes %>
+            <% if current_user.admin? %>
+              <%= button_to "Delete", website, method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: "Delete this website and all its content?" } }, class: danger_button_classes %>
+            <% end %>
           </div>
         </li>
       <% end %>

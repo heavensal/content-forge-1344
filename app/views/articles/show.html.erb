@@ -4,7 +4,7 @@
   <%= link_to "← Articles", website_articles_path(@website), class: "inline-flex min-h-11 items-center text-sm text-emerald-500/90 touch-manipulation hover:text-emerald-400" %>
 
   <header class="mt-6">
-    <p class="text-xs font-medium uppercase tracking-wider text-zinc-500"><%= @article.status %> · <span class="break-all sm:break-normal"><%= @article.slug %></span></p>
+    <p class="text-xs font-medium uppercase tracking-wider text-zinc-500"><%= content_locale_label(@article.locale) %> · <%= @article.status %> · <span class="break-all sm:break-normal"><%= @article.slug %></span></p>
     <h1 class="mt-2 break-words text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl"><%= @article.title %></h1>
     <% if @article.published_at.present? %>
       <p class="mt-2 text-sm text-zinc-500">Published <%= l @article.published_at, format: :long %></p>
@@ -29,6 +29,7 @@
 
   <div class="mt-8 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
     <%= link_to "Edit", edit_website_article_path(@website, @article), class: primary_button_classes %>
+    <%= link_to "Write #{content_locale_label(other_content_locale(@article.locale))} version", new_website_article_path(@website, from: @article.id, locale: other_content_locale(@article.locale)), class: secondary_button_classes %>
     <%= button_to "Delete", [@website, @article], method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: "Delete this article?" } }, class: danger_button_classes %>
   </div>
 </div>

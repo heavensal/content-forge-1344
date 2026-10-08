@@ -1,0 +1,30 @@
+<div class="<%= content_section_card_classes %> mt-6">
+  <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Client access</h2>
+  <p class="mt-2 text-sm text-zinc-500">A client account can have one website. Assigning this site uses that place, so they cannot create another.</p>
+
+  <% memberships = @website.website_memberships.includes(:user) %>
+  <% if memberships.any? %>
+    <ul class="mt-4 space-y-3">
+      <% memberships.each do |membership| %>
+        <li class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p class="min-w-0 truncate text-sm text-zinc-200"><%= membership.user.email %> · <%= membership.role %></p>
+          <%= button_to "Remove", website_membership_path(@website, membership), method: :delete, class: danger_button_classes, form: { class: "sm:w-auto", data: { turbo_confirm: "Remove this client's access to the website?" } } %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="mt-4 text-sm text-zinc-400">No client assigned yet.</p>
+  <% end %>
+
+  <%= form_with url: website_memberships_path(@website), class: "mt-6 space-y-4" do %>
+    <div>
+      <%= label_tag "membership_email", "Client email", class: label_classes %>
+      <%= email_field_tag :email, nil, required: true, class: input_classes, autocomplete: "off", id: "membership_email" %>
+    </div>
+    <div>
+      <%= label_tag "membership_role", "Access", class: label_classes %>
+      <%= select_tag :role, options_for_select(WebsiteMembership.roles.keys.map { |role| [ role.humanize, role ] }, "owner"), class: input_classes, id: "membership_role" %>
+    </div>
+    <%= submit_tag "Assign website", class: primary_button_classes %>
+  <% end %>
+</div>

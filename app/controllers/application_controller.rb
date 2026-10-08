@@ -11,7 +11,18 @@ class ApplicationController < ActionController::Base
   before_action :load_sidebar_websites, if: :use_app_shell?
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  helper_method :use_app_shell?
+  helper_method :use_app_shell?, :accessible_websites
+
+  def after_sign_in_path_for(user)
+    return super if user.admin?
+
+    site = user.websites.order(:name).first
+    site ? website_path(site) : new_website_path
+  end
+
+  def accessible_websites
+    current_user.admin? ? Website.all : current_user.websites
+  end
 
   private
 
@@ -39,7 +50,7 @@ class ApplicationController < ActionController::Base
   end
 
   def load_sidebar_websites
-    @sidebar_websites = current_user.websites.order(:name)
+    @sidebar_websites = accessible_websites.order(:name)
   end
 
   def configure_permitted_parameters

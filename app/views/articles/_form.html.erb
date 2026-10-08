@@ -1,6 +1,8 @@
 <%= render "shared/model_errors", model: article %>
 
 <%= form_with model: [@website, article], class: "space-y-6" do |f| %>
+  <%= render "shared/locale_field", form: f %>
+
   <div>
     <%= f.label :title, class: label_classes %>
     <%= f.text_field :title, class: input_classes, required: true %>

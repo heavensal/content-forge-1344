@@ -23,9 +23,16 @@
     <div class="px-3 pt-4">
       <p class="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Websites</p>
       <nav class="mt-2 space-y-0.5">
-        <%= link_to websites_path, class: nav_item_classes(controller_name == "websites" && %w[index new create].include?(action_name)), data: { action: "click->mobile-nav#close" } do %>
-          <svg class="h-4 w-4 shrink-0 opacity-70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-          <span>All websites</span>
+        <% if current_user.admin? %>
+          <%= link_to websites_path, class: nav_item_classes(controller_name == "websites" && action_name == "index"), data: { action: "click->mobile-nav#close" } do %>
+            <svg class="h-4 w-4 shrink-0 opacity-70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+            <span>All websites</span>
+          <% end %>
+        <% elsif current_user.can_create_website? %>
+          <%= link_to new_website_path, class: nav_item_classes(controller_name == "websites" && %w[new create].include?(action_name)), data: { action: "click->mobile-nav#close" } do %>
+            <svg class="h-4 w-4 shrink-0 opacity-70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+            <span>New website</span>
+          <% end %>
         <% end %>
         <% @sidebar_websites.each do |w| %>
           <%= link_to w, class: nav_item_classes(website_nav_active?(w)), data: { action: "click->mobile-nav#close" } do %>

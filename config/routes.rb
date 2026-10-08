@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :articles, only: [ :index ]
+      resources :articles, only: [ :index, :show ], param: :slug
       resources :faqs, only: [ :index ]
       resources :reviews, only: [ :index ]
       post "send_form", to: "send_form#create", as: :send_form
@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   end
 
   resources :websites do
+    resources :memberships, only: %i[create destroy], controller: "website_memberships"
     resource :contact_form_integration, only: [ :show ], controller: "contact_form_integrations"
     resources :articles
     resources :faqs

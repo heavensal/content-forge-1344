@@ -2,6 +2,9 @@
 
 class Article < ApplicationRecord
   belongs_to :website
+  include ContentLocale
+  include RebuildsWebsite
+  rebuilds_website_as "articles"
   has_rich_text :content
 
   enum :status, { draft: "draft", published: "published", archived: "archived" }, validate: true
@@ -9,7 +12,7 @@ class Article < ApplicationRecord
   normalizes :slug, with: ->(s) { s.to_s.parameterize.presence }
 
   validates :title, presence: true
-  validates :slug, presence: true, uniqueness: { scope: :website_id }
+  validates :slug, presence: true, uniqueness: { scope: %i[website_id locale] }
   validate :published_at_present_when_published
 
   before_validation :assign_slug, on: :create
@@ -35,7 +38,7 @@ class Article < ApplicationRecord
 
     candidate = base
     suffix = 2
-    while Article.where(website_id: website_id).exists?(slug: candidate)
+    while Article.where(website_id: website_id, locale: locale).exists?(slug: candidate)
       candidate = "#{base}-#{suffix}"
       suffix += 1
     end
