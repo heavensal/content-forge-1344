@@ -19,6 +19,17 @@ class AddWebsiteMemberships < ActiveRecord::Migration[8.1]
       # so those sites stay unassigned and can be given to a client later.
       execute "UPDATE users SET role = 'admin'"
     else
+      # A user can hold only one membership. Someone who already owns several sites
+      # would lose all of them when user_id is removed, and with no admin those sites
+      # could not be opened or reassigned. Admin access keeps them reachable.
+      execute <<~SQL.squish
+        UPDATE users
+        SET role = 'admin'
+        WHERE id IN (
+          SELECT user_id FROM websites GROUP BY user_id HAVING COUNT(*) > 1
+        )
+      SQL
+
       execute <<~SQL.squish
         INSERT INTO website_memberships (user_id, website_id, role, created_at, updated_at)
         SELECT websites.user_id, websites.id, 'owner', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
