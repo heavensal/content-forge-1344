@@ -15,7 +15,7 @@ class Review < ApplicationRecord
   validate :published_at_present_when_published
 
   scope :for_public_api, lambda {
-    published.where(published_at: ..Time.current)
+    published.where(published_at: ..Time.current, rating: 1..5)
   }
 
   scope :ordered, -> { order(:position, :id) }
