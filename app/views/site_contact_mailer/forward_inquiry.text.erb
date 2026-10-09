@@ -1,6 +1,11 @@
 New message for <%= @website.name %> (<%= @website.domain %>)
 
 <% w = 20 %>
+<% if @fields.any? %>
+<% @fields.each do |key, value| %>
+<%= key.to_s.ljust(w) %> | <%= value %>
+<% end %>
+<% else %>
 <% if @from_name.present? %>
 <%= "Name".ljust(w) %> | <%= @from_name %>
 <% end %>
@@ -11,8 +16,6 @@ New message for <%= @website.name %> (<%= @website.domain %>)
 <%= "Subject".ljust(w) %> | <%= @inquiry_subject %>
 <% end %>
 <%= "Message".ljust(w) %> | <%= @message.presence || "—" %>
-<% @fields.each do |key, value| %>
-<%= key.to_s.ljust(w) %> | <%= value %>
 <% end %>
 
 — Sent via ContentForge contact API

@@ -10,7 +10,12 @@ module Api
           }, status: :unprocessable_entity
         end
 
-        payload = normalized_payload
+        begin
+          payload = normalized_payload
+        rescue ContactForm::Photos::Rejected => e
+          return render json: { error: e.message }, status: :unprocessable_entity
+        end
+
         unless main_content_present?(payload)
           return render json: {
             error: "Provide at least one of: message, body, or non-empty fields."
@@ -27,7 +32,8 @@ module Api
           from_name: payload[:from_name],
           subject: payload[:subject],
           message: payload[:message],
-          fields: payload[:fields]
+          fields: payload[:fields],
+          photos: payload[:photos]
         )
         begin
           mail.deliver_now
@@ -42,7 +48,7 @@ module Api
       private
 
       def normalized_payload
-        p = params.permit(:from_email, :from_name, :subject, :message, :body, fields: {})
+        p = params.permit(:from_email, :from_name, :subject, :message, :body, fields: {}, attachments: [ :filename, :content_type, :data ])
         msg = p[:message].presence || p[:body].presence
         fields = extract_fields_hash(p[:fields])
 
@@ -51,7 +57,8 @@ module Api
           from_name: p[:from_name].to_s.strip.presence,
           subject: p[:subject].to_s.strip.presence,
           message: msg.to_s.strip.presence,
-          fields: fields.transform_values { |v| v.is_a?(Array) ? v.join(", ") : v }
+          fields: fields.transform_values { |v| v.is_a?(Array) ? v.join(", ") : v },
+          photos: ContactForm::Photos.prepare(p[:attachments])
         }
       end
 

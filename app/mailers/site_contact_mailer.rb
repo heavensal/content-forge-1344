@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 class SiteContactMailer < ApplicationMailer
-  def forward_inquiry(website:, from_email: nil, from_name: nil, subject: nil, message: nil, fields: {})
+  def forward_inquiry(website:, from_email: nil, from_name: nil, subject: nil, message: nil, fields: {}, photos: [])
     @website = website
     @from_name = from_name
     @from_email = from_email
     @inquiry_subject = subject.presence
     @message = message.to_s
     @fields = fields.is_a?(Hash) ? fields.stringify_keys : {}
+
+    Array(photos).each do |photo|
+      attachments[photo.fetch(:filename)] = {
+        mime_type: photo.fetch(:content_type),
+        content: photo.fetch(:data)
+      }
+    end
 
     safe_subject = subject.presence || "Message from #{website.domain}"
     mail(

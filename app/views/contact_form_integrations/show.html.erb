@@ -8,10 +8,12 @@
     },
     body: JSON.stringify({
       from_email: "client@example.com",
-      from_name: "Jean Client",
       subject: "Contact site",
-      message: "Message principal",
-      fields: { phone: "0612345678" }
+      fields: {
+        nom: "Jean Client",
+        message: "Message principal",
+        phone: "0612345678"
+      }
     })
   });
 CFETCH
@@ -76,15 +78,15 @@ CFORM
 
   <div class="<%= content_section_card_classes %> mt-6">
     <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Payload</h2>
-    <p class="mt-2 text-sm text-zinc-500">All keys are optional except you must send a <strong class="text-zinc-300">message</strong> or <strong class="text-zinc-300">body</strong>, or at least one value inside <strong class="text-zinc-300">fields</strong>.</p>
+    <p class="mt-2 text-sm text-zinc-500">All keys are optional except you must send a <strong class="text-zinc-300">message</strong> or <strong class="text-zinc-300">body</strong>, or at least one value inside <strong class="text-zinc-300">fields</strong>. When <strong class="text-zinc-300">fields</strong> is present, that map is the email body, in the order sent. <strong class="text-zinc-300">from_email</strong> is only the reply-to address, and <strong class="text-zinc-300">subject</strong> is only the subject. <strong class="text-zinc-300">message</strong> is the body when <strong class="text-zinc-300">fields</strong> is omitted. Optional <strong class="text-zinc-300">attachments</strong> is up to 3 already reduced JPEGs (<code class="font-mono text-zinc-500">data</code> as base64, 1.2 MB each). They are added to the email as files.</p>
     <pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs leading-relaxed text-zinc-300 sm:text-sm" translate="no">{
   "from_email": "visitor@example.com",
-  "from_name": "Marie Dupont",
   "subject": "Demande depuis arm-services.fr",
-  "message": "Bonjour, je souhaite un devis…",
   "fields": {
-    "phone": "06 12 34 56 78",
-    "service": "Déménagement"
+    "nom": "Dupont",
+    "email": "visitor@example.com",
+    "téléphone": "06 12 34 56 78",
+    "message": "Bonjour, je souhaite un devis…"
   }
 }</pre>
   </div>
