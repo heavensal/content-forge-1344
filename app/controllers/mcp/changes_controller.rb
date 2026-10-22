@@ -4,7 +4,9 @@ module Mcp
 
     def show
       @preview = if @change.operation == "create"
-        Content.scope(@website, @change.content_type).build(@change.payload)
+        Content.scope(@website, @change.content_type).build(@change.payload).tap do |record|
+          record.valid? unless @change.applied_at?
+        end
       else
         Content.scope(@website, @change.content_type).find(@change.record_id).tap do |record|
           record.assign_attributes(@change.payload) if @change.operation == "update"

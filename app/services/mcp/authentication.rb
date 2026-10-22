@@ -5,6 +5,7 @@ module Mcp
     class Unauthorized < StandardError; end
     class Unavailable < StandardError; end
     Context = Data.define(:user, :scopes)
+    CLOCK_SKEW = IdentityProvider::CLOCK_SKEW
 
     def self.call(header)
       token = header.to_s.match(/\ABearer ([A-Za-z0-9\-._~+\/=]+)\z/i)&.captures&.first
@@ -14,7 +15,7 @@ module Mcp
       valid = claims.is_a?(Hash) && claims["active"] == true &&
         claims["iss"] == Settings.issuer && Array(claims["aud"]).include?(Settings.resource) &&
         claims["exp"].is_a?(Numeric) && claims["exp"] > now &&
-        (!claims.key?("nbf") || (claims["nbf"].is_a?(Numeric) && claims["nbf"] <= now)) &&
+        (!claims.key?("nbf") || (claims["nbf"].is_a?(Numeric) && claims["nbf"] <= now + CLOCK_SKEW)) &&
         claims["sub"].is_a?(String) && claims["sub"].present? && claims["scope"].is_a?(String)
       raise Unauthorized unless valid
       identity = McpIdentity.find_by(issuer: Settings.issuer, subject: claims["sub"], revoked_at: nil)

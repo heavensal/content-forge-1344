@@ -97,7 +97,7 @@ module Mcp
         existing = McpChange.find_by(user: @user, request_key: args.fetch("request_key"))
         if existing
           same = existing.website_id == site.id && existing.content_type == type && existing.operation == operation &&
-            (operation == "create" || existing.record_id == requested_id) && existing.payload == payload
+            (operation == "create" || existing.record_id == requested_id) && same_request?(existing.payload, payload)
           raise ArgumentError, "request_key already used for different input" unless same
           return change_json(existing)
         end
@@ -108,11 +108,26 @@ module Mcp
         record.assign_attributes(payload) if %w[create update].include?(operation)
         record.assign_attributes(status: "published", published_at: Time.current) if operation == "publish"
         raise ActiveRecord::RecordInvalid, record unless operation == "delete" || record.valid?
+        payload = with_create_defaults(type, payload, record) if operation == "create"
         change = McpChange.create!(user: @user, website: site, request_key: args.fetch("request_key"),
           content_type: type, operation: operation, record_id: requested_id, payload: payload,
           base_digest: base_digest, expires_at: 30.minutes.from_now)
         change_json(change)
       end
+    end
+
+    def same_request?(stored, incoming)
+      extras = stored.keys - incoming.keys
+      extras.all? { |key| %w[locale slug].include?(key) } && stored.except(*extras) == incoming
+    end
+
+    def with_create_defaults(type, payload, record)
+      defaults = {}
+      defaults["locale"] = record.locale if !payload.key?("locale") && record.locale.present?
+      if Content::FIELDS.fetch(type).include?("slug") && !payload.key?("slug") && record.slug.present?
+        defaults["slug"] = record.slug
+      end
+      defaults.empty? ? payload : payload.merge(defaults)
     end
 
     def change_json(change)

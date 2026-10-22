@@ -54,8 +54,8 @@ module Mcp
 
       def discovery
         Rails.cache.fetch("mcp/oidc-discovery/#{issuer}", expires_in: DISCOVERY_TTL) do
-          url = "#{issuer.sub(%r{/+\z}, '')}/.well-known/openid-configuration"
-          metadata = JSON.parse(http_request(safe_https_uri(url), Net::HTTP::Get.new(url), limit: 65_536))
+          uri = safe_https_uri("#{issuer.sub(%r{/+\z}, '')}/.well-known/openid-configuration")
+          metadata = JSON.parse(http_request(uri, Net::HTTP::Get.new(uri), limit: 65_536))
           raise Failure unless metadata["issuer"] == issuer
           %w[authorization_endpoint token_endpoint jwks_uri].each { |field| safe_https_uri(metadata.fetch(field)) }
           metadata
@@ -77,7 +77,8 @@ module Mcp
         end
         key = jwks.fetch("keys").find do |candidate|
           candidate["kid"] == header["kid"] && candidate["kty"] == "RSA" &&
-            candidate["use"] == "sig" && candidate["alg"] == "RS256"
+            (candidate["use"].nil? || candidate["use"] == "sig") &&
+            (candidate["alg"].nil? || candidate["alg"] == "RS256")
         end
         raise Failure unless key
 
@@ -92,7 +93,7 @@ module Mcp
         valid = valid_signature && claims["iss"] == issuer && valid_audience && valid_azp &&
           claims["sub"].is_a?(String) && claims["sub"].present? && claims["sub"].bytesize <= 255 &&
           claims["exp"].is_a?(Numeric) && claims["exp"] > now &&
-          (!claims.key?("nbf") || (claims["nbf"].is_a?(Numeric) && claims["nbf"] <= now)) &&
+          (!claims.key?("nbf") || (claims["nbf"].is_a?(Numeric) && claims["nbf"] <= now + CLOCK_SKEW)) &&
           claims["iat"].is_a?(Numeric) && claims["iat"] <= now + CLOCK_SKEW &&
           secure_compare(claims["nonce"].to_s, nonce)
         raise Failure, "Identity token verification failed" unless valid
