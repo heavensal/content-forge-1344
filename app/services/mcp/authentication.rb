@@ -17,7 +17,7 @@ module Mcp
         (!claims.key?("nbf") || (claims["nbf"].is_a?(Numeric) && claims["nbf"] <= now)) &&
         claims["sub"].is_a?(String) && claims["sub"].present? && claims["scope"].is_a?(String)
       raise Unauthorized unless valid
-      identity = McpIdentity.find_by(issuer: Settings.issuer, subject: claims["sub"])
+      identity = McpIdentity.find_by(issuer: Settings.issuer, subject: claims["sub"], revoked_at: nil)
       raise Unauthorized unless identity
       Context.new(user: identity.user, scopes: claims["scope"].split.freeze)
     end

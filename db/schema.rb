@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_010000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -109,7 +109,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_000000) do
     t.string "subject", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "revoked_at"
     t.index ["issuer", "subject"], name: "index_mcp_identities_on_issuer_and_subject", unique: true
+    t.index ["revoked_at"], name: "index_mcp_identities_on_revoked_at"
     t.index ["user_id"], name: "index_mcp_identities_on_user_id"
   end
 

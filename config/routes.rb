@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   namespace :mcp do
     resources :changes, only: %i[show update]
   end
+  get "/settings/integrations/mcp", to: "mcp/identities#index", as: :settings_mcp_identities
+  post "/settings/integrations/mcp/identity", to: "mcp/identities#create", as: :new_mcp_identity
+  get "/settings/integrations/mcp/callback", to: "mcp/identities#callback", as: :mcp_identity_callback
+  delete "/settings/integrations/mcp/identity/:id", to: "mcp/identities#destroy", as: :mcp_identity
 
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
