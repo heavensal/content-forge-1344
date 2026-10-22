@@ -1,0 +1,26 @@
+<section class="mx-auto max-w-3xl p-6">
+  <h1 class="text-2xl font-bold">Review contentForge change</h1>
+  <p>Website: <strong><%= @website.name %></strong> (<%= @website.domain %>)</p>
+  <p>Action: <strong><%= @change.operation %></strong> — <%= @change.content_type %></p>
+  <% if @change.operation == "publish" || @preview.published? %>
+    <p>This action changes publicly available content and requests a website rebuild.</p>
+  <% end %>
+  <% if @change.operation == "delete" %>
+    <p>This permanently deletes the content shown below.</p>
+  <% end %>
+  <p>Review all values before approving. Article HTML is shown as text for inspection.</p>
+  <dl class="my-4 space-y-3">
+    <% Mcp::Content.serialize(@preview, @change.content_type).each do |field, value| %>
+      <dt class="font-semibold"><%= field %></dt>
+      <dd class="whitespace-pre-wrap break-words"><%= value %></dd>
+    <% end %>
+  </dl>
+  <% if @change.applied_at? %>
+    <p>This change has already been applied.</p>
+  <% elsif @change.expires_at <= Time.current %>
+    <p>This proposal expired. Ask ChatGPT to prepare a new one.</p>
+  <% else %>
+    <%= button_to "Approve this exact change", mcp_change_path(@change), method: :patch, class: "rounded bg-blue-700 px-4 py-2 text-white" %>
+    <p>To decline, close this page. Nothing is applied without approval.</p>
+  <% end %>
+</section>

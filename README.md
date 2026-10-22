@@ -43,3 +43,8 @@ ARM Services is the reference client. Its variables are `CONTENTFORGE_FAQ_ENABLE
 ## Local app
 
 Ruby and Node versions are in `.ruby-version` / the Gemfile. Database URL comes from `DATABASE_URL` (see `config/database.yml`). Deploy with Kamal (`kamal init`).
+
+## MCP / ChatGPT
+
+Intégration optionnelle, désactivée par défaut : [configuration et workflow](docs/MCP.md).
+Voir aussi [l'audit Rails et publication](docs/MCP_AUDIT.md).

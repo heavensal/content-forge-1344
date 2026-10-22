@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_07_203000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -83,6 +83,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_07_203000) do
     t.index ["website_id", "position"], name: "index_faqs_on_website_id_and_position"
     t.index ["website_id", "status"], name: "index_faqs_on_website_id_and_status"
     t.index ["website_id"], name: "index_faqs_on_website_id"
+  end
+
+  create_table "mcp_changes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "website_id", null: false
+    t.string "request_key", null: false
+    t.string "content_type", null: false
+    t.string "operation", null: false
+    t.bigint "record_id"
+    t.jsonb "payload", default: {}, null: false
+    t.string "base_digest"
+    t.datetime "expires_at", null: false
+    t.datetime "applied_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "request_key"], name: "index_mcp_changes_on_user_id_and_request_key", unique: true
+    t.index ["user_id"], name: "index_mcp_changes_on_user_id"
+    t.index ["website_id"], name: "index_mcp_changes_on_website_id"
+  end
+
+  create_table "mcp_identities", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "issuer", null: false
+    t.string "subject", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["issuer", "subject"], name: "index_mcp_identities_on_issuer_and_subject", unique: true
+    t.index ["user_id"], name: "index_mcp_identities_on_user_id"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -273,6 +301,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_07_203000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "websites"
   add_foreign_key "faqs", "websites"
+  add_foreign_key "mcp_changes", "users"
+  add_foreign_key "mcp_changes", "websites"
+  add_foreign_key "mcp_identities", "users"
   add_foreign_key "reviews", "websites"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

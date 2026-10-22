@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Website < ApplicationRecord
+  has_many :mcp_changes, dependent: :destroy
   has_many :website_memberships, dependent: :destroy
   has_many :users, through: :website_memberships
   has_many :articles, dependent: :destroy

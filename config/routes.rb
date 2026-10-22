@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+  get "/.well-known/oauth-protected-resource", to: "mcp/metadata#show"
+  get "/.well-known/oauth-protected-resource/mcp", to: "mcp/metadata#show"
+  get "/mcp", to: "mcp/server#show"
+  post "/mcp", to: "mcp/server#create"
+  namespace :mcp do
+    resources :changes, only: %i[show update]
+  end
+
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

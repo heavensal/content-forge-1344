@@ -6,6 +6,9 @@ class User < ApplicationRecord
 
   enum :role, { member: "user", admin: "admin" }, default: :member, validate: true
 
+  has_many :mcp_identities, dependent: :destroy
+  has_many :mcp_changes, dependent: :destroy
+
   has_many :website_memberships, dependent: :destroy
   has_many :websites, through: :website_memberships
 
