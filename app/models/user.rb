@@ -6,6 +6,9 @@ class User < ApplicationRecord
 
   enum :role, { member: "user", admin: "admin" }, default: :member, validate: true
 
+  has_many :mcp_changes, dependent: :destroy
+  has_many :oauth_access_tokens, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id, dependent: :delete_all
+
   has_many :website_memberships, dependent: :destroy
   has_many :websites, through: :website_memberships
 

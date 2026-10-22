@@ -1,0 +1,22 @@
+<div class="mx-auto max-w-3xl px-6 py-10">
+  <h1 class="text-2xl font-semibold text-zinc-100">ChatGPT access</h1>
+  <p class="mt-2 text-sm text-zinc-400">Add the contentForge MCP server in ChatGPT. During setup, contentForge will ask you to sign in and approve the requested access. Your existing contentForge account is used; no external identity provider is needed.</p>
+  <p class="mt-3 text-sm text-zinc-400">Server URL: <code><%= ENV.fetch("MCP_RESOURCE_URL", "https://contentforge.1344.fr/mcp") %></code></p>
+
+  <h2 class="mt-8 text-lg font-medium text-zinc-100">Authorized connections</h2>
+  <% if @tokens.empty? %>
+    <p class="mt-2 text-sm text-zinc-400">No ChatGPT connection is currently authorized.</p>
+  <% else %>
+    <ul class="mt-3 divide-y divide-zinc-800">
+      <% @tokens.each do |token| %>
+        <li class="flex items-center justify-between gap-4 py-4">
+          <div>
+            <p class="text-sm font-medium text-zinc-100"><%= token.application&.name || "ChatGPT MCP client" %></p>
+            <p class="mt-1 text-xs text-zinc-400">Authorized <%= l(token.created_at, format: :long) %> · <%= token.scopes.to_a.join(", ") %></p>
+          </div>
+          <%= button_to "Revoke", mcp_authorization_path(token), method: :delete, form: { data: { turbo_confirm: "Revoke this ChatGPT connection?" } }, class: danger_button_classes %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
