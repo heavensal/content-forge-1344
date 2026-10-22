@@ -75,3 +75,5 @@ gem "devise"
 gem "cloudinary"
 
 gem "rack-cors", "~> 3.0"
+
+gem "doorkeeper", "~> 5.9"

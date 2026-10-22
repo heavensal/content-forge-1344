@@ -14,7 +14,7 @@ module Mcp
     end
 
     def self.issuer
-      https_url("MCP_OAUTH_ISSUER")
+      base_url
     end
 
     def self.base_url

@@ -6,46 +6,36 @@ class Mcp::AuthenticationTest < ActiveSupport::TestCase
 
   setup do
     ENV["MCP_RESOURCE_URL"] = "https://contentforge.example/mcp"
-    ENV["MCP_OAUTH_ISSUER"] = "https://identity.example"
     @user = User.create!(name: "OAuth user", email: "oauth@example.com", password: "password123")
-    @identity = McpIdentity.create!(user: @user, issuer: ENV["MCP_OAUTH_ISSUER"], subject: "stable-subject")
-    @claims = { "active" => true, "iss" => ENV["MCP_OAUTH_ISSUER"], "aud" => ENV["MCP_RESOURCE_URL"], "sub" => "stable-subject", "exp" => 10.minutes.from_now.to_i, "scope" => "content:read" }
+    @application = Doorkeeper::Application.create!(name: "ChatGPT", redirect_uri: "https://chatgpt.com/connector/oauth/test", confidential: false)
+    @token = Doorkeeper::AccessToken.create_for(application: @application, resource_owner: @user, scopes: "content:read", expires_in: 1.hour.to_i)
+    @raw_token = @token.plaintext_token
   end
 
   teardown do
     ENV.delete("MCP_RESOURCE_URL")
-    ENV.delete("MCP_OAUTH_ISSUER")
   end
 
-  test "valid introspection resolves the explicitly linked user" do
-    with_method_result(Mcp::Authentication, :introspect, @claims) do
-      context = Mcp::Authentication.call("Bearer opaque-token")
-      assert_equal @user, context.user
-      assert_equal %w[content:read], context.scopes
-    end
+  test "valid contentForge OAuth token resolves its resource owner and scopes" do
+    assert_equal @token, Doorkeeper::AccessToken.by_token(@raw_token)
+    assert @token.accessible?
+    context = Mcp::Authentication.call("Bearer #{@raw_token}")
+    assert_equal @user, context.user
+    assert_equal %w[content:read], context.scopes
   end
 
-  test "inactive expired wrong audience wrong issuer missing subject and future tokens fail closed" do
-    [ { "active" => false }, { "active" => "true" }, { "exp" => Time.current.to_i }, { "exp" => nil },
-      { "aud" => "https://another-resource.example" }, { "iss" => "https://other-issuer.example" },
-      { "sub" => nil }, { "nbf" => 10.minutes.from_now.to_i }, { "scope" => nil } ].each do |override|
-      with_method_result(Mcp::Authentication, :introspect, @claims.merge(override)) do
-        assert_raises(Mcp::Authentication::Unauthorized) { Mcp::Authentication.call("Bearer token") }
-      end
-    end
+  test "revoked and expired tokens fail closed" do
+    @token.revoke
+    assert_raises(Mcp::Authentication::Unauthorized) { Mcp::Authentication.call("Bearer #{@raw_token}") }
+    @token.update!(revoked_at: nil, expires_in: 0, created_at: 2.hours.ago)
+    assert_raises(Mcp::Authentication::Unauthorized) { Mcp::Authentication.call("Bearer #{@raw_token}") }
   end
 
-  test "email alone cannot link an identity and deleted links stop working" do
-    with_method_result(Mcp::Authentication, :introspect, @claims.merge("sub" => "attacker", "email" => @user.email)) do
-      assert_raises(Mcp::Authentication::Unauthorized) { Mcp::Authentication.call("Bearer token") }
-    end
-    @identity.destroy!
-    with_method_result(Mcp::Authentication, :introspect, @claims) do
-      assert_raises(Mcp::Authentication::Unauthorized) { Mcp::Authentication.call("Bearer token") }
-    end
+  test "another user's token cannot be substituted" do
+    assert_raises(Mcp::Authentication::Unauthorized) { Mcp::Authentication.call("Bearer #{SecureRandom.hex(32)}") }
   end
 
-  test "missing or malformed bearer tokens are rejected without introspection" do
+  test "missing or malformed bearer tokens are rejected" do
     [ nil, "token", "Basic token", "Bearer token extra", "Bearer #{'a' * 8193}" ].each do |header|
       assert_raises(Mcp::Authentication::Unauthorized) { Mcp::Authentication.call(header) }
     end

@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  use_doorkeeper do |oauth|
+    oauth.controllers authorizations: "mcp/oauth_authorizations", tokens: "mcp/oauth_tokens"
+    oauth.skip_controllers :applications, :authorized_applications, :token_info
+  end
   get "/.well-known/oauth-protected-resource", to: "mcp/metadata#show"
   get "/.well-known/oauth-protected-resource/mcp", to: "mcp/metadata#show"
   get "/mcp", to: "mcp/server#show"
@@ -6,10 +10,10 @@ Rails.application.routes.draw do
   namespace :mcp do
     resources :changes, only: %i[show update]
   end
-  get "/settings/integrations/mcp", to: "mcp/identities#index", as: :settings_mcp_identities
-  post "/settings/integrations/mcp/identity", to: "mcp/identities#create", as: :new_mcp_identity
-  get "/settings/integrations/mcp/callback", to: "mcp/identities#callback", as: :mcp_identity_callback
-  delete "/settings/integrations/mcp/identity/:id", to: "mcp/identities#destroy", as: :mcp_identity
+  get "/.well-known/oauth-authorization-server", to: "mcp/oauth_metadata#show"
+  post "/oauth/register", to: "mcp/oauth_clients#create"
+  get "/settings/integrations/mcp", to: "mcp/authorizations#index", as: :settings_mcp_authorizations
+  delete "/settings/integrations/mcp/:id", to: "mcp/authorizations#destroy", as: :mcp_authorization
 
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

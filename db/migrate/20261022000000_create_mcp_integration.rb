@@ -1,13 +1,5 @@
 class CreateMcpIntegration < ActiveRecord::Migration[8.1]
   def change
-    create_table :mcp_identities do |t|
-      t.references :user, null: false, foreign_key: true
-      t.string :issuer, null: false
-      t.string :subject, null: false
-      t.timestamps
-    end
-    add_index :mcp_identities, [ :issuer, :subject ], unique: true
-
     create_table :mcp_changes do |t|
       t.references :user, null: false, foreign_key: true
       t.references :website, null: false, foreign_key: true

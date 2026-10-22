@@ -54,8 +54,8 @@
 
   <div class="<%= content_section_card_classes %> mt-8">
     <h2 class="text-sm font-semibold text-zinc-100">ChatGPT access</h2>
-    <p class="mt-2 text-sm text-zinc-400">Connect the identity provider you use for ChatGPT. Your contentForge sign-in stays the same. You will also authorize contentForge when you connect its MCP server in ChatGPT.</p>
-    <%= link_to "Manage ChatGPT connection", settings_mcp_identities_path, class: "#{primary_button_classes} mt-4 inline-flex" %>
+    <p class="mt-2 text-sm text-zinc-400">Connect the contentForge MCP server in ChatGPT. ChatGPT will send you here to sign in with your existing contentForge account and approve access. You can review or revoke access here.</p>
+    <%= link_to "Manage ChatGPT access", settings_mcp_authorizations_path, class: "#{primary_button_classes} mt-4 inline-flex" %>
   </div>
 
   <div class="<%= content_section_card_classes %> mt-8 border-red-900/30">

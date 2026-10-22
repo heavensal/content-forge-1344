@@ -8,7 +8,6 @@ class Mcp::ServerControllerTest < ActionDispatch::IntegrationTest
     Mcp::ServerController::RATE_LIMIT_STORE.clear
     ENV["MCP_ENABLED"] = "true"
     ENV["MCP_RESOURCE_URL"] = "https://contentforge.example/mcp"
-    ENV["MCP_OAUTH_ISSUER"] = "https://identity.example"
     @user = User.create!(name: "Protocol", email: "protocol@example.com", password: "password123")
     @site = Website.create!(name: "Protocol", domain: "protocol.example")
     WebsiteMembership.create!(user: @user, website: @site)
@@ -17,7 +16,7 @@ class Mcp::ServerControllerTest < ActionDispatch::IntegrationTest
   end
 
   teardown do
-    %w[MCP_ENABLED MCP_RESOURCE_URL MCP_OAUTH_ISSUER].each { |name| ENV.delete(name) }
+    %w[MCP_ENABLED MCP_RESOURCE_URL].each { |name| ENV.delete(name) }
   end
 
   test "metadata and unauthenticated challenge support OAuth discovery" do

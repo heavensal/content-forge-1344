@@ -14,6 +14,8 @@ class ApplicationController < ActionController::Base
   helper_method :use_app_shell?, :accessible_websites
 
   def after_sign_in_path_for(user)
+    location = stored_location_for(user)
+    return location if location.present?
     return super if user.admin?
 
     site = user.websites.order(:name).first
