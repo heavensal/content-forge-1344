@@ -27,7 +27,7 @@ module Mcp
         token_endpoint_auth_method: "none",
         grant_types: [ "authorization_code", "refresh_token" ],
         response_types: [ "code" ],
-        scope: application.scopes
+        scope: application.scopes.to_s
       }, status: :created
     rescue JSON::ParserError, ActiveRecord::RecordInvalid
       render_error("invalid_client_metadata")
