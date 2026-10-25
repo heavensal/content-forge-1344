@@ -28,6 +28,18 @@ env:
     - SMTP_PORT
     - SMTP_USER_NAME
     - SMTP_PASSWORD
+    # Kamal injects only names listed here. Include these when .kamal/secrets
+    # defines them so a configured value reaches the container, and omit them
+    # when absent so deploy still succeeds.
+    <%-
+      require "dotenv"
+      optional_secrets = File.file?(".kamal/secrets") ? Dotenv.parse(".kamal/secrets") : {}
+    -%>
+    <%- %w[MAILER_FROM CORS_ALLOWED_ORIGINS].each do |key| -%>
+    <%- if optional_secrets[key].to_s.strip != "" -%>
+    - <%= key %>
+    <%- end -%>
+    <%- end -%>
 
 ssh:
   user: ubuntu
