@@ -44,7 +44,7 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
     assert_equal "none", response.parsed_body["token_endpoint_auth_method"]
     assert_equal payload[:redirect_uris], response.parsed_body["redirect_uris"]
     application = Doorkeeper::Application.find_by!(uid: response.parsed_body["client_id"])
-    assert_equal %w[content:read content:write offline_access], application.scopes.split
+    assert_equal %w[content:read content:write offline_access], application.scopes.all
 
     post "/oauth/register", params: payload.merge(redirect_uris: [ "https://attacker.example/callback" ]).to_json, headers: { "CONTENT_TYPE" => "application/json" }
     assert_response :bad_request
