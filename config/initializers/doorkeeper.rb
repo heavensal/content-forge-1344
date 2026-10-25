@@ -11,7 +11,7 @@ Doorkeeper.configure do
   grant_flows %w[authorization_code]
   force_pkce
   default_scopes :"content:read"
-  optional_scopes :"content:write", :"content:publish"
+  optional_scopes :"content:write", :"content:publish", :offline_access
   access_token_expires_in 1.hour
   use_refresh_token
   reuse_access_token

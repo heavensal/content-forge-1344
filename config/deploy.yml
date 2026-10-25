@@ -21,6 +21,9 @@ builder:
   arch: amd64
 
 env:
+  clear:
+    MCP_ENABLED: "true"
+    MCP_RESOURCE_URL: https://contentforge.1344.fr/mcp
   secret:
     - RAILS_MASTER_KEY
     - DATABASE_URL

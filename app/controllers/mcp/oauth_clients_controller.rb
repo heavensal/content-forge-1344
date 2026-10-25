@@ -16,7 +16,7 @@ module Mcp
       application = Doorkeeper::Application.create!(
         name: body.fetch("client_name", "ChatGPT MCP client").to_s.first(120),
         redirect_uri: body.fetch("redirect_uris").join("\n"),
-        scopes: body.fetch("scope", Settings::SCOPES.join(" ")),
+        scopes: client_scopes(body).join(" "),
         confidential: false
       )
       render json: {
@@ -43,7 +43,11 @@ module Mcp
       return false unless body["redirect_uris"].all? { |redirect_uri| redirect_uri.is_a?(String) && valid_redirect_uri?(redirect_uri) }
 
       scopes = body.fetch("scope", Settings::SCOPES.join(" ")).to_s.split
-      scopes.present? && (scopes - Settings::SCOPES).empty?
+      scopes.present? && (scopes - Settings::OAUTH_SCOPES).empty?
+    end
+
+    def client_scopes(body)
+      (body.fetch("scope", Settings::SCOPES.join(" ")).to_s.split + [ "offline_access" ]).uniq
     end
 
     def valid_redirect_uri?(value)

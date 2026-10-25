@@ -1,6 +1,7 @@
 module Mcp
   module Settings
     SCOPES = %w[content:read content:write content:publish].freeze
+    OAUTH_SCOPES = (SCOPES + %w[offline_access]).freeze
 
     def self.https_url(name)
       value = ENV.fetch(name)
