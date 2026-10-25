@@ -21,6 +21,13 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
     assert_equal "https://contentforge.example/oauth/authorize", response.parsed_body["authorization_endpoint"]
     assert_equal "S256", response.parsed_body["code_challenge_methods_supported"].first
     assert_equal "https://contentforge.example/oauth/register", response.parsed_body["registration_endpoint"]
+    assert_includes response.parsed_body["scopes_supported"], "offline_access"
+  end
+
+  test "protected resource metadata advertises refresh token access scope" do
+    get "/.well-known/oauth-protected-resource/mcp"
+    assert_response :success
+    assert_includes response.parsed_body["scopes_supported"], "offline_access"
   end
 
   test "dynamic registration accepts ChatGPT public client and rejects arbitrary redirect hosts" do
@@ -36,7 +43,8 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
     assert_response :created
     assert_equal "none", response.parsed_body["token_endpoint_auth_method"]
     assert_equal payload[:redirect_uris], response.parsed_body["redirect_uris"]
-    assert_equal payload[:scope], Doorkeeper::Application.find_by!(uid: response.parsed_body["client_id"]).scopes.to_s
+    application = Doorkeeper::Application.find_by!(uid: response.parsed_body["client_id"])
+    assert_equal %w[content:read content:write offline_access], application.scopes.all
 
     post "/oauth/register", params: payload.merge(redirect_uris: [ "https://attacker.example/callback" ]).to_json, headers: { "CONTENT_TYPE" => "application/json" }
     assert_response :bad_request
@@ -53,12 +61,12 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
     user = User.create!(name: "Consent tester", email: "consent@example.com", password: "password123")
     sign_in user
     redirect_uri = "https://chatgpt.com/connector/oauth/callback-flow"
-    application = Doorkeeper::Application.create!(name: "ChatGPT", redirect_uri: redirect_uri, scopes: Mcp::Settings::SCOPES.join(" "), confidential: false)
+    application = Doorkeeper::Application.create!(name: "ChatGPT", redirect_uri: redirect_uri, scopes: Mcp::Settings::OAUTH_SCOPES.join(" "), confidential: false)
     verifier = Base64.urlsafe_encode64(SecureRandom.random_bytes(32), padding: false)
     challenge = Base64.urlsafe_encode64(Digest::SHA256.digest(verifier), padding: false)
     parameters = {
       client_id: application.uid, redirect_uri: redirect_uri, response_type: "code",
-      scope: "content:read content:write", state: "csrf-state-123456789", code_challenge: challenge,
+      scope: "content:read content:write offline_access", state: "csrf-state-123456789", code_challenge: challenge,
       code_challenge_method: "S256", resource: ENV["MCP_RESOURCE_URL"]
     }
 
@@ -74,10 +82,11 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
       redirect_uri: redirect_uri, code_verifier: verifier, resource: ENV["MCP_RESOURCE_URL"]
     }
     assert_response :success
+    assert response.parsed_body["refresh_token"].present?
     token = response.parsed_body.fetch("access_token")
     access_token = Doorkeeper::AccessToken.by_token(token)
     assert_equal user.id, access_token.resource_owner_id
-    assert_equal %w[content:read content:write], access_token.scopes.to_a
+    assert_equal %w[content:read content:write offline_access], access_token.scopes.to_a
   end
 
   test "a signed-out customer returns to OAuth consent after their normal contentForge sign-in" do
