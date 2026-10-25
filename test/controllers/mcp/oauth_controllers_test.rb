@@ -43,6 +43,7 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
     assert_response :created
     assert_equal "none", response.parsed_body["token_endpoint_auth_method"]
     assert_equal payload[:redirect_uris], response.parsed_body["redirect_uris"]
+    assert_equal "content:read content:write offline_access", response.parsed_body["scope"]
     application = Doorkeeper::Application.find_by!(uid: response.parsed_body["client_id"])
     assert_equal %w[content:read content:write offline_access], application.scopes.all
 
