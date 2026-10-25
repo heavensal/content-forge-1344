@@ -5,6 +5,11 @@
 #   KAMAL_REGISTRY_PASSWORD  — Docker Hub access token (push/pull adam1344/contentforge_1344)
 #   RAILS_MASTER_KEY         — same as config/master.key (32-char hex)
 #   DATABASE_URL             — production PostgreSQL URL (e.g. Neon), same as local .kamal/secrets
+#   SMTP_ADDRESS             — SMTP server address (mail.1344.fr)
+#   SMTP_PORT                — SMTP port (465)
+#   SMTP_USER_NAME           — SMTP account username
+#   SMTP_PASSWORD            — SMTP account password
+# Optional GitHub secrets: MAILER_FROM, CORS_ALLOWED_ORIGINS
 #
 name: Deploy
 
@@ -48,13 +53,25 @@ jobs:
           KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SMTP_ADDRESS: ${{ secrets.SMTP_ADDRESS }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER_NAME: ${{ secrets.SMTP_USER_NAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          MAILER_FROM: ${{ secrets.MAILER_FROM }}
+          CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
         run: |
           mkdir -p .kamal
           ruby -e '
-            lines = %w[KAMAL_REGISTRY_PASSWORD RAILS_MASTER_KEY DATABASE_URL].map do |k|
-              v = ENV[k] or abort("Missing required secret: #{k}")
-              raise "#{k} is empty" if v.strip.empty?
+            required = %w[KAMAL_REGISTRY_PASSWORD RAILS_MASTER_KEY DATABASE_URL SMTP_ADDRESS SMTP_PORT SMTP_USER_NAME SMTP_PASSWORD]
+            lines = required.map do |k|
+              v = ENV[k]
+              abort("Missing required GitHub Actions secret: #{k}") if v.nil? || v.strip.empty?
               %(#{k}=#{v.gsub("\n", "")})
+            end
+            %w[MAILER_FROM CORS_ALLOWED_ORIGINS].each do |k|
+              v = ENV[k]
+              next if v.nil? || v.strip.empty?
+              lines << %(#{k}=#{v.gsub("\n", "")})
             end
             File.write(".kamal/secrets", lines.join("\n") + "\n")
           '

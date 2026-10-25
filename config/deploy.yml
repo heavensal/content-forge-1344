@@ -28,8 +28,6 @@ env:
     - SMTP_PORT
     - SMTP_USER_NAME
     - SMTP_PASSWORD
-    - MAILER_FROM
-    - CORS_ALLOWED_ORIGINS
 
 ssh:
   user: ubuntu
