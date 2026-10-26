@@ -47,7 +47,24 @@ jobs:
       - name: Trust VPS host key
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -T 15 -H 51.75.124.208 >> ~/.ssh/known_hosts
+          host_key_file="$RUNNER_TEMP/contentforge-vps-host-key"
+          ssh-keyscan -T 15 -t ed25519 51.75.124.208 > "$host_key_file"
+          fingerprint=$(ssh-keygen -lf "$host_key_file" -E sha256 | awk '{print $2}')
+          # Verified against /etc/ssh/ssh_host_ed25519_key.pub on the VPS.
+          if [ "$fingerprint" != "SHA256:YNbe7lJuDnMdWUJ52gOnWjxIPBdEqcpTpKAujAzkG50" ]; then
+            echo "Unexpected VPS host key fingerprint: $fingerprint" >&2
+            exit 1
+          fi
+          touch ~/.ssh/known_hosts
+          if ssh-keygen -F 51.75.124.208 -f ~/.ssh/known_hosts >/dev/null; then
+            ssh-keygen -R 51.75.124.208 -f ~/.ssh/known_hosts >/dev/null
+          fi
+          cat "$host_key_file" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Verify SSH before building the image
+        run: |
+          bundle exec ruby -rnet/ssh -e 'Net::SSH.start("51.75.124.208", "ubuntu", verify_host_key: :always, non_interactive: true, timeout: 15) { |ssh| ssh.exec!("true") }'
 
       - name: Write Kamal secrets
         env:
