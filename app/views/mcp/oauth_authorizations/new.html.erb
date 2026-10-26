@@ -1,23 +1,30 @@
-<header class="page-header" role="banner">
-  <h1><%= t("doorkeeper.authorizations.new.title") %></h1>
-</header>
+<% content_for :title, "Authorize ChatGPT access — ContentForge" %>
 
-<main role="main">
-  <p class="h4"><%= raw t("doorkeeper.authorizations.new.prompt", client_name: content_tag(:strong, class: "text-info") { @pre_auth.client.name }) %></p>
+<div class="mx-auto w-full max-w-2xl">
+  <header>
+    <p class="text-xs font-semibold uppercase tracking-wider text-emerald-400">ChatGPT integration</p>
+    <h1 class="mt-2 text-2xl font-semibold tracking-tight text-zinc-50"><%= t("doorkeeper.authorizations.new.title") %></h1>
+    <p class="mt-3 text-sm leading-6 text-zinc-400">
+      <strong class="font-semibold text-zinc-100"><%= @pre_auth.client.name %></strong> is requesting access to your contentForge account.
+      Review the permissions before continuing.
+    </p>
+  </header>
 
-  <% if @pre_auth.scopes.count > 0 %>
-    <div id="oauth-permissions">
-      <p><%= t("doorkeeper.authorizations.new.able_to") %></p>
-      <ul class="text-info">
-        <% @pre_auth.scopes.each do |scope| %>
-          <li><%= t scope, scope: [ :doorkeeper, :scopes ] %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <section class="<%= content_section_card_classes %> mt-6" aria-labelledby="oauth-permissions-title">
+    <h2 id="oauth-permissions-title" class="text-base font-semibold text-zinc-100"><%= t("doorkeeper.authorizations.new.able_to") %></h2>
+    <ul class="mt-4 divide-y divide-zinc-800 text-sm text-zinc-300">
+      <% @pre_auth.scopes.each do |scope| %>
+        <li class="py-3 first:pt-0 last:pb-0"><%= t(scope, scope: [ :doorkeeper, :scopes ]) %></li>
+      <% end %>
+    </ul>
+    <p class="mt-5 border-t border-zinc-800 pt-4 text-xs leading-5 text-zinc-500">
+      Access is limited to websites assigned to your account. Content changes require your separate approval in contentForge.
+      You can revoke this connection in your account settings.
+    </p>
+  </section>
 
-  <div class="actions">
-    <%= form_tag oauth_authorization_path, method: :post do %>
+  <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+    <%= form_tag oauth_authorization_path, method: :post, class: "sm:order-2", data: { turbo: false } do %>
       <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
       <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil %>
       <%= hidden_field_tag :state, @pre_auth.state, id: nil %>
@@ -27,9 +34,9 @@
       <%= hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil %>
       <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil %>
       <%= hidden_field_tag :resource, params[:resource], id: nil %>
-      <%= submit_tag t("doorkeeper.authorizations.buttons.authorize"), class: "btn btn-success btn-lg btn-block" %>
+      <%= submit_tag t("doorkeeper.authorizations.buttons.authorize"), class: primary_button_classes %>
     <% end %>
-    <%= form_tag oauth_authorization_path, method: :delete do %>
+    <%= form_tag oauth_authorization_path, method: :delete, class: "sm:order-1", data: { turbo: false } do %>
       <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
       <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil %>
       <%= hidden_field_tag :state, @pre_auth.state, id: nil %>
@@ -39,7 +46,7 @@
       <%= hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil %>
       <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil %>
       <%= hidden_field_tag :resource, params[:resource], id: nil %>
-      <%= submit_tag t("doorkeeper.authorizations.buttons.deny"), class: "btn btn-danger btn-lg btn-block" %>
+      <%= submit_tag t("doorkeeper.authorizations.buttons.deny"), class: secondary_button_classes %>
     <% end %>
   </div>
-</main>
+</div>

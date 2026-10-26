@@ -1,5 +1,6 @@
 module Mcp
   class OauthAuthorizationsController < Doorkeeper::AuthorizationsController
+    layout "application"
     before_action :require_mcp_resource
 
     private

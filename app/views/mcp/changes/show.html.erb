@@ -1,26 +1,54 @@
-<section class="mx-auto max-w-3xl p-6">
-  <h1 class="text-2xl font-bold">Review contentForge change</h1>
-  <p>Website: <strong><%= @website.name %></strong> (<%= @website.domain %>)</p>
-  <p>Action: <strong><%= @change.operation %></strong> — <%= @change.content_type %></p>
-  <% if @change.operation == "publish" || @preview.published? %>
-    <p>This action changes publicly available content and requests a website rebuild.</p>
-  <% end %>
-  <% if @change.operation == "delete" %>
-    <p>This permanently deletes the content shown below.</p>
-  <% end %>
-  <p>Review all values before approving. Article HTML is shown as text for inspection.</p>
-  <dl class="my-4 space-y-3">
-    <% Mcp::Content.serialize(@preview, @change.content_type).each do |field, value| %>
-      <dt class="font-semibold"><%= field %></dt>
-      <dd class="whitespace-pre-wrap break-words"><%= value %></dd>
+<% content_for :title, "Review content change — ContentForge" %>
+
+<div class="mx-auto w-full max-w-3xl">
+  <%= link_to "← ChatGPT access", settings_mcp_authorizations_path, class: "inline-flex min-h-11 items-center text-sm text-emerald-400 hover:text-emerald-300" %>
+
+  <header class="mt-6">
+    <p class="text-xs font-semibold uppercase tracking-wider text-emerald-400">ChatGPT proposal</p>
+    <h1 class="mt-2 text-2xl font-semibold tracking-tight text-zinc-50">Review contentForge change</h1>
+    <p class="mt-2 text-sm text-zinc-400">Nothing is saved until you approve this exact proposal.</p>
+  </header>
+
+  <div class="<%= content_section_card_classes %> mt-6">
+    <dl class="grid gap-4 text-sm sm:grid-cols-2">
+      <div>
+        <dt class="text-zinc-500">Website</dt>
+        <dd class="mt-1 break-words font-medium text-zinc-100"><%= @website.name %> <span class="font-normal text-zinc-400">(<%= @website.domain %>)</span></dd>
+      </div>
+      <div>
+        <dt class="text-zinc-500">Change</dt>
+        <dd class="mt-1 font-medium capitalize text-zinc-100"><%= @change.operation %> · <%= @change.content_type %></dd>
+      </div>
+    </dl>
+    <% if @change.operation == "publish" || @preview.published? %>
+      <p class="mt-5 rounded-lg border border-amber-800/50 bg-amber-950/30 p-3 text-sm text-amber-200">This change affects public content and requests a website rebuild.</p>
     <% end %>
-  </dl>
-  <% if @change.applied_at? %>
-    <p>This change has already been applied.</p>
-  <% elsif @change.expires_at <= Time.current %>
-    <p>This proposal expired. Ask ChatGPT to prepare a new one.</p>
-  <% else %>
-    <%= button_to "Approve this exact change", mcp_change_path(@change), method: :patch, class: "rounded bg-blue-700 px-4 py-2 text-white" %>
-    <p>To decline, close this page. Nothing is applied without approval.</p>
-  <% end %>
-</section>
+    <% if @change.operation == "delete" %>
+      <p class="mt-5 rounded-lg border border-red-900/60 bg-red-950/30 p-3 text-sm text-red-200">This permanently deletes the content shown below.</p>
+    <% end %>
+  </div>
+
+  <section class="<%= content_section_card_classes %> mt-5" aria-labelledby="proposal-details-title">
+    <h2 id="proposal-details-title" class="text-lg font-semibold text-zinc-100">Proposed content</h2>
+    <p class="mt-1 text-xs text-zinc-500">Article HTML is displayed as text so you can inspect it.</p>
+    <dl class="mt-5 divide-y divide-zinc-800">
+      <% Mcp::Content.serialize(@preview, @change.content_type).each do |field, value| %>
+        <div class="py-3 first:pt-0 last:pb-0">
+          <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500"><%= field.humanize %></dt>
+          <dd class="mt-1 whitespace-pre-wrap break-words text-sm text-zinc-200"><%= value %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </section>
+
+  <div class="mt-6">
+    <% if @change.applied_at? %>
+      <p class="text-sm text-emerald-300">This change has already been applied.</p>
+    <% elsif @change.expires_at <= Time.current %>
+      <p class="text-sm text-amber-300">This proposal expired. Ask ChatGPT to prepare a new one.</p>
+    <% else %>
+      <%= button_to "Approve this exact change", mcp_change_path(@change), method: :patch, class: primary_button_classes %>
+      <p class="mt-3 text-xs text-zinc-500">To decline, close this page. Nothing is applied without approval.</p>
+    <% end %>
+  </div>
+</div>

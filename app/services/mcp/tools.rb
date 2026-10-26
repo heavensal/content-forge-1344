@@ -1,31 +1,44 @@
 module Mcp
   class Tools
     class Forbidden < StandardError; end
-    TYPES = { type: "string", enum: Content::FIELDS.keys }.freeze
-    ID = { type: "integer", minimum: 1 }.freeze
+    TYPES = { type: "string", enum: Content::FIELDS.keys, description: "Content collection: articles, reviews or faqs." }.freeze
+    ID = { type: "integer", minimum: 1, description: "ID returned by list_websites for a website assigned to the signed-in user." }.freeze
+    TITLES = {
+      "list_websites" => "List my websites",
+      "list_content" => "List website content",
+      "get_content" => "Read content",
+      "prepare_change" => "Prepare a content change",
+      "get_change" => "Check a proposed change"
+    }.freeze
 
     def self.definitions
       [
-        definition("list_websites", "List your active websites. Never returns website API tokens or webhook settings.", {}),
-        definition("list_content", "List content for one authorized website (up to 50 records per page).", { website_id: ID, content_type: TYPES, after_id: ID }, %w[website_id content_type]),
-        definition("get_content", "Read one content record, including its current publication state.", { website_id: ID, content_type: TYPES, record_id: ID }, %w[website_id content_type record_id]),
-        definition("prepare_change", "Prepare create/update/delete/publish for articles, reviews or FAQs. Does NOT apply or publish. Show the returned approval URL to the user; they must review and approve in contentForge. New content is a draft; publish is a separate proposal. Never invent customer reviews. Reuse request_key only when retrying the identical request.", {
-          website_id: ID, content_type: TYPES, record_id: ID,
-          operation: { type: "string", enum: %w[create update delete publish] },
-          request_key: { type: "string", minLength: 1, maxLength: 100 },
+        definition("list_websites", "Use this first to find the active websites assigned to this account and obtain a website_id for other contentForge tools. Returns up to 100 websites; never returns API tokens or webhook settings.", {}),
+        definition("list_content", "Use this to find articles, reviews or FAQs on one authorized website, including their IDs and publication states. Returns up to 50 records; use next_after_id as after_id to fetch another page.", { website_id: ID, content_type: TYPES, after_id: { **ID, description: "Optional pagination cursor from the previous list_content response's next_after_id." } }, %w[website_id content_type]),
+        definition("get_content", "Use this to inspect one existing article, review or FAQ before editing, deleting or publishing it. Includes its current status and fields.", { website_id: ID, content_type: TYPES, record_id: { **ID, description: "Existing record ID returned by list_content." } }, %w[website_id content_type record_id]),
+        definition("prepare_change", "Use this to propose a create, update, delete or publish action for an article, review or FAQ. It does not save or publish anything. Show approval_url to the user for explicit review in contentForge. After an approved create, the record is a draft; publication needs a separate publish proposal and approval. Never invent a customer review.", {
+          website_id: ID, content_type: TYPES, record_id: { **ID, description: "Existing content record ID from list_content; required for update, delete and publish; omit for create." },
+          operation: { type: "string", enum: %w[create update delete publish], description: "create makes a draft; update changes fields; delete removes a record; publish makes an existing draft public after approval." },
+          request_key: { type: "string", minLength: 1, maxLength: 100, description: "Unique key for this proposal. Reuse it only when retrying the exact same request." },
           attributes: { type: "object", additionalProperties: false, properties: {
-            title: { type: "string" }, slug: { type: "string" }, description: { type: "string" },
-            content: { type: "string" }, locale: { type: "string", enum: %w[fr en] },
-            author: { type: "string" }, rating: { type: "integer", minimum: 1, maximum: 5 },
-            position: { type: "integer", minimum: 0 }, question: { type: "string" }, answer: { type: "string" }
-          } }
+            title: { type: "string", description: "Article title (articles only)." },
+            slug: { type: "string", description: "Optional URL slug (articles and FAQs only); generated when omitted on create." },
+            description: { type: "string", description: "Article summary (articles only)." },
+            content: { type: "string", description: "Article body as limited HTML, or actual customer review text (articles and reviews only)." },
+            locale: { type: "string", enum: %w[fr en], description: "Content language; defaults to the website locale on create." },
+            author: { type: "string", description: "Name provided for a real customer review (reviews only)." },
+            rating: { type: "integer", minimum: 1, maximum: 5, description: "Review rating from 1 to 5 (reviews only)." },
+            position: { type: "integer", minimum: 0, description: "Display order (reviews and FAQs only)." },
+            question: { type: "string", description: "FAQ question (FAQs only)." },
+            answer: { type: "string", description: "FAQ answer (FAQs only)." }
+          }, description: "Fields for create or update only. Supply fields allowed for the selected content_type; omit for delete and publish. Status and published_at cannot be set here." }
         }, %w[website_id content_type operation request_key], write: true),
-        definition("get_change", "Check whether your proposal was approved. Applied means saved, not proof of a completed website rebuild.", { change_id: ID }, %w[change_id])
+        definition("get_change", "Use this after presenting approval_url to check whether the user approved a proposal. applied=true means saved in contentForge, not that the website rebuild has completed.", { change_id: { **ID, description: "Proposal ID returned by prepare_change." } }, %w[change_id])
       ]
     end
 
     def self.definition(name, description, properties, required = [], write: false)
-      { name: name, description: description,
+      { name: name, title: TITLES.fetch(name), description: description,
         inputSchema: { type: "object", properties: properties, required: required, additionalProperties: false },
         annotations: { readOnlyHint: !write, destructiveHint: false, idempotentHint: true, openWorldHint: false },
         securitySchemes: [ { type: "oauth2", scopes: write ? %w[content:read content:write] : %w[content:read] } ] }

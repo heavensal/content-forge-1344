@@ -16,6 +16,8 @@ Voir [l'audit initial](MCP_AUDIT.md). Le serveur est désactivé par défaut dan
 
 `content_type` est articles/reviews/faqs. Les champs acceptés suivent les formulaires Rails, sauf status/published_at qui ne sont jamais modifiables directement. Le HTML Article est limité à p/br/strong/em/ul/ol/li/h2/h3/blockquote/a, sans pièces jointes Action Text. Les reviews doivent refléter de vrais témoignages fournis par le client.
 
+ChatGPT lit les instructions renvoyées par `initialize` ainsi que le titre, la description et le schéma de chaque outil renvoyé par `tools/list`. Ces informations expliquent l'ordre des appels, les trois types de contenu et la validation humaine. Le nom et la description du **plugin ChatGPT** sont saisis séparément dans ChatGPT lors de sa création : le serveur MCP ne peut pas remplir automatiquement ces champs. La page **Account → Manage ChatGPT access** affiche une description suggérée à copier. Après une mise à jour du serveur, rafraîchir les outils du plugin dans ses paramètres ChatGPT pour récupérer les nouvelles descriptions et instructions ([documentation OpenAI](https://developers.openai.com/api/docs/guides/custom-mcp-server#how-to-use)).
+
 ## Workflow humain
 
 1. Le client ajoute le serveur MCP contentForge dans ChatGPT. ChatGPT l'envoie vers contentForge pour s'authentifier et consentir.
@@ -45,6 +47,12 @@ Le jeton n'est jamais conservé dans les propositions. Les tokens de Website ne 
 Scopes : `content:read` pour lire ; `content:write` en plus pour proposer ; `content:publish` en plus pour publier, modifier ou supprimer un contenu dont le statut est published (y compris publication future). L'outil renvoie un challenge d'augmentation des scopes si nécessaire. Les droits de membership sont relus, ils ne proviennent jamais des arguments du modèle. Les admins conservent leur accès global ; owner/editor conservent leurs droits existants.
 
 ## Configuration et déploiement
+
+### Pour la PR de présentation et de descriptions MCP
+
+Avant fusion : aucune nouvelle variable `.env`, aucun secret GitHub et aucune migration. Après fusion : attendre le déploiement automatique puis rafraîchir les outils dans les paramètres du plugin ChatGPT. Le nom et la description du plugin déjà créé restent à compléter manuellement dans ChatGPT si ces champs sont vides.
+
+### Installation initiale et exploitation
 
 1. Migrer en préproduction : `bin/rails db:migrate` ; vérifier le schéma et les tests sur une base dédiée.
 2. Fournir `MCP_ENABLED=true` et `MCP_RESOURCE_URL=https://contentforge.1344.fr/mcp` au conteneur de production via `config/deploy.yml` ; aucune variable d'identifiants OAuth externes n'est nécessaire.
