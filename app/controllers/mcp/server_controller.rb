@@ -1,6 +1,7 @@
 module Mcp
   class ServerController < ActionController::API
     VERSIONS = %w[2025-06-18 2025-11-25].freeze
+    INSTRUCTIONS = "contentForge manages articles, customer reviews and FAQs on websites assigned to the signed-in user. First call list_websites to get a website_id. Use list_content/get_content to inspect existing records. Use prepare_change to propose a create, update, delete or publish operation; it never saves or publishes. Show the returned approval_url to the user for review in contentForge. A create becomes a draft only after approval. Publishing needs a separate publish proposal and approval. Use get_change to check whether a proposal was applied; applied does not confirm website rebuild delivery. Never invent customer reviews or claim a change was applied before approval.".freeze
     RATE_LIMIT_STORE = ActiveSupport::Cache::MemoryStore.new(size: 8.megabytes)
     before_action :check_enabled
     before_action :check_origin
@@ -42,7 +43,7 @@ module Mcp
       when "initialize"
         { protocolVersion: VERSIONS.include?(params["protocolVersion"]) ? params["protocolVersion"] : VERSIONS.last,
           capabilities: { tools: { listChanged: false } }, serverInfo: { name: "contentForge", version: "1.0.0" },
-          instructions: "Mutations prepare proposals only. Ask the user to review the approval URL. Never claim publication before approval, or claim rebuild delivery from an applied proposal." }
+          instructions: INSTRUCTIONS }
       when "ping" then {}
       when "tools/list" then { tools: Tools.definitions }
       when "tools/call" then call_tool(params)

@@ -32,8 +32,15 @@ class Mcp::ServerControllerTest < ActionDispatch::IntegrationTest
     with_method_result(Mcp::Authentication, :call, @context) do
       rpc("initialize", { "protocolVersion" => "2025-11-25" })
       assert_equal "2025-11-25", response.parsed_body.dig("result", "protocolVersion")
+      instructions = response.parsed_body.dig("result", "instructions")
+      assert_includes instructions.first(512), "approval_url"
+      assert_includes instructions, "separate publish proposal"
       rpc("tools/list")
-      assert_equal 5, response.parsed_body.dig("result", "tools").length
+      definitions = response.parsed_body.dig("result", "tools")
+      assert_equal 5, definitions.length
+      prepare = definitions.find { |tool| tool["name"] == "prepare_change" }
+      assert_includes prepare["description"], "does not save or publish"
+      assert_includes prepare.dig("inputSchema", "properties", "attributes", "properties", "rating", "description"), "reviews only"
       rpc("ping")
       assert_equal({}, response.parsed_body["result"])
       post "/mcp", params: { jsonrpc: "2.0", method: "notifications/initialized" }.to_json, headers: @headers

@@ -23,6 +23,7 @@ en:
       "content:read": "Read content on your assigned websites"
       "content:write": "Create, update, and delete content on your assigned websites"
       "content:publish": "Publish content on your assigned websites"
+      "offline_access": "Stay connected until you revoke access in contentForge"
     applications:
       confirmations:
         destroy: 'Are you sure?'

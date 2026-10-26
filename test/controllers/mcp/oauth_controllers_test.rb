@@ -73,6 +73,10 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
 
     get "/oauth/authorize", params: parameters
     assert_response :success
+    assert_select "body.bg-zinc-950"
+    assert_select "link[rel='stylesheet']"
+    assert_select "h1", text: "Authorization required"
+    assert_select "li", text: "Stay connected until you revoke access in contentForge"
     post "/oauth/authorize", params: parameters
     assert_response :redirect
     code = CGI.parse(URI.parse(response.location).query).fetch("code").first
@@ -111,6 +115,7 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
     assert_match %r{/oauth/authorize}, response.location
     follow_redirect!
     assert_response :success
-    assert_includes response.body, "Authorize <strong class=\"text-info\">ChatGPT</strong> to use your account?"
+    assert_select "strong", text: "ChatGPT"
+    assert_select "body.bg-zinc-950"
   end
 end
