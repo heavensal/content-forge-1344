@@ -24,7 +24,7 @@
   </section>
 
   <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-    <%= form_tag oauth_authorization_path, method: :post, class: "sm:order-2" do %>
+    <%= form_tag oauth_authorization_path, method: :post, class: "sm:order-2", data: { turbo: false } do %>
       <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
       <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil %>
       <%= hidden_field_tag :state, @pre_auth.state, id: nil %>
@@ -36,7 +36,7 @@
       <%= hidden_field_tag :resource, params[:resource], id: nil %>
       <%= submit_tag t("doorkeeper.authorizations.buttons.authorize"), class: primary_button_classes %>
     <% end %>
-    <%= form_tag oauth_authorization_path, method: :delete, class: "sm:order-1" do %>
+    <%= form_tag oauth_authorization_path, method: :delete, class: "sm:order-1", data: { turbo: false } do %>
       <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
       <%= hidden_field_tag :redirect_uri, @pre_auth.redirect_uri, id: nil %>
       <%= hidden_field_tag :state, @pre_auth.state, id: nil %>
