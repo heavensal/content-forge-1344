@@ -11,7 +11,7 @@ class WebsiteRebuildWebhook
   class PermanentError < StandardError; end
 
   GITHUB_DISPATCH_PATH = %r{\A/repos/[^/]+/[^/]+/dispatches\z}
-  EVENT_TYPE = "contentforge-rebuild"
+  EVENT_TYPE = "forge-rebuild"
 
   class << self
     def deliver!(website, content_type)
@@ -60,9 +60,9 @@ class WebsiteRebuildWebhook
 
     request = Net::HTTP::Post.new(uri)
     request["Content-Type"] = "application/json"
-    request["User-Agent"] = "ContentForge-Rebuild/1"
-    request["X-ContentForge-Timestamp"] = timestamp
-    request["X-ContentForge-Signature"] = "v1=#{signature_for(body, timestamp)}"
+    request["User-Agent"] = "Forge-Rebuild/1"
+    request["X-Forge-Timestamp"] = timestamp
+    request["X-Forge-Signature"] = "v1=#{signature_for(body, timestamp)}"
     request["Authorization"] = "Bearer #{@website.rebuild_webhook_token}" if @website.rebuild_webhook_token.present?
     request["Accept"] = github_dispatch?(uri) ? "application/vnd.github+json" : "application/json"
     request["X-GitHub-Api-Version"] = "2022-11-28" if github_dispatch?(uri)

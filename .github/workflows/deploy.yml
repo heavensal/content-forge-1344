@@ -2,7 +2,7 @@
 #
 # Required GitHub repository secrets:
 #   SSH_PRIVATE_KEY          — private key for ssh ubuntu@51.75.124.208 (no passphrase, or use ssh-agent with passphrase secret)
-#   KAMAL_REGISTRY_PASSWORD  — Docker Hub access token (push/pull adam1344/contentforge_1344)
+#   KAMAL_REGISTRY_PASSWORD  — Docker Hub access token (push/pull adam1344/forge)
 #   RAILS_MASTER_KEY         — same as config/master.key (32-char hex)
 #   DATABASE_URL             — production PostgreSQL URL (e.g. Neon), same as local .kamal/secrets
 #   SMTP_ADDRESS             — SMTP server address (mail.1344.fr)
@@ -47,7 +47,7 @@ jobs:
       - name: Trust VPS host key
         run: |
           mkdir -p ~/.ssh
-          host_key_file="$RUNNER_TEMP/contentforge-vps-host-key"
+          host_key_file="$RUNNER_TEMP/forge-vps-host-key"
           ssh-keyscan -T 15 -t ed25519 51.75.124.208 > "$host_key_file"
           fingerprint=$(ssh-keygen -lf "$host_key_file" -E sha256 | awk '{print $2}')
           # Verified against /etc/ssh/ssh_host_ed25519_key.pub on the VPS.

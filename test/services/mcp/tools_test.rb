@@ -4,7 +4,7 @@ class Mcp::ToolsTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   setup do
-    ENV["MCP_RESOURCE_URL"] = "https://contentforge.example/mcp"
+    ENV["MCP_RESOURCE_URL"] = "https://forge.example/mcp"
     @user = User.create!(name: "Client", email: "mcp-client@example.com", password: "password123")
     @other = User.create!(name: "Other", email: "mcp-other@example.com", password: "password123")
     @site = Website.create!(name: "Client", domain: "mcp-client.example")

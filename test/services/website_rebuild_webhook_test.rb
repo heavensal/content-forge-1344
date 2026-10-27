@@ -32,11 +32,11 @@ class WebsiteRebuildWebhookTest < ActiveSupport::TestCase
     assert_equal "Bearer github-pat", request["Authorization"]
     assert_equal "application/vnd.github+json", request["Accept"]
     body = JSON.parse(request.body)
-    assert_equal "contentforge-rebuild", body["event_type"]
+    assert_equal "forge-rebuild", body["event_type"]
     assert_equal "articles", body.dig("client_payload", "content_type")
     assert_equal @website.domain, body.dig("client_payload", "website", "domain")
     assert_equal @article.updated_at.iso8601, body.dig("client_payload", "updated_at")
-    assert_equal "v1=#{signature(request)}", request["X-ContentForge-Signature"]
+    assert_equal "v1=#{signature(request)}", request["X-Forge-Signature"]
   end
 
   test "posts the event itself to a generic https hook and omits a blank token" do
@@ -47,7 +47,7 @@ class WebsiteRebuildWebhookTest < ActiveSupport::TestCase
     body = JSON.parse(request.body)
     assert_equal "content.changed", body["event"]
     assert_equal "articles", body["content_type"]
-    assert_equal "v1=#{signature(request)}", request["X-ContentForge-Signature"]
+    assert_equal "v1=#{signature(request)}", request["X-Forge-Signature"]
   end
 
   test "refuses a private address and a client error without calling them twice" do
@@ -89,7 +89,7 @@ class WebsiteRebuildWebhookTest < ActiveSupport::TestCase
     OpenSSL::HMAC.hexdigest(
       "SHA256",
       @website.rebuild_webhook_secret,
-      "#{request["X-ContentForge-Timestamp"]}.#{request.body}"
+      "#{request["X-Forge-Timestamp"]}.#{request.body}"
     )
   end
 

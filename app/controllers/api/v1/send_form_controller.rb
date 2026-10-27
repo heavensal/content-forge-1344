@@ -6,7 +6,7 @@ module Api
       def create
         unless @website.email.present?
           return render json: {
-            error: "This website has no contact email. Set it on the website in ContentForge."
+            error: "This website has no contact email. Set it on the website in Forge."
           }, status: :unprocessable_entity
         end
 

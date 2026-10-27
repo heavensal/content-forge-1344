@@ -13,10 +13,10 @@ module Mcp
 
     def self.definitions
       [
-        definition("list_websites", "Use this first to find the active websites assigned to this account and obtain a website_id for other contentForge tools. Returns up to 100 websites; never returns API tokens or webhook settings.", {}),
+        definition("list_websites", "Use this first to find the active websites assigned to this account and obtain a website_id for other Forge tools. Returns up to 100 websites; never returns API tokens or webhook settings.", {}),
         definition("list_content", "Use this to find articles, reviews or FAQs on one authorized website, including their IDs and publication states. Returns up to 50 records; use next_after_id as after_id to fetch another page.", { website_id: ID, content_type: TYPES, after_id: { **ID, description: "Optional pagination cursor from the previous list_content response's next_after_id." } }, %w[website_id content_type]),
         definition("get_content", "Use this to inspect one existing article, review or FAQ before editing, deleting or publishing it. Includes its current status and fields.", { website_id: ID, content_type: TYPES, record_id: { **ID, description: "Existing record ID returned by list_content." } }, %w[website_id content_type record_id]),
-        definition("prepare_change", "Use this to propose a create, update, delete or publish action for an article, review or FAQ. It does not save or publish anything. Show approval_url to the user for explicit review in contentForge. After an approved create, the record is a draft; publication needs a separate publish proposal and approval. Never invent a customer review.", {
+        definition("prepare_change", "Use this to propose a create, update, delete or publish action for an article, review or FAQ. It does not save or publish anything. Show approval_url to the user for explicit review in Forge. After an approved create, the record is a draft; publication needs a separate publish proposal and approval. Never invent a customer review.", {
           website_id: ID, content_type: TYPES, record_id: { **ID, description: "Existing content record ID from list_content; required for update, delete and publish; omit for create." },
           operation: { type: "string", enum: %w[create update delete publish], description: "create makes a draft; update changes fields; delete removes a record; publish makes an existing draft public after approval." },
           request_key: { type: "string", minLength: 1, maxLength: 100, description: "Unique key for this proposal. Reuse it only when retrying the exact same request." },
@@ -33,7 +33,7 @@ module Mcp
             answer: { type: "string", description: "FAQ answer (FAQs only)." }
           }, description: "Fields for create or update only. Supply fields allowed for the selected content_type; omit for delete and publish. Status and published_at cannot be set here." }
         }, %w[website_id content_type operation request_key], write: true),
-        definition("get_change", "Use this after presenting approval_url to check whether the user approved a proposal. applied=true means saved in contentForge, not that the website rebuild has completed.", { change_id: { **ID, description: "Proposal ID returned by prepare_change." } }, %w[change_id])
+        definition("get_change", "Use this after presenting approval_url to check whether the user approved a proposal. applied=true means saved in Forge, not that the website rebuild has completed.", { change_id: { **ID, description: "Proposal ID returned by prepare_change." } }, %w[change_id])
       ]
     end
 

@@ -5,7 +5,7 @@ class Mcp::AuthenticationTest < ActiveSupport::TestCase
   include McpMethodReplacement
 
   setup do
-    ENV["MCP_RESOURCE_URL"] = "https://contentforge.example/mcp"
+    ENV["MCP_RESOURCE_URL"] = "https://forge.example/mcp"
     @user = User.create!(name: "OAuth user", email: "oauth@example.com", password: "password123")
     @application = Doorkeeper::Application.create!(name: "ChatGPT", redirect_uri: "https://chatgpt.com/connector/oauth/test", confidential: false)
     @token = Doorkeeper::AccessToken.create_for(application: @application, resource_owner: @user, scopes: "content:read", expires_in: 1.hour.to_i)
@@ -16,7 +16,7 @@ class Mcp::AuthenticationTest < ActiveSupport::TestCase
     ENV.delete("MCP_RESOURCE_URL")
   end
 
-  test "valid contentForge OAuth token resolves its resource owner and scopes" do
+  test "valid Forge OAuth token resolves its resource owner and scopes" do
     assert_equal @token, Doorkeeper::AccessToken.by_token(@raw_token)
     assert @token.accessible?
     context = Mcp::Authentication.call("Bearer #{@raw_token}")

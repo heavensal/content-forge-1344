@@ -7,7 +7,7 @@ class Mcp::ServerControllerTest < ActionDispatch::IntegrationTest
   setup do
     Mcp::ServerController::RATE_LIMIT_STORE.clear
     ENV["MCP_ENABLED"] = "true"
-    ENV["MCP_RESOURCE_URL"] = "https://contentforge.example/mcp"
+    ENV["MCP_RESOURCE_URL"] = "https://forge.example/mcp"
     @user = User.create!(name: "Protocol", email: "protocol@example.com", password: "password123")
     @site = Website.create!(name: "Protocol", domain: "protocol.example")
     WebsiteMembership.create!(user: @user, website: @site)

@@ -1,4 +1,4 @@
-# ContentForge by 1344
+# Forge by 1344
 
 Headless CMS. Writing happens here (admin, scoped to a `Website`). Brochure sites do not live in this repo: they read published JSON with that website’s API token and render it themselves.
 
@@ -38,7 +38,7 @@ The quote form still posts to `POST /api/v1/send_form` on this app. That is deli
 
 This app does not store whether a site displays a block. Each brochure site turns FAQ, reviews, and articles on or off in its own environment (`true` or `false`), so one site can publish a blog and leave reviews in its own translations.
 
-ARM Services is the reference client. Its variables are `CONTENTFORGE_FAQ_ENABLED`, `CONTENTFORGE_REVIEWS_ENABLED`, and `CONTENTFORGE_ARTICLES_ENABLED`, plus a shared `CONTENTFORGE_URL` and `CONTENTFORGE_API_TOKEN`. See that repo’s README for the fallback when a flag is `false` or the fetch fails. Content is read at **build** time.
+ARM Services is the reference client. Its variables are `FORGE_FAQ_ENABLED`, `FORGE_REVIEWS_ENABLED`, and `FORGE_ARTICLES_ENABLED`, plus a shared `FORGE_URL` and `FORGE_API_TOKEN`. See that repo’s README for the fallback when a flag is `false` or the fetch fails. Content is read at **build** time.
 
 ## Local app
 

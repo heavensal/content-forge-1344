@@ -1,28 +1,28 @@
-<% content_for :title, "ChatGPT access — ContentForge" %>
+<% content_for :title, "ChatGPT access — Forge" %>
 
 <div class="mx-auto w-full max-w-3xl">
   <header>
     <p class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Account integration</p>
     <h1 class="mt-2 text-2xl font-semibold tracking-tight text-zinc-50">ChatGPT access</h1>
-    <p class="mt-2 text-sm leading-6 text-zinc-400">Connect your existing contentForge account to ChatGPT to manage articles, reviews and FAQs on websites assigned to you.</p>
+    <p class="mt-2 text-sm leading-6 text-zinc-400">Connect your existing Forge account to ChatGPT to manage articles, reviews and FAQs on websites assigned to you.</p>
   </header>
 
   <section class="<%= content_section_card_classes %> mt-6" aria-labelledby="mcp-setup-title">
     <h2 id="mcp-setup-title" class="text-lg font-semibold text-zinc-100">Connect in ChatGPT</h2>
     <ol class="mt-4 list-inside list-decimal space-y-2 text-sm leading-6 text-zinc-300">
       <li>Add a custom MCP server in ChatGPT and enter the server URL below.</li>
-      <li>Sign in to contentForge and approve the requested permissions.</li>
+      <li>Sign in to Forge and approve the requested permissions.</li>
       <li>Ask ChatGPT to list your websites before creating content.</li>
     </ol>
     <div class="mt-5">
       <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Server URL</p>
-      <code class="mt-2 block overflow-x-auto rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-3 text-sm text-emerald-300"><%= ENV.fetch("MCP_RESOURCE_URL", "https://contentforge.1344.fr/mcp") %></code>
+      <code class="mt-2 block overflow-x-auto rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-3 text-sm text-emerald-300"><%= ENV.fetch("MCP_RESOURCE_URL", "https://forge.1344.fr/mcp") %></code>
     </div>
     <div class="mt-5">
       <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Suggested plugin description</p>
-      <p class="mt-2 rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 py-3 text-sm text-zinc-300">Manage articles, reviews and FAQs for websites assigned to your contentForge account. Changes require your approval in contentForge before they are saved or published.</p>
+      <p class="mt-2 rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 py-3 text-sm text-zinc-300">Manage articles, reviews and FAQs for websites assigned to your Forge account. Changes require your approval in Forge before they are saved or published.</p>
     </div>
-    <p class="mt-5 text-xs leading-5 text-zinc-500">ChatGPT generates the text. Creating, editing, deleting or publishing content prepares a proposal; you review and approve each proposal in contentForge. New content starts as a draft. Publishing requires a separate approval.</p>
+    <p class="mt-5 text-xs leading-5 text-zinc-500">ChatGPT generates the text. Creating, editing, deleting or publishing content prepares a proposal; you review and approve each proposal in Forge. New content starts as a draft. Publishing requires a separate approval.</p>
   </section>
 
   <section class="mt-8" aria-labelledby="mcp-connections-title">

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
   <head>
-    <title><%= content_for(:title) || "ContentForge" %></title>
+    <title><%= content_for(:title) || "Forge" %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="ContentForge">
+    <meta name="application-name" content="Forge">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -46,7 +46,7 @@
               </svg>
             </button>
             <div class="min-w-0 flex-1">
-              <p class="truncate text-sm font-semibold text-emerald-400">ContentForge</p>
+              <p class="truncate text-sm font-semibold text-emerald-400">Forge</p>
               <% if defined?(@website) && @website.present? %>
                 <p class="truncate text-xs text-zinc-500"><%= @website.name %></p>
               <% else %>
@@ -63,7 +63,7 @@
     <% else %>
       <div class="flex min-h-screen min-h-[100dvh] flex-col items-center justify-center px-4 py-8 sm:py-12 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))]">
         <div class="mb-8 text-center">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-500/90">ContentForge</p>
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-500/90">Forge</p>
           <p class="mt-1 text-sm text-zinc-500">by 1344</p>
         </div>
         <div class="w-full max-w-md">
