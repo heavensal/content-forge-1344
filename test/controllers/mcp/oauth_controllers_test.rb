@@ -5,7 +5,7 @@ require "base64"
 class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
   setup do
     ENV["MCP_ENABLED"] = "true"
-    ENV["MCP_RESOURCE_URL"] = "https://contentforge.example/mcp"
+    ENV["MCP_RESOURCE_URL"] = "https://forge.example/mcp"
     sign_in User.create!(name: "OAuth tester", email: "oauth-test@example.com", password: "password123")
   end
 
@@ -17,10 +17,10 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
   test "OAuth metadata advertises authorization code, PKCE, registration and resource issuer" do
     get "/.well-known/oauth-authorization-server"
     assert_response :success
-    assert_equal "https://contentforge.example", response.parsed_body["issuer"]
-    assert_equal "https://contentforge.example/oauth/authorize", response.parsed_body["authorization_endpoint"]
+    assert_equal "https://forge.example", response.parsed_body["issuer"]
+    assert_equal "https://forge.example/oauth/authorize", response.parsed_body["authorization_endpoint"]
     assert_equal "S256", response.parsed_body["code_challenge_methods_supported"].first
-    assert_equal "https://contentforge.example/oauth/register", response.parsed_body["registration_endpoint"]
+    assert_equal "https://forge.example/oauth/register", response.parsed_body["registration_endpoint"]
     assert_includes response.parsed_body["scopes_supported"], "offline_access"
   end
 
@@ -32,7 +32,7 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
 
   test "dynamic registration accepts ChatGPT public client and rejects arbitrary redirect hosts" do
     payload = {
-      client_name: "ChatGPT contentForge",
+      client_name: "ChatGPT Forge",
       redirect_uris: [ "https://chatgpt.com/connector/oauth/callback-123" ],
       grant_types: [ "authorization_code", "refresh_token" ],
       response_types: [ "code" ],
@@ -58,7 +58,7 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
     assert_response :bad_request
   end
 
-  test "existing contentForge account approves a PKCE grant and ChatGPT exchanges it for a scoped token" do
+  test "existing Forge account approves a PKCE grant and ChatGPT exchanges it for a scoped token" do
     user = User.create!(name: "Consent tester", email: "consent@example.com", password: "password123")
     sign_in user
     redirect_uri = "https://chatgpt.com/connector/oauth/callback-flow"
@@ -76,7 +76,7 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
     assert_select "body.bg-zinc-950"
     assert_select "link[rel='stylesheet']"
     assert_select "h1", text: "Authorization required"
-    assert_select "li", text: "Stay connected until you revoke access in contentForge"
+    assert_select "li", text: "Stay connected until you revoke access in Forge"
     post "/oauth/authorize", params: parameters
     assert_response :redirect
     code = CGI.parse(URI.parse(response.location).query).fetch("code").first
@@ -94,7 +94,7 @@ class Mcp::OauthControllersTest < ActionDispatch::IntegrationTest
     assert_equal %w[content:read content:write offline_access], access_token.scopes.to_a
   end
 
-  test "a signed-out customer returns to OAuth consent after their normal contentForge sign-in" do
+  test "a signed-out customer returns to OAuth consent after their normal Forge sign-in" do
     user = User.create!(name: "Login tester", email: "login-oauth@example.com", password: "password123")
     sign_out :user
     redirect_uri = "https://chatgpt.com/connector/oauth/login-flow"

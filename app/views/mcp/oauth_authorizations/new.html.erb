@@ -1,11 +1,11 @@
-<% content_for :title, "Authorize ChatGPT access — ContentForge" %>
+<% content_for :title, "Authorize ChatGPT access — Forge" %>
 
 <div class="mx-auto w-full max-w-2xl">
   <header>
     <p class="text-xs font-semibold uppercase tracking-wider text-emerald-400">ChatGPT integration</p>
     <h1 class="mt-2 text-2xl font-semibold tracking-tight text-zinc-50"><%= t("doorkeeper.authorizations.new.title") %></h1>
     <p class="mt-3 text-sm leading-6 text-zinc-400">
-      <strong class="font-semibold text-zinc-100"><%= @pre_auth.client.name %></strong> is requesting access to your contentForge account.
+      <strong class="font-semibold text-zinc-100"><%= @pre_auth.client.name %></strong> is requesting access to your Forge account.
       Review the permissions before continuing.
     </p>
   </header>
@@ -18,7 +18,7 @@
       <% end %>
     </ul>
     <p class="mt-5 border-t border-zinc-800 pt-4 text-xs leading-5 text-zinc-500">
-      Access is limited to websites assigned to your account. Content changes require your separate approval in contentForge.
+      Access is limited to websites assigned to your account. Content changes require your separate approval in Forge.
       You can revoke this connection in your account settings.
     </p>
   </section>
