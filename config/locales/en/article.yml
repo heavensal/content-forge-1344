@@ -1,0 +1,62 @@
+en:
+  article:
+    title: &article_title Title
+    slug: &article_slug Slug
+    description: &article_description Description
+    content: &article_content Content
+    status: &article_status Status
+    published_at: &article_published_at Published at
+    locale: &article_locale Language
+    cover_image: &article_cover_image Presentation image
+    cover_image_url: &article_cover_image_url Presentation image
+    remove_cover_image: Remove presentation image
+    heading: Articles
+    one: Article
+    new: New article
+    edit: Edit article
+    create: Create article
+    empty: No articles yet.
+    delete_confirm: Delete this article?
+    back: "← Articles"
+    blog_posts: "Blog posts for %{domain}"
+    slug_placeholder: auto from title if left blank on create
+    hints:
+      slug: URL segment for your public site. Leave blank on create to generate from the title.
+      published_at: Required when status is published.
+      cover_image_html: 'Shown on the brochure site. The public API returns it as <code class="text-zinc-400">cover_image_url</code>. JPEG, PNG, WebP, or GIF, up to 8 MB.'
+      content_html: 'Use the attachment button to insert an image into the text. It is uploaded to Cloudinary and included in <code class="text-zinc-400">content_html</code>.'
+    statuses:
+      draft: Draft
+      published: Published
+      archived: Archived
+    notices:
+      created: Article was successfully created.
+      updated: Article was successfully updated.
+      deleted: Article was successfully deleted.
+    images:
+      blank: Choose an image file.
+      invalid_type: Use a JPEG, PNG, WebP, or GIF image.
+      too_large: Image must be 8 MB or smaller.
+      failed: Image upload failed.
+      unconfigured: Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.
+  activerecord:
+    models:
+      article:
+        one: Article
+        other: Articles
+    attributes:
+      article:
+        title: *article_title
+        slug: *article_slug
+        description: *article_description
+        content: *article_content
+        status: *article_status
+        published_at: *article_published_at
+        locale: *article_locale
+        cover_image: *article_cover_image
+        cover_image_url: *article_cover_image_url
+  helpers:
+    submit:
+      article:
+        create: Create Article
+        update: Update Article

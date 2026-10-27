@@ -1,0 +1,100 @@
+en:
+  website:
+    name: &website_name Name
+    domain: &website_domain Domain
+    email: &website_email Email
+    description: &website_description Description
+    default_locale: &website_default_locale Default language
+    status: &website_status Status
+    imports_articles: &website_imports_articles Blog articles
+    imports_faqs: &website_imports_faqs FAQs
+    imports_reviews: &website_imports_reviews Reviews
+    rebuild_webhook_url: &website_rebuild_webhook_url Rebuild webhook URL
+    rebuild_webhook_token: &website_rebuild_webhook_token Rebuild bearer token
+    title: Websites
+    one: Website
+    new: New website
+    edit: Edit website
+    edit_named: "Edit %{name}"
+    empty: No websites yet.
+    empty_hint: Create one to start publishing articles, FAQs, and reviews.
+    create_first: Create your first website
+    intro: Manage brochure sites and API access for each domain.
+    token_hint: An API token is generated automatically when you save.
+    delete_confirm: Delete this website and all its content?
+    default_language: "Default language: %{language}"
+    statuses:
+      active: Active
+      archived: Archived
+    notices:
+      created: Website was successfully created.
+      updated: Website was successfully updated.
+      deleted: Website was successfully deleted.
+    alerts:
+      admin_delete: Only an admin can delete a website.
+      already_have: You already have a website.
+    hints:
+      domain: Hostname only, no protocol. Used to identify this site for your external front end.
+      email: Optional contact email for this site. Must match the same format as account emails (one @, no spaces).
+      default_locale: Used when a page asks for a language that has no published content. English items are optional.
+      imports: A create, update, or delete rebuilds the site only for a type it fetches at build time. Match FORGE_ARTICLES_ENABLED, FORGE_FAQ_ENABLED, and FORGE_REVIEWS_ENABLED. Unticked types do not trigger a build.
+      imports_legend: Content this site displays
+      rebuild_url: HTTPS endpoint that starts the site build. For GitHub Actions, use the repository dispatch URL and listen for forge-rebuild.
+      rebuild_token: "Sent as Authorization: Bearer. Required for GitHub (fine-grained PAT with Contents: Read and write). Leave blank to keep the saved token."
+      rebuild_token_saved: Saved — leave blank to keep it
+      rebuild_token_blank: GitHub PAT or other bearer token
+    placeholders:
+      domain: example.com
+      email: contact@example.com
+      email_title: "Format: local@domain"
+      rebuild_url: https://api.github.com/repos/OWNER/REPO/dispatches
+    show:
+      api_access: API access
+      api_help_html: 'Send this value as <code class="rounded bg-zinc-950 px-1.5 py-0.5 font-mono text-xs text-emerald-300/90">Authorization: Bearer &lt;token&gt;</code> from your external site.'
+      api_token: API token
+      copy_token: Copy token
+      api_secret: Keep this secret — anyone with the token can manage content for this website via the API.
+      rebuild: Site rebuild
+      rebuild_help: Creating, updating, or deleting an imported type sends a signed webhook and starts a build. Types this site does not display are ignored.
+      imported: imported
+      not_imported: not imported
+      blog_articles: "Blog articles: %{state}"
+      faqs: "FAQs: %{state}"
+      reviews: "Reviews: %{state}"
+      no_rebuild_url: No rebuild URL yet.
+      bearer_saved: Bearer token saved.
+      no_bearer: No bearer token.
+      signature_html: 'Signature secret. The request signs <code class="font-mono text-xs text-zinc-400">{timestamp}.{raw body}</code> with HMAC-SHA256. Headers: <code class="font-mono text-xs text-zinc-400">X-Forge-Timestamp</code> and <code class="font-mono text-xs text-zinc-400">X-Forge-Signature: v1=…</code>.'
+      rebuild_secret: Rebuild webhook secret
+      copy_secret: Copy secret
+    errors:
+      https: must be an https URL
+  activerecord:
+    models:
+      website:
+        one: Website
+        other: Websites
+    attributes:
+      website:
+        name: *website_name
+        domain: *website_domain
+        email: *website_email
+        description: *website_description
+        default_locale: *website_default_locale
+        status: *website_status
+        imports_articles: *website_imports_articles
+        imports_faqs: *website_imports_faqs
+        imports_reviews: *website_imports_reviews
+        rebuild_webhook_url: *website_rebuild_webhook_url
+        rebuild_webhook_token: *website_rebuild_webhook_token
+    errors:
+      models:
+        website:
+          attributes:
+            rebuild_webhook_url:
+              https: must be an https URL
+  helpers:
+    submit:
+      website:
+        create: Create Website
+        update: Update Website

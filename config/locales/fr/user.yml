@@ -1,0 +1,86 @@
+fr:
+  user:
+    name: &user_name Nom
+    email: &user_email E-mail
+    password: &user_password Mot de passe
+    password_confirmation: &user_password_confirmation Confirmation du mot de passe
+    current_password: &user_current_password Mot de passe actuel
+    remember_me: &user_remember_me Se souvenir de moi
+    role: &user_role Rôle
+    title: Compte
+    sign_in: Se connecter
+    sign_in_title: "Connexion — Forge"
+    sign_in_hint: Bon retour dans votre espace de contenu.
+    sign_up: S'inscrire
+    sign_up_title: "Inscription — Forge"
+    create_account: Créer un compte
+    create_account_hint: Commencez à gérer le contenu de vos sites vitrines.
+    create_an_account: Créer un compte
+    forgot_password: Mot de passe oublié ?
+    forgot_title: "Mot de passe oublié — Forge"
+    forgot_hint: Nous vous enverrons les instructions de réinitialisation par e-mail.
+    send_reset: Envoyer les instructions
+    reset_title: "Réinitialiser le mot de passe — Forge"
+    new_password: Choisir un nouveau mot de passe
+    new_password_label: Nouveau mot de passe
+    confirm_new_password: Confirmer le nouveau mot de passe
+    update_password: Mettre à jour le mot de passe
+    minimum: "%{count} caractères minimum"
+    account_title: "Compte — Forge"
+    account_hint: Mettez à jour votre profil ou votre mot de passe.
+    language: Langue
+    language_hint: L'interface reste dans cette langue sur ce navigateur.
+    pending_confirmation: "En attente de confirmation pour : %{email}"
+    change_password: Changer le mot de passe
+    leave_blank: Laissez vide pour conserver le mot de passe actuel.
+    current_password_hint: Requis pour confirmer vos modifications.
+    update_account: Mettre à jour le compte
+    chatgpt_access: Accès ChatGPT
+    chatgpt_hint: Voyez si ChatGPT est connecté à votre compte, connectez-le ou déconnectez-le.
+    manage_chatgpt: Gérer l'accès ChatGPT
+    cancel_account: Supprimer le compte
+    cancel_hint: Cela supprime définitivement votre utilisateur et les données associées lorsque l'application l'autorise.
+    cancel_my_account: Supprimer mon compte
+    cancel_confirm: Confirmer ? Cette action est irréversible.
+    back_to_websites: "← Retour aux sites"
+    confirmation_title: "Renvoyer la confirmation — Forge"
+    resend_confirmation: Renvoyer la confirmation
+    resend_instructions: Renvoyer les instructions
+    unlock_title: "Déverrouiller le compte — Forge"
+    resend_unlock: Renvoyer les instructions de déverrouillage
+    resend_unlock_email: Renvoyer l'e-mail de déverrouillage
+    sign_in_with: "Se connecter avec %{provider}"
+    mailer:
+      greeting: "Bonjour %{email} !"
+      welcome: "Bienvenue %{email} !"
+      reset_body: Quelqu'un a demandé un lien pour changer votre mot de passe. Vous pouvez le faire avec le lien ci-dessous.
+      reset_link: Changer mon mot de passe
+      reset_ignore: Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail.
+      reset_unchanged: Votre mot de passe ne changera pas tant que vous n'aurez pas ouvert le lien ci-dessus et choisi un nouveau mot de passe.
+      confirm_body: "Vous pouvez confirmer l'e-mail de votre compte avec le lien ci-dessous :"
+      confirm_link: Confirmer mon compte
+      unlock_body: Votre compte a été verrouillé après un trop grand nombre de tentatives de connexion.
+      unlock_prompt: "Cliquez sur le lien ci-dessous pour déverrouiller votre compte :"
+      unlock_link: Déverrouiller mon compte
+      email_changing: "Nous vous contactons pour vous informer que votre e-mail est en cours de modification vers %{email}."
+      email_changed: "Nous vous contactons pour vous informer que votre e-mail a été modifié vers %{email}."
+      password_changed: Nous vous contactons pour vous informer que votre mot de passe a été modifié.
+  activerecord:
+    models:
+      user:
+        one: Utilisateur
+        other: Utilisateurs
+    attributes:
+      user:
+        name: *user_name
+        email: *user_email
+        password: *user_password
+        password_confirmation: *user_password_confirmation
+        current_password: *user_current_password
+        remember_me: *user_remember_me
+        role: *user_role
+  helpers:
+    submit:
+      user:
+        create: S'inscrire
+        update: Mettre à jour le compte

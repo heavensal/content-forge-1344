@@ -21,7 +21,7 @@ L'API /api/v1 utilise un token permanent de Website, sans identité utilisateur 
 RebuildsWebsite déclenche après commit (create/update/destroy), y compris les brouillons. Website#schedule_rebuild! vérifie site actif, URL et imports_<type>. DeliverWebsiteRebuildJob appelle WebsiteRebuildWebhook : HTTPS, HMAC timestampé, bearer optionnel, repository_dispatch GitHub possible, retries sur erreurs transitoires. Le site consommateur doit ensuite relire l'API.
 
 - Aucun workflow d'approbation ; une modification de contenu publié est immédiatement visible via l'API.
-- La queue production :async est en mémoire : jobs perdus possibles lors d'un arrêt. Publication enregistrée ne signifie pas reconstruction livrée.
+- Les reconstructions sont des jobs Active Job (Sidekiq / Redis). Une publication enregistrée ne signifie pas que la reconstruction a été livrée.
 - Une publication future devient visible à sa date, mais aucun job planifié à cette date n'est présent.
 - Le webhook vérifie les IP DNS avant une deuxième résolution par Net::HTTP : fenêtre de DNS rebinding possible. À traiter séparément ; le MCP n'expose aucun paramètre de webhook.
 - Tests existants utiles pour memberships/API/webhooks ; plusieurs tests CRUD/modèles sont encore des squelettes.

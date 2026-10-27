@@ -1,0 +1,26 @@
+en:
+  contact_form:
+    eyebrow: Website
+    title: Contact form API
+    page_title: "Contact form API — %{name} — Forge"
+    intro_html: Post a JSON payload from your public site (for example %{domain}) to Forge. The message is emailed to the address saved on this website
+    email_present_html: "(%{email})."
+    email_missing_html: "— <strong class=\"text-amber-400/90\">add a contact email on the website</strong> in Forge before using this API."
+    endpoint: Endpoint
+    endpoint_help_html: 'POST JSON with header <code class="rounded bg-zinc-950 px-1.5 py-0.5 font-mono text-xs text-emerald-300/90">Authorization: Bearer &lt;api_token&gt;</code>.'
+    endpoint_base_html: 'Use the exact base URL of your Forge deployment (production: <code class="font-mono text-zinc-500">https://forge.1344.fr</code>). The route path is always <code class="font-mono text-zinc-500">/api/v1/send_form</code>.'
+    payload: Payload
+    payload_help_html: All keys are optional except you must send a <strong class="text-zinc-300">message</strong> or <strong class="text-zinc-300">body</strong>, or at least one value inside <strong class="text-zinc-300">fields</strong>.
+    fetch_title: Example (fetch from the browser)
+    fetch_help: Prefer a server-side proxy so the API token is not embedded in public JavaScript. Below is a minimal client-only example for development.
+    form_title: Example (HTML form + small script)
+    form_help_html: Avoids full page navigation to the API. Map your inputs into <code class="font-mono text-zinc-500">message</code> and/or <code class="font-mono text-zinc-500">fields</code>.
+    back: "← Back to website"
+    mailer:
+      new_message: "New message for %{name}"
+      name: Name
+      email: Email
+      subject: Subject
+      message: Message
+      fallback_subject: "Message from %{domain}"
+      sent_via: Sent via Forge contact API

@@ -1,0 +1,50 @@
+en:
+  review:
+    author: &review_author Author
+    content: &review_content Content
+    rating: &review_rating Rating
+    position: &review_position Position
+    status: &review_status Status
+    published_at: &review_published_at Published at
+    locale: &review_locale Language
+    title: Reviews
+    one: Review
+    new: New review
+    edit: Edit review
+    create: Create review
+    empty: No reviews yet.
+    draft: Draft review
+    delete_confirm: Delete this review?
+    back: "← Reviews"
+    hints:
+      author: Displayed name (required when published).
+      rating: Required when published.
+    statuses:
+      draft: Draft
+      published: Published
+      archived: Archived
+    notices:
+      created: Review was successfully created.
+      updated: Review was successfully updated.
+      deleted: Review was successfully deleted.
+    rating_option: "%{count} / 5"
+    testimonials: Testimonials
+  activerecord:
+    models:
+      review:
+        one: Review
+        other: Reviews
+    attributes:
+      review:
+        author: *review_author
+        content: *review_content
+        rating: *review_rating
+        position: *review_position
+        status: *review_status
+        published_at: *review_published_at
+        locale: *review_locale
+  helpers:
+    submit:
+      review:
+        create: Create Review
+        update: Update Review

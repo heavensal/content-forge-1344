@@ -1,0 +1,50 @@
+fr:
+  review:
+    author: &review_author Auteur
+    content: &review_content Avis
+    rating: &review_rating Note
+    position: &review_position Position
+    status: &review_status Statut
+    published_at: &review_published_at Date de publication
+    locale: &review_locale Langue
+    title: Avis
+    one: Avis
+    new: Nouvel avis
+    edit: Modifier l'avis
+    create: Créer un avis
+    empty: Aucun avis pour le moment.
+    draft: Brouillon d'avis
+    delete_confirm: Supprimer cet avis ?
+    back: "← Avis"
+    hints:
+      author: Nom affiché (obligatoire une fois publié).
+      rating: Obligatoire une fois publié.
+    statuses:
+      draft: Brouillon
+      published: Publié
+      archived: Archivé
+    notices:
+      created: L'avis a été créé.
+      updated: L'avis a été mis à jour.
+      deleted: L'avis a été supprimé.
+    rating_option: "%{count} / 5"
+    testimonials: Témoignages
+  activerecord:
+    models:
+      review:
+        one: Avis
+        other: Avis
+    attributes:
+      review:
+        author: *review_author
+        content: *review_content
+        rating: *review_rating
+        position: *review_position
+        status: *review_status
+        published_at: *review_published_at
+        locale: *review_locale
+  helpers:
+    submit:
+      review:
+        create: Créer l'avis
+        update: Enregistrer l'avis

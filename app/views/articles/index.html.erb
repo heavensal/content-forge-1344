@@ -1,32 +1,37 @@
-<% content_for :title, "Articles — #{@website.name}" %>
+<% content_for :title, "#{t("article.heading")} — #{@website.name}" %>
 
 <div class="mx-auto w-full max-w-5xl">
   <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
     <div class="min-w-0">
       <%= link_to @website.name, @website, class: "text-xs font-medium uppercase tracking-wider text-emerald-500/90 hover:text-emerald-400" %>
-      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl">Articles</h1>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl"><%= t("article.heading") %></h1>
     </div>
-    <%= link_to "New article", new_website_article_path(@website), class: primary_button_classes %>
+    <%= link_to t("article.new"), new_website_article_path(@website), class: primary_button_classes %>
   </div>
 
-  <%= render "shared/public_api_fetch", endpoint: "articles", resource_label: "Articles" %>
+  <%= render "shared/public_api_fetch", endpoint: "articles", resource_label: t("article.heading") %>
 
   <% if @articles.empty? %>
     <div class="<%= content_section_card_classes %> mt-10 text-center">
-      <p class="text-zinc-400">No articles yet.</p>
-      <%= link_to "Create article", new_website_article_path(@website), class: "#{primary_button_classes} mt-4" %>
+      <p class="text-zinc-400"><%= t("article.empty") %></p>
+      <%= link_to t("article.create"), new_website_article_path(@website), class: "#{primary_button_classes} mt-4" %>
     </div>
   <% else %>
     <ul class="mt-10 divide-y divide-zinc-800 rounded-xl border border-zinc-800 bg-zinc-900/40">
       <% @articles.each do |article| %>
         <li class="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-          <div class="min-w-0 flex-1">
-            <%= link_to article.title, [@website, article], class: "break-words font-medium text-zinc-100 hover:text-emerald-400" %>
-            <p class="mt-0.5 break-all text-xs text-zinc-500 sm:break-normal"><span class="text-zinc-600">/</span><%= article.slug %> · <%= content_locale_label(article.locale) %> · <%= article.status %></p>
+          <div class="flex min-w-0 flex-1 items-center gap-3">
+            <% if article.cover_image_url.present? %>
+              <%= image_tag article.cover_image_url, alt: "", class: "h-14 w-20 shrink-0 rounded-md object-cover" %>
+            <% end %>
+            <div class="min-w-0">
+              <%= link_to article.title, [@website, article], class: "break-words font-medium text-zinc-100 hover:text-emerald-400" %>
+              <p class="mt-0.5 break-all text-xs text-zinc-500 sm:break-normal"><span class="text-zinc-600">/</span><%= article.slug %> · <%= content_locale_label(article.locale) %> · <%= status_label(article) %></p>
+            </div>
           </div>
           <div class="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
-            <%= link_to "Edit", edit_website_article_path(@website, article), class: secondary_button_classes %>
-            <%= button_to "Delete", [@website, article], method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: "Delete this article?" } }, class: danger_button_classes %>
+            <%= link_to t("common.edit"), edit_website_article_path(@website, article), class: secondary_button_classes %>
+            <%= button_to t("common.delete"), [@website, article], method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: t("article.delete_confirm") } }, class: danger_button_classes %>
           </div>
         </li>
       <% end %>

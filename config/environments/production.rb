@@ -43,14 +43,7 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Cache: mémoire partagée entre threads du même processus Puma (simple, pas de Redis).
-  # Solid (désactivé): # config.cache_store = :solid_cache_store
   config.cache_store = :memory_store
-
-  # Jobs: exécution asynchrone dans le processus web (pas de worker séparé).
-  # Solid (désactivé): # config.active_job.queue_adapter = :solid_queue
-  #                     # config.solid_queue.connects_to = { database: { writing: :queue } }
-  config.active_job.queue_adapter = :async
 
   # SMTP via ENV (see config/initializers/action_mailer_smtp.rb). Kamal: inject secrets at deploy.
   config.action_mailer.perform_deliveries = true

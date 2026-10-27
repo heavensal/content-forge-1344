@@ -1,0 +1,41 @@
+en:
+  website_membership:
+    email: Client email
+    role: &website_membership_role Access
+    user: &website_membership_user User
+    website: &website_membership_website Website
+    title: Client access
+    hint: A client account can have one website. Assigning this site uses that place, so they cannot create another.
+    remove: Remove
+    remove_confirm: Remove this client's access to the website?
+    empty: No client assigned yet.
+    assign: Assign website
+    roles:
+      owner: Owner
+      editor: Editor
+    notices:
+      assigned: "%{email} can now open this website."
+      removed: Website access removed.
+    alerts:
+      missing_email: No account with that email.
+      admin_only: Only an admin can assign a website.
+  activerecord:
+    models:
+      website_membership:
+        one: Membership
+        other: Memberships
+    attributes:
+      website_membership:
+        role: *website_membership_role
+        user: *website_membership_user
+        website: *website_membership_website
+    errors:
+      models:
+        website_membership:
+          attributes:
+            user_id:
+              already_has_website: already has a website
+            user:
+              admin_sees_every_website: is an admin and already sees every website
+            website:
+              already_has_owner: already has an owner

@@ -1,40 +1,40 @@
-<% content_for :title, "Review content change — Forge" %>
+<% content_for :title, t("mcp_change.page_title") %>
 
 <div class="mx-auto w-full max-w-3xl">
-  <%= link_to "← ChatGPT access", settings_mcp_authorizations_path, class: "inline-flex min-h-11 items-center text-sm text-emerald-400 hover:text-emerald-300" %>
+  <%= link_to t("mcp_change.back"), settings_mcp_authorizations_path, class: "inline-flex min-h-11 items-center text-sm text-emerald-400 hover:text-emerald-300" %>
 
   <header class="mt-6">
-    <p class="text-xs font-semibold uppercase tracking-wider text-emerald-400">ChatGPT proposal</p>
-    <h1 class="mt-2 text-2xl font-semibold tracking-tight text-zinc-50">Review Forge change</h1>
-    <p class="mt-2 text-sm text-zinc-400">Nothing is saved until you approve this exact proposal.</p>
+    <p class="text-xs font-semibold uppercase tracking-wider text-emerald-400"><%= t("mcp_change.eyebrow") %></p>
+    <h1 class="mt-2 text-2xl font-semibold tracking-tight text-zinc-50"><%= t("mcp_change.title") %></h1>
+    <p class="mt-2 text-sm text-zinc-400"><%= t("mcp_change.nothing_saved") %></p>
   </header>
 
   <div class="<%= content_section_card_classes %> mt-6">
     <dl class="grid gap-4 text-sm sm:grid-cols-2">
       <div>
-        <dt class="text-zinc-500">Website</dt>
+        <dt class="text-zinc-500"><%= t("mcp_change.website") %></dt>
         <dd class="mt-1 break-words font-medium text-zinc-100"><%= @website.name %> <span class="font-normal text-zinc-400">(<%= @website.domain %>)</span></dd>
       </div>
       <div>
-        <dt class="text-zinc-500">Change</dt>
+        <dt class="text-zinc-500"><%= t("mcp_change.change") %></dt>
         <dd class="mt-1 font-medium capitalize text-zinc-100"><%= @change.operation %> · <%= @change.content_type %></dd>
       </div>
     </dl>
     <% if @change.operation == "publish" || @preview.published? %>
-      <p class="mt-5 rounded-lg border border-amber-800/50 bg-amber-950/30 p-3 text-sm text-amber-200">This change affects public content and requests a website rebuild.</p>
+      <p class="mt-5 rounded-lg border border-amber-800/50 bg-amber-950/30 p-3 text-sm text-amber-200"><%= t("mcp_change.public_warning") %></p>
     <% end %>
     <% if @change.operation == "delete" %>
-      <p class="mt-5 rounded-lg border border-red-900/60 bg-red-950/30 p-3 text-sm text-red-200">This permanently deletes the content shown below.</p>
+      <p class="mt-5 rounded-lg border border-red-900/60 bg-red-950/30 p-3 text-sm text-red-200"><%= t("mcp_change.delete_warning") %></p>
     <% end %>
   </div>
 
   <section class="<%= content_section_card_classes %> mt-5" aria-labelledby="proposal-details-title">
-    <h2 id="proposal-details-title" class="text-lg font-semibold text-zinc-100">Proposed content</h2>
-    <p class="mt-1 text-xs text-zinc-500">Article HTML is displayed as text so you can inspect it.</p>
+    <h2 id="proposal-details-title" class="text-lg font-semibold text-zinc-100"><%= t("mcp_change.proposed") %></h2>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("mcp_change.html_hint") %></p>
     <dl class="mt-5 divide-y divide-zinc-800">
       <% Mcp::Content.serialize(@preview, @change.content_type).each do |field, value| %>
         <div class="py-3 first:pt-0 last:pb-0">
-          <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500"><%= field.humanize %></dt>
+          <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500"><%= content_field_label(@change.content_type, field) %></dt>
           <dd class="mt-1 whitespace-pre-wrap break-words text-sm text-zinc-200"><%= value %></dd>
         </div>
       <% end %>
@@ -43,12 +43,12 @@
 
   <div class="mt-6">
     <% if @change.applied_at? %>
-      <p class="text-sm text-emerald-300">This change has already been applied.</p>
+      <p class="text-sm text-emerald-300"><%= t("mcp_change.applied") %></p>
     <% elsif @change.expires_at <= Time.current %>
-      <p class="text-sm text-amber-300">This proposal expired. Ask ChatGPT to prepare a new one.</p>
+      <p class="text-sm text-amber-300"><%= t("mcp_change.expired") %></p>
     <% else %>
-      <%= button_to "Approve this exact change", mcp_change_path(@change), method: :patch, class: primary_button_classes %>
-      <p class="mt-3 text-xs text-zinc-500">To decline, close this page. Nothing is applied without approval.</p>
+      <%= button_to t("mcp_change.approve"), mcp_change_path(@change), method: :patch, class: primary_button_classes %>
+      <p class="mt-3 text-xs text-zinc-500"><%= t("mcp_change.decline") %></p>
     <% end %>
   </div>
 </div>

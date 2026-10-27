@@ -1,0 +1,48 @@
+fr:
+  faq:
+    question: &faq_question Question
+    slug: &faq_slug Slug
+    answer: &faq_answer Réponse
+    position: &faq_position Position
+    status: &faq_status Statut
+    published_at: &faq_published_at Date de publication
+    locale: &faq_locale Langue
+    title: FAQ
+    one: FAQ
+    new: Nouvelle FAQ
+    edit: Modifier la FAQ
+    create: Créer une FAQ
+    empty: Aucune FAQ pour le moment.
+    delete_confirm: Supprimer cette FAQ ?
+    back: "← FAQ"
+    questions: Questions et réponses
+    position_label: "position %{position}"
+    hints:
+      slug: Remplacement facultatif ; sinon généré depuis la question à la création.
+    statuses:
+      draft: Brouillon
+      published: Publié
+      archived: Archivé
+    notices:
+      created: La FAQ a été créée.
+      updated: La FAQ a été mise à jour.
+      deleted: La FAQ a été supprimée.
+  activerecord:
+    models:
+      faq:
+        one: FAQ
+        other: FAQ
+    attributes:
+      faq:
+        question: *faq_question
+        slug: *faq_slug
+        answer: *faq_answer
+        position: *faq_position
+        status: *faq_status
+        published_at: *faq_published_at
+        locale: *faq_locale
+  helpers:
+    submit:
+      faq:
+        create: Créer la FAQ
+        update: Enregistrer la FAQ

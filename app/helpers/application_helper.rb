@@ -41,6 +41,41 @@ module ApplicationHelper
       (controller_name == "websites" && params[:id].to_s == website_record.id.to_s)
   end
 
+  def admin_database_active?(entity)
+    controller_path == "admin/records" && params[:entity] == entity
+  end
+
+  def admin_display_columns
+    @columns + @rich_text_columns.reject { |name| @columns.include?(name) }
+  end
+
+  def admin_attribute(record, column)
+    if !record.has_attribute?(column) && record.class.reflect_on_association(:"rich_text_#{column}")
+      return record.public_send(column)&.to_plain_text
+    end
+
+    record.read_attribute_before_type_cast(column)
+  end
+
+  def admin_cell(value)
+    case value
+    when nil
+      "—"
+    when Time, ActiveSupport::TimeWithZone, DateTime
+      value.strftime("%Y-%m-%d %H:%M")
+    when Date
+      value.iso8601
+    when Hash, Array
+      value.to_json
+    else
+      value.to_s
+    end
+  end
+
+  def admin_record_path(record)
+    send(:"admin_#{@entity.singularize}_path", record)
+  end
+
   def show_website_content_nav?
     @website&.persisted? && (
       params[:website_id].present? ||
@@ -57,11 +92,38 @@ module ApplicationHelper
   end
 
   def content_locale_options
-    [ [ "French", "fr" ], [ "English", "en" ] ]
+    ContentLocale::LOCALES.map { |locale| [ content_locale_label(locale), locale ] }
   end
 
   def content_locale_label(locale)
-    locale.to_s == "en" ? "English" : "French"
+    t("common.languages.#{locale}", default: locale.to_s)
+  end
+
+  def ui_locale_name(locale)
+    { "en" => "English", "fr" => "Français" }.fetch(locale.to_s)
+  end
+
+  def status_options(model)
+    model.statuses.keys.map { |status| [ t("#{model.model_name.i18n_key}.statuses.#{status}"), status ] }
+  end
+
+  def status_label(record)
+    t("#{record.model_name.i18n_key}.statuses.#{record.status}")
+  end
+
+  def role_options(model)
+    model.roles.keys.map { |role| [ t("#{model.model_name.i18n_key}.roles.#{role}"), role ] }
+  end
+
+  def role_label(record)
+    t("#{record.model_name.i18n_key}.roles.#{record.role}")
+  end
+
+  def content_field_label(content_type, field)
+    model = { "articles" => Article, "faqs" => Faq, "reviews" => Review }[content_type.to_s]
+    return field.to_s.humanize unless model
+
+    model.human_attribute_name(field)
   end
 
   def other_content_locale(locale)

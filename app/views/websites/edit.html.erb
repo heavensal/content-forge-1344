@@ -1,7 +1,7 @@
-<% content_for :title, "Edit #{@website.name} — Forge" %>
+<% content_for :title, "#{t("website.edit_named", name: @website.name)} — Forge" %>
 
 <div class="mx-auto w-full max-w-xl">
-  <h1 class="text-2xl font-semibold tracking-tight text-zinc-50">Edit website</h1>
+  <h1 class="text-2xl font-semibold tracking-tight text-zinc-50"><%= t("website.edit") %></h1>
   <p class="mt-1 text-sm text-zinc-500"><%= @website.domain %></p>
 
   <div class="<%= content_section_card_classes %> mt-8">

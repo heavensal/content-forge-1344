@@ -3,7 +3,6 @@
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
-  # Avec Solid Queue : voir docs/SOLID_OPTIONAL.md (chargement schéma queue si besoin).
 fi
 
 exec "${@}"

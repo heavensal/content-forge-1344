@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
+  around_action :switch_locale
   before_action :authenticate_user!, unless: :devise_controller?
   before_action :load_sidebar_websites, if: :use_app_shell?
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -27,6 +28,12 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def switch_locale(&action)
+    requested = cookies[:locale].to_s
+    locale = I18n.available_locales.map(&:to_s).include?(requested) ? requested : I18n.default_locale
+    I18n.with_locale(locale, &action)
+  end
 
   def use_app_shell?
     user_signed_in? && !guest_devise_action?

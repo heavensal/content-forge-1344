@@ -1,0 +1,41 @@
+<% content_for :title, "#{@label} — Forge" %>
+
+<div class="w-full">
+  <p class="text-xs font-medium uppercase tracking-wider text-emerald-500/90"><%= t("admin.database") %></p>
+  <h1 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl"><%= @label %></h1>
+  <p class="mt-1 text-sm text-zinc-500"><%= t("admin.rows", count: @records.size) %></p>
+
+  <% if @records.empty? %>
+    <div class="<%= content_section_card_classes %> mt-8">
+      <p class="text-sm text-zinc-400"><%= t("admin.empty") %></p>
+    </div>
+  <% else %>
+    <div class="mt-6 overflow-x-auto rounded-xl border border-zinc-800">
+      <table class="min-w-full text-left">
+        <thead class="bg-zinc-900/80 text-[11px] uppercase tracking-wide text-zinc-500">
+          <tr>
+            <% admin_display_columns.each do |column| %>
+              <th class="whitespace-nowrap px-3 py-2 font-medium" scope="col"><%= @model.human_attribute_name(column) %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-zinc-800">
+          <% @records.each do |record| %>
+            <tr class="align-top hover:bg-zinc-900/50">
+              <% admin_display_columns.each do |column| %>
+                <% value = admin_cell(admin_attribute(record, column)) %>
+                <td class="max-w-xs truncate px-3 py-2 font-mono text-xs text-zinc-300" title="<%= value %>">
+                  <% if column == "id" %>
+                    <%= link_to record.id, admin_record_path(record), class: "text-emerald-400 hover:text-emerald-300" %>
+                  <% else %>
+                    <%= value.truncate(120) %>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

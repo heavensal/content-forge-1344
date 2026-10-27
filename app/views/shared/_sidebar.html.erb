@@ -1,18 +1,18 @@
 <aside
   id="app-sidebar"
   data-mobile-nav-target="panel"
-  class="fixed inset-y-0 left-0 z-50 flex h-full w-[min(18rem,calc(100vw-2.5rem))] max-w-full -translate-x-full flex-col border-r border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/40 transition-transform duration-200 ease-out lg:static lg:z-auto lg:h-auto lg:min-h-screen lg:w-64 lg:max-w-none lg:translate-x-0 lg:shadow-none"
-  aria-label="Main navigation">
+  class="fixed inset-y-0 left-0 z-50 flex h-dvh max-h-dvh min-h-0 w-[min(18rem,calc(100vw-2.5rem))] max-w-full -translate-x-full flex-col overflow-hidden border-r border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/40 transition-transform duration-200 ease-out lg:static lg:z-auto lg:h-full lg:max-h-full lg:w-64 lg:max-w-none lg:translate-x-0 lg:shadow-none"
+  aria-label="<%= t("nav.main") %>">
   <div class="flex shrink-0 items-center justify-between gap-2 border-b border-zinc-800 px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))] lg:pt-5">
     <%= link_to root_path, class: "min-w-0 flex-1", data: { action: "click->mobile-nav#close" } do %>
       <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400">Forge</p>
-      <p class="text-[11px] text-zinc-500">by 1344</p>
+      <p class="text-[11px] text-zinc-500"><%= t("nav.by") %></p>
     <% end %>
     <button
       type="button"
       class="inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-lg border border-zinc-700 text-zinc-400 touch-manipulation hover:bg-zinc-800 hover:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 lg:hidden"
       data-action="click->mobile-nav#close"
-      aria-label="Close menu">
+      aria-label="<%= t("nav.close_menu") %>">
       <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
       </svg>
@@ -21,17 +21,17 @@
 
   <div class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
     <div class="px-3 pt-4">
-      <p class="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Websites</p>
+      <p class="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-500"><%= t("nav.websites") %></p>
       <nav class="mt-2 space-y-0.5">
         <% if current_user.admin? %>
           <%= link_to websites_path, class: nav_item_classes(controller_name == "websites" && action_name == "index"), data: { action: "click->mobile-nav#close" } do %>
             <svg class="h-4 w-4 shrink-0 opacity-70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-            <span>All websites</span>
+            <span><%= t("nav.all_websites") %></span>
           <% end %>
         <% elsif current_user.can_create_website? %>
           <%= link_to new_website_path, class: nav_item_classes(controller_name == "websites" && %w[new create].include?(action_name)), data: { action: "click->mobile-nav#close" } do %>
             <svg class="h-4 w-4 shrink-0 opacity-70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-            <span>New website</span>
+            <span><%= t("nav.new_website") %></span>
           <% end %>
         <% end %>
         <% @sidebar_websites.each do |w| %>
@@ -45,20 +45,33 @@
 
     <% if show_website_content_nav? %>
       <div class="mt-4 border-t border-zinc-800/80 px-3 pt-4">
-        <p class="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">Content</p>
+        <p class="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-500"><%= t("nav.content") %></p>
         <p class="truncate px-3 text-xs font-medium text-emerald-400/90"><%= @website.name %></p>
         <nav class="mt-2 space-y-0.5">
           <%= link_to website_articles_path(@website), class: nav_item_classes(controller_name == "articles"), data: { action: "click->mobile-nav#close" } do %>
-            <span>Articles</span>
+            <span><%= t("article.heading") %></span>
           <% end %>
           <%= link_to website_faqs_path(@website), class: nav_item_classes(controller_name == "faqs"), data: { action: "click->mobile-nav#close" } do %>
-            <span>FAQs</span>
+            <span><%= t("faq.title") %></span>
           <% end %>
           <%= link_to website_reviews_path(@website), class: nav_item_classes(controller_name == "reviews"), data: { action: "click->mobile-nav#close" } do %>
-            <span>Reviews</span>
+            <span><%= t("review.title") %></span>
           <% end %>
           <%= link_to website_contact_form_integration_path(@website), class: nav_item_classes(controller_name == "contact_form_integrations"), data: { action: "click->mobile-nav#close" } do %>
-            <span>Contact form API</span>
+            <span><%= t("nav.contact_form") %></span>
+          <% end %>
+        </nav>
+      </div>
+    <% end %>
+
+    <% if current_user.admin? %>
+      <div class="mt-4 border-t border-zinc-800/80 px-3 pt-4 pb-4">
+        <p class="px-3 text-[10px] font-semibold uppercase tracking-wider text-zinc-500"><%= t("nav.database") %></p>
+        <nav class="mt-2 space-y-0.5">
+          <% Admin::RecordsController::ENTITIES.each do |entity| %>
+            <%= link_to send(:"admin_#{entity}_path"), class: nav_item_classes(admin_database_active?(entity)), data: { action: "click->mobile-nav#close" } do %>
+              <span><%= t("admin.entities.#{entity}") %></span>
+            <% end %>
           <% end %>
         </nav>
       </div>
@@ -69,15 +82,16 @@
     <div class="rounded-lg bg-zinc-900/60 px-3 py-2">
       <p class="truncate text-xs font-medium text-zinc-200"><%= current_user.name %></p>
       <p class="truncate text-[11px] text-zinc-500"><%= current_user.email %></p>
+      <p class="mt-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400/90" data-sidebar-role><%= current_user.role_before_type_cast %></p>
     </div>
     <nav class="mt-2 space-y-0.5">
       <%= link_to edit_user_registration_path, class: nav_item_classes(controller_name == "registrations" && %w[edit update].include?(action_name)), data: { action: "click->mobile-nav#close" } do %>
         <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
-        <span>Edit account</span>
+        <span><%= t("nav.edit_account") %></span>
       <% end %>
       <%= button_to destroy_user_session_path, method: :delete, form: { class: "block w-full" }, class: "#{nav_item_classes(false)} w-full min-h-11 cursor-pointer touch-manipulation border-0 bg-transparent text-left font-inherit", data: { action: "click->mobile-nav#close" } do %>
         <svg class="h-4 w-4 shrink-0 text-zinc-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
-        <span>Sign out</span>
+        <span><%= t("nav.sign_out") %></span>
       <% end %>
     </nav>
   </div>

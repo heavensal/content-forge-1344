@@ -1,43 +1,58 @@
 <%= render "shared/model_errors", model: article %>
 
-<%= form_with model: [@website, article], class: "space-y-6" do |f| %>
+<%= form_with model: [@website, article], class: "space-y-6", data: { controller: "article-images", article_images_url_value: website_article_images_path(@website) } do |f| %>
   <%= render "shared/locale_field", form: f %>
 
   <div>
-    <%= f.label :title, class: label_classes %>
+    <%= f.label :title, t("article.title"), class: label_classes %>
     <%= f.text_field :title, class: input_classes, required: true %>
   </div>
 
   <div>
-    <%= f.label :slug, class: label_classes %>
-    <%= f.text_field :slug, class: input_classes, placeholder: "auto from title if left blank on create" %>
-    <p class="mt-1 text-xs text-zinc-500">URL segment for your public site. Leave blank on create to generate from the title.</p>
+    <%= f.label :slug, t("article.slug"), class: label_classes %>
+    <%= f.text_field :slug, class: input_classes, placeholder: t("article.slug_placeholder") %>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("article.hints.slug") %></p>
   </div>
 
   <div>
-    <%= f.label :description, class: label_classes %>
+    <%= f.label :description, t("article.description"), class: label_classes %>
     <%= f.text_area :description, class: "#{input_classes} min-h-[120px]", rows: 5 %>
   </div>
 
   <div>
-    <%= f.label :status, class: label_classes %>
-    <%= f.select :status, Article.statuses.keys.map { |k| [k.humanize, k] }, {}, class: input_classes %>
+    <%= f.label :status, t("article.status"), class: label_classes %>
+    <%= f.select :status, status_options(Article), {}, class: input_classes %>
   </div>
 
   <div>
-    <%= f.label :published_at, class: label_classes %>
+    <%= f.label :published_at, t("article.published_at"), class: label_classes %>
     <%= f.datetime_field :published_at, class: input_classes %>
-    <p class="mt-1 text-xs text-zinc-500">Required when status is published.</p>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("article.hints.published_at") %></p>
   </div>
 
+  <div>
+    <%= f.label :cover_image, t("article.cover_image"), class: label_classes %>
+    <% if article.cover_image_url.present? %>
+      <%= image_tag article.cover_image_url, alt: article.title.presence || t("article.cover_image"), class: "mb-3 mt-2 max-h-48 w-full rounded-lg object-cover" %>
+    <% end %>
+    <%= f.file_field :cover_image, accept: "image/jpeg,image/png,image/webp,image/gif", class: "block w-full text-sm text-zinc-300 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-800 file:px-3 file:py-2 file:text-sm file:font-medium file:text-zinc-100" %>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("article.hints.cover_image_html") %></p>
+    <% if article.cover_image_url.present? %>
+      <label class="mt-3 flex items-center gap-2 text-sm text-zinc-300">
+        <%= f.check_box :remove_cover_image, class: "rounded border-zinc-600 bg-zinc-900 text-emerald-500 focus:ring-emerald-500/40" %>
+        <%= t("article.remove_cover_image") %>
+      </label>
+    <% end %>
+  </div>
 
   <div class="min-w-0 overflow-x-auto">
-    <%= f.label :content, class: label_classes %>
+    <%= f.label :content, t("article.content"), class: label_classes %>
     <%= f.rich_text_area :content, class: "max-w-full rounded-lg border border-zinc-600 bg-zinc-900/80 text-zinc-100 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/40" %>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("article.hints.content_html") %></p>
   </div>
 
   <div class="<%= form_footer_actions_classes %> pt-2">
     <%= f.submit class: primary_button_classes %>
-    <%= link_to "Cancel", article.persisted? ? [@website, article] : website_articles_path(@website), class: secondary_button_classes %>
+    <%= link_to t("common.cancel"), article.persisted? ? [@website, article] : website_articles_path(@website), class: secondary_button_classes %>
   </div>
 <% end %>

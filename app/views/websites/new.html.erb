@@ -1,8 +1,8 @@
-<% content_for :title, "New website — Forge" %>
+<% content_for :title, "#{t("website.new")} — Forge" %>
 
 <div class="mx-auto w-full max-w-xl">
-  <h1 class="text-2xl font-semibold tracking-tight text-zinc-50">New website</h1>
-  <p class="mt-1 text-sm text-zinc-500">An API token is generated automatically when you save.</p>
+  <h1 class="text-2xl font-semibold tracking-tight text-zinc-50"><%= t("website.new") %></h1>
+  <p class="mt-1 text-sm text-zinc-500"><%= t("website.token_hint") %></p>
 
   <div class="<%= content_section_card_classes %> mt-8">
     <%= render "form", website: @website %>

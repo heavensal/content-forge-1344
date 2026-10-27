@@ -1,7 +1,7 @@
 module Mcp
   module Content
     FIELDS = {
-      "articles" => %w[title slug description content locale],
+      "articles" => %w[title slug description content locale cover_image_url],
       "reviews" => %w[author content rating position locale],
       "faqs" => %w[question slug answer position locale]
     }.freeze
@@ -18,7 +18,7 @@ module Mcp
     def self.serialize(record, type)
       fields = FIELDS.fetch(type) + %w[id website_id status published_at updated_at]
       fields.to_h do |field|
-        value = field == "content" && type == "articles" ? record.content.body&.to_html.to_s : record.public_send(field)
+        value = field == "content" && type == "articles" ? record.public_content_html.to_s : record.public_send(field)
         [ field, value ]
       end.as_json
     end
@@ -38,10 +38,32 @@ module Mcp
         end
       end
       # Do not allow Action Text attachment signed IDs to reference another client's files.
-      if type == "articles" && payload.key?("content")
-        payload = payload.merge("content" => Rails::HTML5::SafeListSanitizer.new.sanitize(payload["content"], tags: %w[p br strong em ul ol li h2 h3 blockquote a], attributes: %w[href title]))
+      if type == "articles"
+        payload = payload.merge("cover_image_url" => cover_image_url(payload["cover_image_url"])) if payload.key?("cover_image_url")
+        payload = payload.merge("content" => article_html(payload["content"])) if payload.key?("content")
       end
       payload
+    end
+
+    def self.cover_image_url(value)
+      return "" if value.blank?
+      raise ArgumentError, "cover_image_url must be an https URL" unless ArticleImages.https_url?(value)
+
+      value
+    end
+
+    def self.article_html(html)
+      original = Nokogiri::HTML5.fragment(html.to_s)
+      images = original.css("img")
+      raise ArgumentError, "An article can contain at most 12 images" if images.size > 12
+      images.each do |image|
+        raise ArgumentError, "Article images must use https URLs" unless ArticleImages.https_url?(image["src"].to_s)
+      end
+      Rails::HTML5::SafeListSanitizer.new.sanitize(
+        html.to_s,
+        tags: %w[p br strong em ul ol li h2 h3 blockquote a figure figcaption img],
+        attributes: %w[href title src alt width height]
+      )
     end
   end
 end

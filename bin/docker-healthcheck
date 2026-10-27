@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# The job container runs Sidekiq and does not listen on port 80.
+# A dead worker exits the container; Kamal restarts it.
+if [ "${FORGE_PROCESS:-}" = "job" ]; then
+  exit 0
+fi
+
+curl -fsS http://127.0.0.1:80/up

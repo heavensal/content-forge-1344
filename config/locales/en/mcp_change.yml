@@ -1,0 +1,54 @@
+en:
+  mcp_change:
+    operation: &mcp_change_operation Operation
+    content_type: &mcp_change_content_type Content type
+    website: Website
+    change: Change
+    title: Review Forge change
+    page_title: "Review content change — Forge"
+    back: "← ChatGPT access"
+    eyebrow: ChatGPT proposal
+    nothing_saved: Nothing is saved until you approve this exact proposal.
+    public_warning: This change affects public content and requests a website rebuild.
+    delete_warning: This permanently deletes the content shown below.
+    proposed: Proposed content
+    html_hint: Article HTML is displayed as text so you can inspect it.
+    applied: This change has already been applied.
+    expired: This proposal expired. Ask ChatGPT to prepare a new one.
+    approve: Approve this exact change
+    decline: To decline, close this page. Nothing is applied without approval.
+    notices:
+      approved: Change approved and saved. Website rebuild delivery is asynchronous.
+  mcp:
+    page_title: "ChatGPT access — Forge"
+    eyebrow: Account integration
+    title: ChatGPT access
+    intro: ChatGPT acts with your Forge account to manage articles, reviews and FAQs on websites assigned to you.
+    status_connected: Connected
+    status_disconnected: Not connected
+    connected_body: ChatGPT can prepare articles, reviews and FAQs. You approve each change in Forge.
+    disconnected_body: The button opens ChatGPT. Add a custom MCP server there, then paste the URL below. ChatGPT sends you back here to approve access.
+    connect_chatgpt: Connect
+    disconnect: Disconnect
+    disconnect_confirm: Disconnect ChatGPT? It cannot prepare changes until you connect again.
+    disconnected: ChatGPT is disconnected.
+    server_url: Server URL
+    server_hint: Paste this URL into ChatGPT when the MCP server form asks for it.
+    plugin: Suggested plugin description
+    plugin_body: Manage articles, reviews and FAQs for websites assigned to your Forge account. Changes require your approval in Forge before they are saved or published.
+    footnote: ChatGPT generates the text. Creating, editing, deleting or publishing content prepares a proposal; you review and approve each proposal in Forge. New content starts as a draft. Publishing requires a separate approval.
+    authorize_title: "Authorize ChatGPT access — Forge"
+    authorize_eyebrow: ChatGPT integration
+    requesting_html: "<strong class=\"font-semibold text-zinc-100\">%{client}</strong> is requesting access to your Forge account. Review the permissions before continuing."
+    limited: Access is limited to websites assigned to your account. Content changes require your separate approval in Forge. You can revoke this connection in your account settings.
+    error_title: "Authorization error — Forge"
+    return: Return to Forge
+  activerecord:
+    models:
+      mcp_change:
+        one: MCP change
+        other: MCP changes
+    attributes:
+      mcp_change:
+        operation: *mcp_change_operation
+        content_type: *mcp_change_content_type

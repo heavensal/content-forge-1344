@@ -1,0 +1,48 @@
+fr:
+  doorkeeper:
+    scopes:
+      "content:read": "Lire le contenu des sites qui vous sont assignés"
+      "content:write": "Créer, modifier et supprimer le contenu des sites qui vous sont assignés"
+      "content:publish": "Publier le contenu des sites qui vous sont assignés"
+      "offline_access": "Rester connecté jusqu'à ce que vous révoquiez l'accès dans Forge"
+    authorizations:
+      buttons:
+        authorize: "Autoriser"
+        deny: "Refuser"
+      error:
+        title: "Une erreur s'est produite"
+      new:
+        title: "Autorisation requise"
+        prompt: "Autoriser %{client_name} à utiliser votre compte ?"
+        able_to: "Cette application pourra :"
+    errors:
+      messages:
+        invalid_request:
+          unknown: "La requête manque d'un paramètre requis, contient une valeur non prise en charge, ou est mal formée."
+          missing_param: "Paramètre requis manquant : %{value}."
+          request_not_authorized: "La requête doit être autorisée. Le paramètre requis est manquant ou invalide."
+          invalid_code_challenge: "Le code challenge est requis."
+          multiple_client_auth_methods: "La requête utilise plus d'un mécanisme d'authentification du client."
+        invalid_redirect_uri: "L'URI de redirection demandée est mal formée ou ne correspond pas à celle du client."
+        unauthorized_client: "Le client n'est pas autorisé à effectuer cette requête avec cette méthode."
+        access_denied: "Le propriétaire de la ressource ou le serveur d'autorisation a refusé la requête."
+        invalid_scope: "La portée demandée est invalide, inconnue ou mal formée."
+        invalid_code_challenge_method:
+          zero: "Le serveur d'autorisation ne prend pas en charge PKCE."
+          one: "code_challenge_method doit être %{challenge_methods}."
+          other: "code_challenge_method doit être l'une de ces valeurs : %{challenge_methods}."
+        server_error: "Le serveur d'autorisation a rencontré une condition inattendue."
+        temporarily_unavailable: "Le serveur d'autorisation ne peut pas traiter la requête pour le moment."
+        unsupported_response_type: "Le serveur d'autorisation ne prend pas en charge ce type de réponse."
+        unsupported_response_mode: "Le serveur d'autorisation ne prend pas en charge ce mode de réponse."
+        invalid_client: "L'authentification du client a échoué."
+        invalid_grant: "L'autorisation fournie est invalide, expirée, révoquée, ou ne correspond pas à la requête."
+        unsupported_grant_type: "Ce type d'autorisation n'est pas pris en charge."
+        invalid_token:
+          revoked: "Le jeton d'accès a été révoqué"
+          expired: "Le jeton d'accès a expiré"
+          unknown: "Le jeton d'accès est invalide"
+        revoke:
+          unauthorized: "Vous n'êtes pas autorisé à révoquer ce jeton"
+        forbidden_token:
+          missing_scope: "L'accès à cette ressource exige la portée \"%{oauth_scopes}\"."

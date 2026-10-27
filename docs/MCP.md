@@ -31,7 +31,7 @@ ChatGPT lit les instructions renvoyées par `initialize` ainsi que le titre, la 
 
 ## Connexion au compte et OAuth
 
-Le client garde son compte et mot de passe Forge. Il ajoute le serveur MCP depuis ChatGPT. Le flux OAuth redirige vers Forge ; Devise authentifie l'utilisateur et Doorkeeper affiche le consentement à chaque nouvelle connexion, avec les scopes demandés. ChatGPT reçoit un jeton opaque à durée limitée avec refresh token. La page **Account → Manage ChatGPT access** liste les connexions et permet de les révoquer immédiatement. Aucun compte ChatGPT n'est associé par adresse email : l'accès utilise directement la session et l'identifiant interne du compte Forge connecté au consentement.
+Le client garde son compte et mot de passe Forge. Il ajoute le serveur MCP depuis ChatGPT. Le flux OAuth redirige vers Forge ; Devise authentifie l'utilisateur et Doorkeeper affiche le consentement, avec les scopes demandés. ChatGPT reçoit un jeton opaque à durée limitée avec refresh token. La page **Account → Manage ChatGPT access** répond par oui ou non : un jeton non révoqué, encore utilisable ou renouvelable, signifie connecté. Se déconnecter révoque tous les jetons de ce compte. Se connecter ouvre la page Plugins de ChatGPT ; l'URL du serveur reste affichée pour être collée, ChatGPT ne préremplit pas ce champ. Les renouvellements de jeton ne créent pas de lignes supplémentaires à l'écran. Aucun compte ChatGPT n'est associé par adresse email : l'accès utilise directement la session et l'identifiant interne du compte Forge connecté au consentement.
 
 La connexion dans ChatGPT lance le consentement OAuth : si l'utilisateur n'est pas connecté à Forge, il entre ses identifiants Forge ; sinon il confirme les permissions. Il peut gérer ou révoquer l'accès depuis Forge et retirer la connexion ChatGPT depuis ChatGPT.
 
@@ -74,7 +74,7 @@ Avant fusion : aucune nouvelle variable `.env`, aucun secret GitHub et aucune mi
 
 ## Limites conservées et suites
 
-La queue production :async n'est pas durable ; activer une file persistante et l'observabilité de livraison avant de promettre une distribution garantie (voir SOLID_OPTIONAL.md). La publication programmée n'est pas exposée. L'audit signale une fenêtre de DNS rebinding dans le webhook existant ; une correction dédiée doit pinner les IP vérifiées et couvrir IPv6. Pas de modification des secrets ou réglages de Website via MCP. Pas de téléchargement/gestion de médias, pas de UI ChatGPT embarquée, pas de publication sans clic Forge. La liste de sites est limitée à 100 (à paginer si l'administration dépasse cette taille).
+Les emails et les reconstructions passent par Active Job et Sidekiq (Redis). Une publication enregistrée ne signifie pas que la reconstruction a été livrée. La publication programmée n'est pas exposée. L'audit signale une fenêtre de DNS rebinding dans le webhook existant ; une correction dédiée doit pinner les IP vérifiées et couvrir IPv6. Pas de modification des secrets ou réglages de Website via MCP. Pas de téléchargement/gestion de médias, pas de UI ChatGPT embarquée, pas de publication sans clic Forge. La liste de sites est limitée à 100 (à paginer si l'administration dépasse cette taille).
 
 ## Références
 

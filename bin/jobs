@@ -1,9 +1,5 @@
-#!/usr/bin/env ruby
-# Worker Solid Queue — réactiver avec la gem solid_queue (voir docs/SOLID_OPTIONAL.md).
-#
-# require_relative "../config/environment"
-# require "solid_queue/cli"
-# SolidQueue::Cli.start(ARGV)
+#!/usr/bin/env bash
+set -euo pipefail
 
-warn "bin/jobs: Solid Queue n’est pas activé. Voir docs/SOLID_OPTIONAL.md"
-exit 1
+cd "$(dirname "$0")/.."
+exec bundle exec sidekiq -C config/sidekiq.yml "$@"

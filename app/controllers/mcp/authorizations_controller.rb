@@ -1,13 +1,20 @@
 module Mcp
   class AuthorizationsController < ApplicationController
     def index
-      @tokens = current_user.oauth_access_tokens.includes(:application).order(created_at: :desc)
+      @connected = chatgpt_connected?
     end
 
     def destroy
-      token = current_user.oauth_access_tokens.find(params[:id])
-      token.revoke
-      redirect_to settings_mcp_authorizations_path, notice: "ChatGPT access revoked."
+      current_user.oauth_access_tokens.where(revoked_at: nil).find_each(&:revoke)
+      redirect_to settings_mcp_authorizations_path, notice: t("mcp.disconnected")
+    end
+
+    private
+
+    def chatgpt_connected?
+      current_user.oauth_access_tokens.where(revoked_at: nil).any? do |token|
+        token.accessible? || token.refresh_token.present?
+      end
     end
   end
 end

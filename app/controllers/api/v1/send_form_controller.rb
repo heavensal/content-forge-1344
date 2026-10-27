@@ -30,10 +30,10 @@ module Api
           fields: payload[:fields]
         )
         begin
-          mail.deliver_now
+          mail.deliver_later
         rescue StandardError => e
           Rails.logger.error("[SendForm] #{e.class}: #{e.message}")
-          return render json: { error: "Mail could not be sent. Try again later." }, status: :bad_gateway
+          return render json: { error: "Mail could not be queued. Try again later." }, status: :bad_gateway
         end
 
         render json: { ok: true }, status: :created

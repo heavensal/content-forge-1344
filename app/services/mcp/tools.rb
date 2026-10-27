@@ -24,13 +24,14 @@ module Mcp
             title: { type: "string", description: "Article title (articles only)." },
             slug: { type: "string", description: "Optional URL slug (articles and FAQs only); generated when omitted on create." },
             description: { type: "string", description: "Article summary (articles only)." },
-            content: { type: "string", description: "Article body as limited HTML, or actual customer review text (articles and reviews only)." },
+            content: { type: "string", description: "Article body as limited HTML, or actual customer review text (articles and reviews only). For an article image, use <img src=\"https://...\" alt=\"...\">. Forge copies each image to Cloudinary when the proposal is approved, so the URL must stay reachable until then." },
             locale: { type: "string", enum: %w[fr en], description: "Content language; defaults to the website locale on create." },
             author: { type: "string", description: "Name provided for a real customer review (reviews only)." },
             rating: { type: "integer", minimum: 1, maximum: 5, description: "Review rating from 1 to 5 (reviews only)." },
             position: { type: "integer", minimum: 0, description: "Display order (reviews and FAQs only)." },
             question: { type: "string", description: "FAQ question (FAQs only)." },
-            answer: { type: "string", description: "FAQ answer (FAQs only)." }
+            answer: { type: "string", description: "FAQ answer (FAQs only)." },
+            cover_image_url: { type: "string", description: "Presentation image for an article, as an https URL. Forge copies it to Cloudinary when the proposal is approved. Pass an empty string to remove the current presentation image." }
           }, description: "Fields for create or update only. Supply fields allowed for the selected content_type; omit for delete and publish. Status and published_at cannot be set here." }
         }, %w[website_id content_type operation request_key], write: true),
         definition("get_change", "Use this after presenting approval_url to check whether the user approved a proposal. applied=true means saved in Forge, not that the website rebuild has completed.", { change_id: { **ID, description: "Proposal ID returned by prepare_change." } }, %w[change_id])

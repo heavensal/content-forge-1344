@@ -46,6 +46,11 @@ class Website < ApplicationRecord
     end
   end
 
+  def cloudinary_folder
+    folder = name.to_s.parameterize.first(80).delete_suffix("-")
+    folder.presence || "website-#{id}"
+  end
+
   def content_updated_at(content_type)
     scope = case content_type.to_s
     when "articles" then articles
@@ -68,8 +73,8 @@ class Website < ApplicationRecord
     uri = URI.parse(rebuild_webhook_url)
     return if uri.is_a?(URI::HTTPS) && uri.host.present?
 
-    errors.add(:rebuild_webhook_url, "must be an https URL")
+    errors.add(:rebuild_webhook_url, :https)
   rescue URI::InvalidURIError
-    errors.add(:rebuild_webhook_url, "must be an https URL")
+    errors.add(:rebuild_webhook_url, :https)
   end
 end

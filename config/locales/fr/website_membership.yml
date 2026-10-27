@@ -1,0 +1,41 @@
+fr:
+  website_membership:
+    email: E-mail du client
+    role: &website_membership_role Accès
+    user: &website_membership_user Utilisateur
+    website: &website_membership_website Site
+    title: Accès client
+    hint: "Un compte client ne peut avoir qu'un seul site. Assigner ce site occupe cette place : il ne pourra pas en créer un autre."
+    remove: Retirer
+    remove_confirm: Retirer l'accès de ce client au site ?
+    empty: Aucun client assigné pour le moment.
+    assign: Assigner le site
+    roles:
+      owner: Propriétaire
+      editor: Éditeur
+    notices:
+      assigned: "%{email} peut maintenant ouvrir ce site."
+      removed: Accès au site retiré.
+    alerts:
+      missing_email: Aucun compte avec cet e-mail.
+      admin_only: Seul un administrateur peut assigner un site.
+  activerecord:
+    models:
+      website_membership:
+        one: Accès
+        other: Accès
+    attributes:
+      website_membership:
+        role: *website_membership_role
+        user: *website_membership_user
+        website: *website_membership_website
+    errors:
+      models:
+        website_membership:
+          attributes:
+            user_id:
+              already_has_website: a déjà un site
+            user:
+              admin_sees_every_website: est administrateur et voit déjà tous les sites
+            website:
+              already_has_owner: a déjà un propriétaire
