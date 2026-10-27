@@ -175,6 +175,41 @@ class Mcp::ToolsTest < ActiveSupport::TestCase
     assert_includes shown["content"], "forge/client/22222222-2222-4222-8222-222222222222"
   end
 
+  test "article image copies run outside the approval locks" do
+    change = McpChange.find(prepare[:change_id])
+    baseline = McpChange.connection.current_transaction
+    seen = nil
+    stubbing(Mcp::ArticleImages, :import!, lambda { |_website, attributes|
+      seen = McpChange.connection.current_transaction
+      attributes
+    }) do
+      change.apply!(@user)
+    end
+
+    assert_same baseline, seen
+    assert change.reload.applied_at?
+  end
+
+  test "a failed approval does not delete the presentation image" do
+    public_id = "forge/client/55555555-5555-4555-8555-555555555555"
+    article = @site.articles.create!(
+      title: "Cover",
+      cover_image_public_id: public_id,
+      cover_image_url: "https://res.cloudinary.com/demo/image/upload/#{public_id}.png"
+    )
+    change = McpChange.find(prepare(operation: "update", id: article.id, attributes: { "cover_image_url" => "" })[:change_id])
+    released = []
+    change.define_singleton_method(:update!) { |*| raise "approval failed" }
+
+    stubbing(CloudinaryImages, :destroy, ->(id) { released << id }) do
+      assert_raises(RuntimeError) { change.apply!(@user) }
+    end
+
+    assert_empty released
+    assert_equal public_id, article.reload.cover_image_public_id
+    assert_nil change.reload.applied_at
+  end
+
   test "chatgpt image urls must be https and an empty presentation image clears it" do
     assert_raises(ArgumentError) { prepare(attributes: { "title" => "Bird", "cover_image_url" => "http://cdn.example/a.png" }) }
     assert_raises(ArgumentError) { prepare(attributes: { "title" => "Bird", "content" => '<img src="javascript:alert(1)">' }) }

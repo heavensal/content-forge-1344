@@ -72,12 +72,26 @@ class ArticleTest < ActiveSupport::TestCase
     article.update!(content: figure)
     assert_includes article.public_content_html, %(src="#{url}")
     assert_not_includes article.public_content_html, "action-text-attachment"
+
+    article.update!(content: %(<action-text-attachment content-type="image" url="#{url}" width="4" height="3" caption="Pasted"></action-text-attachment>))
+    html = article.public_content_html
+    assert_includes html, %(src="#{url}")
+    assert_includes html, 'alt="Pasted"'
+    assert_not_includes html, "action-text-attachment"
+
+    pasted = %(<figure data-trix-attachment='{"contentType":"image","url":"#{url}"}' data-trix-content-type="image"><img src="#{url}"></figure>)
+    article.update!(content: pasted)
+    assert_includes article.public_content_html, %(src="#{url}")
+    assert_not_includes article.public_content_html, "action-text-attachment"
   end
 
   test "public html drops an image whose url is not https" do
     article = @website.articles.create!(title: "Unsafe")
     article.update!(content: '<action-text-attachment content-type="image/png" url="javascript:alert(1)"></action-text-attachment>')
     assert_not_includes article.public_content_html.to_s, "javascript:"
+    article.update!(content: '<action-text-attachment content-type="image" url="javascript:alert(1)"></action-text-attachment>')
+    assert_not_includes article.public_content_html.to_s, "javascript:"
+    assert_not_includes article.public_content_html.to_s, "action-text-attachment"
   end
 
   private

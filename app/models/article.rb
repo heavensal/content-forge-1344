@@ -35,8 +35,10 @@ class Article < ApplicationRecord
     fragment.css("action-text-attachment").each do |node|
       url = node["url"].to_s
       content_type = node["content-type"].to_s
-      unless content_type.start_with?("image/") && url.match?(%r{\Ahttps://}i)
-        node.remove if content_type.start_with?("image/")
+      # Trix stores a bare "image" type when the browser does not know the MIME type.
+      image_attachment = content_type == "image" || content_type.start_with?("image/")
+      unless image_attachment && url.match?(%r{\Ahttps://}i)
+        node.remove if image_attachment
         next
       end
 
@@ -89,7 +91,9 @@ class Article < ApplicationRecord
   end
 
   def assign_cover_image
-    previous_public_id = cover_image_public_id
+    # Attribute assignment (the MCP apply path) changes the id before this runs.
+    # Release that previous id only after commit, same as a file upload.
+    previous_public_id = cover_image_public_id_was
     if cover_image.present?
       uploaded = CloudinaryImages.upload!(website: website, io: cover_image)
       self.cover_image_public_id = uploaded.public_id
@@ -97,8 +101,6 @@ class Article < ApplicationRecord
     elsif ActiveModel::Type::Boolean.new.cast(remove_cover_image)
       self.cover_image_public_id = nil
       self.cover_image_url = nil
-    else
-      return
     end
 
     return if previous_public_id.blank? || previous_public_id == cover_image_public_id
