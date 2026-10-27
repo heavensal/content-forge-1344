@@ -1,4 +1,4 @@
-# Deploy to production (Kamal → VPS) on every push to master.
+# Deploy to production (Kamal → VPS) on every push to main.
 #
 # Required GitHub repository secrets:
 #   SSH_PRIVATE_KEY          — private key for ssh ubuntu@51.75.124.208 (no passphrase, or use ssh-agent with passphrase secret)
@@ -15,7 +15,7 @@ name: Deploy
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 concurrency:
   group: kamal-deploy-production

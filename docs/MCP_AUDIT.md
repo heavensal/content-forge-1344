@@ -1,6 +1,6 @@
 # Audit avant modification — 22 octobre 2026
 
-Base auditée : `79e30d208d561bc60a65e3b55fde9d2bbeba44fd` (master).
+Base auditée : `79e30d208d561bc60a65e3b55fde9d2bbeba44fd` (main).
 
 ## Architecture et associations
 
