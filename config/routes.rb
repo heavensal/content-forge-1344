@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   get "/.well-known/oauth-authorization-server", to: "mcp/oauth_metadata#show"
   post "/oauth/register", to: "mcp/oauth_clients#create"
   get "/settings/integrations/mcp", to: "mcp/authorizations#index", as: :settings_mcp_authorizations
-  delete "/settings/integrations/mcp/:id", to: "mcp/authorizations#destroy", as: :mcp_authorization
+  delete "/settings/integrations/mcp", to: "mcp/authorizations#destroy", as: :mcp_authorization
 
   devise_for :users
   patch "locale", to: "locales#update", as: :locale

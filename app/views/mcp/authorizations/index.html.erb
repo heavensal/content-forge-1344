@@ -7,40 +7,26 @@
     <p class="mt-2 text-sm leading-6 text-zinc-400"><%= t("mcp.intro") %></p>
   </header>
 
-  <section class="<%= content_section_card_classes %> mt-6" aria-labelledby="mcp-setup-title">
-    <h2 id="mcp-setup-title" class="text-lg font-semibold text-zinc-100"><%= t("mcp.connect") %></h2>
-    <ol class="mt-4 list-inside list-decimal space-y-2 text-sm leading-6 text-zinc-300">
-      <li><%= t("mcp.steps.url") %></li>
-      <li><%= t("mcp.steps.approve") %></li>
-      <li><%= t("mcp.steps.list") %></li>
-    </ol>
+  <section class="<%= content_section_card_classes %> mt-6" aria-labelledby="mcp-status-title">
+    <h2 id="mcp-status-title" class="text-lg font-semibold text-zinc-100"><%= t(@connected ? "mcp.status_connected" : "mcp.status_disconnected") %></h2>
+    <p class="mt-2 text-sm leading-6 text-zinc-400"><%= t(@connected ? "mcp.connected_body" : "mcp.disconnected_body") %></p>
     <div class="mt-5">
-      <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500"><%= t("mcp.server_url") %></p>
-      <code class="mt-2 block overflow-x-auto rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-3 text-sm text-emerald-300"><%= ENV.fetch("MCP_RESOURCE_URL", "https://forge.1344.fr/mcp") %></code>
-    </div>
-    <div class="mt-5">
-      <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500"><%= t("mcp.plugin") %></p>
-      <p class="mt-2 rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 py-3 text-sm text-zinc-300"><%= t("mcp.plugin_body") %></p>
+      <% if @connected %>
+        <%= button_to t("mcp.disconnect"), mcp_authorization_path, method: :delete, form: { data: { turbo_confirm: t("mcp.disconnect_confirm") } }, class: danger_button_classes %>
+      <% else %>
+        <%= link_to t("mcp.connect_chatgpt"), Mcp::Settings::CHATGPT_CONNECTORS_URL, target: "_blank", rel: "noopener noreferrer", class: primary_button_classes %>
+      <% end %>
     </div>
     <p class="mt-5 text-xs leading-5 text-zinc-500"><%= t("mcp.footnote") %></p>
   </section>
 
-  <section class="mt-8" aria-labelledby="mcp-connections-title">
-    <h2 id="mcp-connections-title" class="text-lg font-semibold text-zinc-100"><%= t("mcp.connections") %></h2>
-    <% if @tokens.empty? %>
-      <p class="mt-2 text-sm text-zinc-400"><%= t("mcp.empty") %></p>
-    <% else %>
-      <ul class="mt-4 divide-y divide-zinc-800 rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 sm:px-6">
-        <% @tokens.each do |token| %>
-          <li class="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="min-w-0">
-              <p class="break-words text-sm font-medium text-zinc-100"><%= token.application&.name || t("mcp.fallback_client") %></p>
-              <p class="mt-1 text-xs text-zinc-400"><%= t("mcp.authorized", date: l(token.created_at, format: :long), scopes: token.scopes.to_a.join(", ")) %></p>
-            </div>
-            <%= button_to t("mcp.revoke"), mcp_authorization_path(token), method: :delete, form: { data: { turbo_confirm: t("mcp.revoke_confirm") } }, class: danger_button_classes %>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
-  </section>
+  <% unless @connected %>
+    <section class="<%= content_section_card_classes %> mt-6" aria-labelledby="mcp-setup-title">
+      <h2 id="mcp-setup-title" class="text-lg font-semibold text-zinc-100"><%= t("mcp.server_url") %></h2>
+      <p class="mt-2 text-sm leading-6 text-zinc-400"><%= t("mcp.server_hint") %></p>
+      <code class="mt-4 block overflow-x-auto rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-3 text-sm text-emerald-300"><%= ENV.fetch("MCP_RESOURCE_URL", "https://forge.1344.fr/mcp") %></code>
+      <p class="mt-5 text-xs font-semibold uppercase tracking-wider text-zinc-500"><%= t("mcp.plugin") %></p>
+      <p class="mt-2 rounded-lg border border-zinc-800 bg-zinc-950/70 px-3 py-3 text-sm text-zinc-300"><%= t("mcp.plugin_body") %></p>
+    </section>
+  <% end %>
 </div>

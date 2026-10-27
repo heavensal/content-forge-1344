@@ -23,23 +23,20 @@ fr:
     page_title: "Accès ChatGPT — Forge"
     eyebrow: Intégration du compte
     title: Accès ChatGPT
-    intro: Connectez votre compte Forge à ChatGPT pour gérer les articles, les avis et les FAQ des sites qui vous sont assignés.
-    connect: Connecter dans ChatGPT
-    steps:
-      url: Ajoutez un serveur MCP personnalisé dans ChatGPT et saisissez l'URL ci-dessous.
-      approve: Connectez-vous à Forge et approuvez les permissions demandées.
-      list: Demandez à ChatGPT de lister vos sites avant de créer du contenu.
+    intro: ChatGPT agit avec votre compte Forge pour gérer les articles, les avis et les FAQ des sites qui vous sont assignés.
+    status_connected: Connecté
+    status_disconnected: Non connecté
+    connected_body: ChatGPT peut préparer des articles, des avis et des FAQ. Vous approuvez chaque changement dans Forge.
+    disconnected_body: Le bouton ouvre ChatGPT. Ajoutez-y un serveur MCP personnalisé, puis collez l'URL ci-dessous. ChatGPT vous renverra ici pour approuver l'accès.
+    connect_chatgpt: Se connecter
+    disconnect: Se déconnecter
+    disconnect_confirm: Déconnecter ChatGPT ? Il ne pourra plus proposer de changements tant que vous ne le reconnectez pas.
+    disconnected: ChatGPT est déconnecté.
     server_url: URL du serveur
+    server_hint: Collez cette URL dans ChatGPT lorsque le formulaire du serveur MCP la demande.
     plugin: Description suggérée du plugin
     plugin_body: Gérez les articles, les avis et les FAQ des sites assignés à votre compte Forge. Les changements exigent votre approbation dans Forge avant d'être enregistrés ou publiés.
     footnote: ChatGPT génère le texte. Créer, modifier, supprimer ou publier prépare une proposition ; vous relisez et approuvez chaque proposition dans Forge. Le nouveau contenu commence en brouillon. Publier demande une approbation séparée.
-    connections: Connexions autorisées
-    empty: Aucune connexion ChatGPT n'est autorisée pour le moment.
-    fallback_client: Client MCP ChatGPT
-    authorized: "Autorisé le %{date} · %{scopes}"
-    revoke: Révoquer
-    revoke_confirm: Révoquer cette connexion ChatGPT ?
-    revoked: Accès ChatGPT révoqué.
     authorize_title: "Autoriser l'accès ChatGPT — Forge"
     authorize_eyebrow: Intégration ChatGPT
     requesting_html: "<strong class=\"font-semibold text-zinc-100\">%{client}</strong> demande l'accès à votre compte Forge. Relisez les permissions avant de continuer."

@@ -36,7 +36,7 @@ fr:
     current_password_hint: Requis pour confirmer vos modifications.
     update_account: Mettre à jour le compte
     chatgpt_access: Accès ChatGPT
-    chatgpt_hint: Connectez le serveur MCP Forge dans ChatGPT. ChatGPT vous renverra ici pour vous connecter avec votre compte Forge et approuver l'accès. Vous pouvez consulter ou révoquer l'accès ici.
+    chatgpt_hint: Voyez si ChatGPT est connecté à votre compte, connectez-le ou déconnectez-le.
     manage_chatgpt: Gérer l'accès ChatGPT
     cancel_account: Supprimer le compte
     cancel_hint: Cela supprime définitivement votre utilisateur et les données associées lorsque l'application l'autorise.

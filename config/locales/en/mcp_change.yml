@@ -23,23 +23,20 @@ en:
     page_title: "ChatGPT access — Forge"
     eyebrow: Account integration
     title: ChatGPT access
-    intro: Connect your existing Forge account to ChatGPT to manage articles, reviews and FAQs on websites assigned to you.
-    connect: Connect in ChatGPT
-    steps:
-      url: Add a custom MCP server in ChatGPT and enter the server URL below.
-      approve: Sign in to Forge and approve the requested permissions.
-      list: Ask ChatGPT to list your websites before creating content.
+    intro: ChatGPT acts with your Forge account to manage articles, reviews and FAQs on websites assigned to you.
+    status_connected: Connected
+    status_disconnected: Not connected
+    connected_body: ChatGPT can prepare articles, reviews and FAQs. You approve each change in Forge.
+    disconnected_body: The button opens ChatGPT. Add a custom MCP server there, then paste the URL below. ChatGPT sends you back here to approve access.
+    connect_chatgpt: Connect
+    disconnect: Disconnect
+    disconnect_confirm: Disconnect ChatGPT? It cannot prepare changes until you connect again.
+    disconnected: ChatGPT is disconnected.
     server_url: Server URL
+    server_hint: Paste this URL into ChatGPT when the MCP server form asks for it.
     plugin: Suggested plugin description
     plugin_body: Manage articles, reviews and FAQs for websites assigned to your Forge account. Changes require your approval in Forge before they are saved or published.
     footnote: ChatGPT generates the text. Creating, editing, deleting or publishing content prepares a proposal; you review and approve each proposal in Forge. New content starts as a draft. Publishing requires a separate approval.
-    connections: Authorized connections
-    empty: No ChatGPT connection is currently authorized.
-    fallback_client: ChatGPT MCP client
-    authorized: "Authorized %{date} · %{scopes}"
-    revoke: Revoke
-    revoke_confirm: Revoke this ChatGPT connection?
-    revoked: ChatGPT access revoked.
     authorize_title: "Authorize ChatGPT access — Forge"
     authorize_eyebrow: ChatGPT integration
     requesting_html: "<strong class=\"font-semibold text-zinc-100\">%{client}</strong> is requesting access to your Forge account. Review the permissions before continuing."
