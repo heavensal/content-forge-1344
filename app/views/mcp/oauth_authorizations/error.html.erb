@@ -1,10 +1,10 @@
-<% content_for :title, "Authorization error — Forge" %>
+<% content_for :title, t("mcp.error_title") %>
 
 <div class="mx-auto w-full max-w-2xl">
   <div class="<%= content_section_card_classes %>">
-    <p class="text-xs font-semibold uppercase tracking-wider text-emerald-400">ChatGPT integration</p>
+    <p class="text-xs font-semibold uppercase tracking-wider text-emerald-400"><%= t("mcp.authorize_eyebrow") %></p>
     <h1 class="mt-2 text-2xl font-semibold text-zinc-50"><%= t("doorkeeper.authorizations.error.title") %></h1>
     <p class="mt-4 whitespace-pre-wrap break-words text-sm text-zinc-300"><%= (local_assigns[:error_response] ? error_response : @pre_auth.error_response).body[:error_description] %></p>
-    <%= link_to "Return to Forge", root_path, class: "#{secondary_button_classes} mt-6" %>
+    <%= link_to t("mcp.return"), root_path, class: "#{secondary_button_classes} mt-6" %>
   </div>
 </div>

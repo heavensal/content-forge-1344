@@ -12,6 +12,24 @@ module ActiveSupport
     # fixtures :all
 
     # Add more helper methods to be used by all tests here...
+    def stubbing(object, method_name, replacement)
+      singleton = object.singleton_class
+      backup = :"_stub_backup_#{method_name}_#{Process.pid}_#{stub_sequence}"
+      singleton.alias_method(backup, method_name)
+      singleton.define_method(method_name) do |*args, **kwargs, &block|
+        next replacement unless replacement.respond_to?(:call)
+
+        kwargs.empty? ? replacement.call(*args, &block) : replacement.call(*args, **kwargs, &block)
+      end
+      yield
+    ensure
+      singleton.alias_method(method_name, backup)
+      singleton.remove_method(backup)
+    end
+
+    def stub_sequence
+      @stub_sequence = @stub_sequence.to_i + 1
+    end
   end
 end
 

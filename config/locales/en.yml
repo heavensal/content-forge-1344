@@ -1,31 +1,58 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  attributes:
+    id: ID
+    created_at: Created at
+    updated_at: Updated at
+    email: Email
+    name: Name
+  common:
+    edit: Edit
+    delete: Delete
+    cancel: Cancel
+    open: Open
+    back: "← %{name}"
+    published_on: "Published %{date}"
+    write_other: "Write %{language} version"
+    could_not_save: Could not save
+    language: Language
+    content_language_hint: One language per item. English is optional — keep the site default if this site has no English version.
+    languages:
+      en: English
+      fr: French
+    blank: "—"
+  nav:
+    websites: Websites
+    all_websites: All websites
+    new_website: New website
+    content: Content
+    contact_form: Contact form API
+    database: Database
+    edit_account: Edit account
+    sign_out: Sign out
+    open_menu: Open navigation menu
+    close_menu: Close menu
+    main: Main navigation
+    by: by 1344
+  admin:
+    database: Database
+    empty: No rows yet.
+    all: "All %{label}"
+    rows:
+      one: "%{count} row"
+      other: "%{count} rows"
+    entities:
+      users: Users
+      websites: Websites
+      website_memberships: Memberships
+      articles: Articles
+      faqs: FAQs
+      reviews: Reviews
+      mcp_changes: MCP changes
+    alerts:
+      admin_only: Only an admin can browse the database.
+  public_api:
+    heading: "Public API · %{resource}"
+    intro_html: Returns <strong class="font-medium text-zinc-400">published</strong> items for one language. <code class="font-mono text-zinc-400">?locale=fr</code> or <code class="font-mono text-zinc-400">?locale=en</code>. If that language has no published items, the response uses the site default (%{default_locale}). Use your website’s API token (same as on the %{website_link}).
+    website_page: website page
+    article_one_html: 'One published article: <code class="text-emerald-400">GET /api/v1/articles/:slug?locale=fr</code>. Same JSON object. <code class="text-zinc-400">cover_image_url</code> is the presentation image, or <code class="text-zinc-400">null</code>. Images placed in the text are <code class="text-zinc-400">&lt;img&gt;</code> tags inside <code class="text-zinc-400">content_html</code>. If the slug exists only in the site default language, that version is returned. Missing, draft, or not-yet-published slugs return 404.'
+    example: Example response

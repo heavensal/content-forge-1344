@@ -7,7 +7,7 @@ module Mcp
     def destroy
       token = current_user.oauth_access_tokens.find(params[:id])
       token.revoke
-      redirect_to settings_mcp_authorizations_path, notice: "ChatGPT access revoked."
+      redirect_to settings_mcp_authorizations_path, notice: t("mcp.revoked")
     end
   end
 end

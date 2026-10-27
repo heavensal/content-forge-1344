@@ -1,6 +1,8 @@
 require "test_helper"
 
 class Api::V1::PublicContentTest < ActionDispatch::IntegrationTest
+  include ActiveJob::TestHelper
+
   setup do
     @website = Website.create!(name: "ARM", domain: "api.example", status: "active")
     @other = Website.create!(name: "Other", domain: "other.example", status: "active")
@@ -59,6 +61,7 @@ class Api::V1::PublicContentTest < ActionDispatch::IntegrationTest
     body = JSON.parse(response.body)
     assert_equal "premier-trajet", body["slug"]
     assert_equal "Premier trajet", body["title"]
+    assert_nil body["cover_image_url"]
     assert body["updated_at"].present?
 
     get api_v1_article_path("brouillon"), headers: @headers
@@ -133,9 +136,42 @@ class Api::V1::PublicContentTest < ActionDispatch::IntegrationTest
     assert_equal "fr", body["locale"]
   end
 
+  test "article json includes the presentation image and inline cloudinary images" do
+    url = "https://res.cloudinary.com/demo/image/upload/v1/forge/arm/pic.png"
+    article = @website.articles.create!(
+      title: "Illustré",
+      slug: "illustre",
+      status: "published",
+      published_at: 1.day.ago,
+      cover_image_url: "https://res.cloudinary.com/demo/image/upload/v1/forge/arm/cover.png"
+    )
+    article.update!(content: %(<action-text-attachment content-type="image/png" url="#{url}"></action-text-attachment>))
+
+    get api_v1_article_path("illustre"), headers: @headers
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert_equal article.cover_image_url, body["cover_image_url"]
+    assert_includes body["content_html"], %(src="#{url}")
+  end
+
   test "a blank content locale uses the website default language" do
     @website.update!(default_locale: "en")
     article = @website.articles.create!(title: "Hello")
     assert_equal "en", article.locale
+  end
+
+  test "contact form enqueues the inquiry email" do
+    @website.update!(email: "owner@example.com")
+
+    assert_enqueued_with(job: ActionMailer::MailDeliveryJob) do
+      post api_v1_send_form_path,
+        params: { message: "Bonjour", from_email: "ada@example.com" },
+        headers: @headers,
+        as: :json
+    end
+
+    assert_response :created
+    assert_equal({ "ok" => true }, JSON.parse(response.body))
+    assert_empty ActionMailer::Base.deliveries
   end
 end

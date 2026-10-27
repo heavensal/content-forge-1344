@@ -1,4 +1,4 @@
-<% content_for :title, "Contact form API — #{@website.name} — Forge" %>
+<% content_for :title, t("contact_form.page_title", name: @website.name) %>
 <% fetch_example = <<~CFETCH.strip
   await fetch(#{@send_form_url.to_json}, {
     method: "POST",
@@ -52,31 +52,27 @@ CFORM
 %>
 
 <div class="mx-auto w-full max-w-4xl">
-  <p class="text-xs font-medium uppercase tracking-wider text-emerald-500/90">Website</p>
-  <h1 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl">Contact form API</h1>
+  <p class="text-xs font-medium uppercase tracking-wider text-emerald-500/90"><%= t("contact_form.eyebrow") %></p>
+  <h1 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl"><%= t("contact_form.title") %></h1>
   <p class="mt-2 max-w-2xl text-sm text-zinc-400">
-    Post a JSON payload from your public site (for example <span class="text-zinc-300"><%= h @website.domain %></span>) to Forge.
-    The message is emailed to the address saved on this website
+    <%= t("contact_form.intro_html", domain: tag.span(@website.domain, class: "text-zinc-300")) %>
     <% if @website.email.present? %>
-      (<span class="text-emerald-400/90"><%= h @website.email %></span>).
+      <%= t("contact_form.email_present_html", email: tag.span(@website.email, class: "text-emerald-400/90")) %>
     <% else %>
-      — <strong class="text-amber-400/90">add a contact email on the website</strong> in Forge before using this API.
+      <%= t("contact_form.email_missing_html") %>
     <% end %>
   </p>
 
   <div class="<%= content_section_card_classes %> mt-8">
-    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Endpoint</h2>
-    <p class="mt-2 text-sm text-zinc-500">POST JSON with header <code class="rounded bg-zinc-950 px-1.5 py-0.5 font-mono text-xs text-emerald-300/90">Authorization: Bearer &lt;api_token&gt;</code>.</p>
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400"><%= t("contact_form.endpoint") %></h2>
+    <p class="mt-2 text-sm text-zinc-500"><%= t("contact_form.endpoint_help_html") %></p>
     <pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs text-emerald-200/90 sm:text-sm" translate="no"><%= h @send_form_url %></pre>
-    <p class="mt-3 text-xs text-zinc-600">
-      Use the exact base URL of your Forge deployment (production: <code class="font-mono text-zinc-500">https://forge.1344.fr</code>).
-      The route path is always <code class="font-mono text-zinc-500">/api/v1/send_form</code>.
-    </p>
+    <p class="mt-3 text-xs text-zinc-600"><%= t("contact_form.endpoint_base_html") %></p>
   </div>
 
   <div class="<%= content_section_card_classes %> mt-6">
-    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Payload</h2>
-    <p class="mt-2 text-sm text-zinc-500">All keys are optional except you must send a <strong class="text-zinc-300">message</strong> or <strong class="text-zinc-300">body</strong>, or at least one value inside <strong class="text-zinc-300">fields</strong>.</p>
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400"><%= t("contact_form.payload") %></h2>
+    <p class="mt-2 text-sm text-zinc-500"><%= t("contact_form.payload_help_html") %></p>
     <pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-xs leading-relaxed text-zinc-300 sm:text-sm" translate="no">{
   "from_email": "visitor@example.com",
   "from_name": "Marie Dupont",
@@ -90,18 +86,18 @@ CFORM
   </div>
 
   <div class="<%= content_section_card_classes %> mt-6">
-    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Example (fetch from the browser)</h2>
-    <p class="mt-2 text-sm text-zinc-500">Prefer a server-side proxy so the API token is not embedded in public JavaScript. Below is a minimal client-only example for development.</p>
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400"><%= t("contact_form.fetch_title") %></h2>
+    <p class="mt-2 text-sm text-zinc-500"><%= t("contact_form.fetch_help") %></p>
     <pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-[11px] leading-relaxed text-zinc-300 sm:text-sm" translate="no"><%= h fetch_example %></pre>
   </div>
 
   <div class="<%= content_section_card_classes %> mt-6">
-    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400">Example (HTML form + small script)</h2>
-    <p class="mt-2 text-sm text-zinc-500">Avoids full page navigation to the API. Map your inputs into <code class="font-mono text-zinc-500">message</code> and/or <code class="font-mono text-zinc-500">fields</code>.</p>
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400"><%= t("contact_form.form_title") %></h2>
+    <p class="mt-2 text-sm text-zinc-500"><%= t("contact_form.form_help_html") %></p>
     <pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 p-4 font-mono text-[11px] leading-relaxed text-zinc-300 sm:text-sm" translate="no"><%= h form_example %></pre>
   </div>
 
   <p class="mt-8">
-    <%= link_to "← Back to website", @website, class: secondary_button_classes %>
+    <%= link_to t("contact_form.back"), @website, class: secondary_button_classes %>
   </p>
 </div>

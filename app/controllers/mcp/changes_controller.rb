@@ -16,7 +16,7 @@ module Mcp
 
     def update
       @change.apply!(current_user)
-      redirect_to website_path(@website), notice: "Change approved and saved. Website rebuild delivery is asynchronous."
+      redirect_to website_path(@website), notice: t("mcp_change.notices.approved")
     rescue ArgumentError, ActiveRecord::RecordInvalid => error
       render plain: error.message, status: :conflict
     end

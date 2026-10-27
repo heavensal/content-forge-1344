@@ -1,0 +1,58 @@
+fr:
+  attributes:
+    id: ID
+    created_at: Créé le
+    updated_at: Mis à jour le
+    email: E-mail
+    name: Nom
+  common:
+    edit: Modifier
+    delete: Supprimer
+    cancel: Annuler
+    open: Ouvrir
+    back: "← %{name}"
+    published_on: "Publié le %{date}"
+    write_other: "Rédiger la version %{language}"
+    could_not_save: Enregistrement impossible
+    language: Langue
+    content_language_hint: Une langue par élément. L'anglais est facultatif — gardez la langue par défaut du site s'il n'a pas de version anglaise.
+    languages:
+      en: Anglais
+      fr: Français
+    blank: "—"
+  nav:
+    websites: Sites
+    all_websites: Tous les sites
+    new_website: Nouveau site
+    content: Contenu
+    contact_form: API formulaire de contact
+    database: Base de données
+    edit_account: Modifier le compte
+    sign_out: Se déconnecter
+    open_menu: Ouvrir le menu
+    close_menu: Fermer le menu
+    main: Navigation principale
+    by: par 1344
+  admin:
+    database: Base de données
+    empty: Aucune ligne pour le moment.
+    all: "Tous les %{label}"
+    rows:
+      one: "%{count} ligne"
+      other: "%{count} lignes"
+    entities:
+      users: Utilisateurs
+      websites: Sites
+      website_memberships: Accès
+      articles: Articles
+      faqs: FAQ
+      reviews: Avis
+      mcp_changes: Changements MCP
+    alerts:
+      admin_only: Seul un administrateur peut parcourir la base de données.
+  public_api:
+    heading: "API publique · %{resource}"
+    intro_html: Renvoie les éléments <strong class="font-medium text-zinc-400">publiés</strong> pour une langue. <code class="font-mono text-zinc-400">?locale=fr</code> ou <code class="font-mono text-zinc-400">?locale=en</code>. Si cette langue n'a aucun élément publié, la réponse utilise la langue par défaut du site (%{default_locale}). Utilisez le jeton API du site (le même que sur la %{website_link}).
+    website_page: page du site
+    article_one_html: 'Un article publié : <code class="text-emerald-400">GET /api/v1/articles/:slug?locale=fr</code>. Le même objet JSON. <code class="text-zinc-400">cover_image_url</code> est l''image de présentation, ou <code class="text-zinc-400">null</code>. Les images placées dans le texte sont des balises <code class="text-zinc-400">&lt;img&gt;</code> dans <code class="text-zinc-400">content_html</code>. Si le slug n''existe que dans la langue par défaut du site, cette version est renvoyée. Un slug absent, en brouillon ou pas encore publié renvoie 404.'
+    example: Exemple de réponse

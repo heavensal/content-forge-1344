@@ -74,7 +74,7 @@ Avant fusion : aucune nouvelle variable `.env`, aucun secret GitHub et aucune mi
 
 ## Limites conservées et suites
 
-La queue production :async n'est pas durable ; activer une file persistante et l'observabilité de livraison avant de promettre une distribution garantie (voir SOLID_OPTIONAL.md). La publication programmée n'est pas exposée. L'audit signale une fenêtre de DNS rebinding dans le webhook existant ; une correction dédiée doit pinner les IP vérifiées et couvrir IPv6. Pas de modification des secrets ou réglages de Website via MCP. Pas de téléchargement/gestion de médias, pas de UI ChatGPT embarquée, pas de publication sans clic Forge. La liste de sites est limitée à 100 (à paginer si l'administration dépasse cette taille).
+Les emails et les reconstructions passent par Active Job et Sidekiq (Redis). Une publication enregistrée ne signifie pas que la reconstruction a été livrée. La publication programmée n'est pas exposée. L'audit signale une fenêtre de DNS rebinding dans le webhook existant ; une correction dédiée doit pinner les IP vérifiées et couvrir IPv6. Pas de modification des secrets ou réglages de Website via MCP. Pas de téléchargement/gestion de médias, pas de UI ChatGPT embarquée, pas de publication sans clic Forge. La liste de sites est limitée à 100 (à paginer si l'administration dépasse cette taille).
 
 ## Références
 

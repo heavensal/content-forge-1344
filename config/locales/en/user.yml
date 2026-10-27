@@ -1,0 +1,86 @@
+en:
+  user:
+    name: &user_name Name
+    email: &user_email Email
+    password: &user_password Password
+    password_confirmation: &user_password_confirmation Password confirmation
+    current_password: &user_current_password Current password
+    remember_me: &user_remember_me Remember me
+    role: &user_role Role
+    title: Account
+    sign_in: Sign in
+    sign_in_title: "Sign in — Forge"
+    sign_in_hint: Welcome back to your content hub.
+    sign_up: Sign up
+    sign_up_title: "Sign up — Forge"
+    create_account: Create account
+    create_account_hint: Start managing content for your brochure sites.
+    create_an_account: Create an account
+    forgot_password: Forgot password?
+    forgot_title: "Forgot password — Forge"
+    forgot_hint: We'll email you reset instructions.
+    send_reset: Send reset instructions
+    reset_title: "Reset password — Forge"
+    new_password: Set a new password
+    new_password_label: New password
+    confirm_new_password: Confirm new password
+    update_password: Update password
+    minimum: "%{count} characters minimum"
+    account_title: "Account — Forge"
+    account_hint: Update your profile or password.
+    language: Language
+    language_hint: The interface stays in this language on this browser.
+    pending_confirmation: "Currently waiting confirmation for: %{email}"
+    change_password: Change password
+    leave_blank: Leave blank to keep your current password.
+    current_password_hint: Required to confirm your changes.
+    update_account: Update account
+    chatgpt_access: ChatGPT access
+    chatgpt_hint: Connect the Forge MCP server in ChatGPT. ChatGPT will send you here to sign in with your existing Forge account and approve access. You can review or revoke access here.
+    manage_chatgpt: Manage ChatGPT access
+    cancel_account: Cancel account
+    cancel_hint: This permanently removes your user and associated data where the app allows.
+    cancel_my_account: Cancel my account
+    cancel_confirm: Are you sure? This cannot be undone.
+    back_to_websites: "← Back to websites"
+    confirmation_title: "Resend confirmation — Forge"
+    resend_confirmation: Resend confirmation
+    resend_instructions: Resend instructions
+    unlock_title: "Unlock account — Forge"
+    resend_unlock: Resend unlock instructions
+    resend_unlock_email: Resend unlock email
+    sign_in_with: "Sign in with %{provider}"
+    mailer:
+      greeting: "Hello %{email}!"
+      welcome: "Welcome %{email}!"
+      reset_body: Someone has requested a link to change your password. You can do this through the link below.
+      reset_link: Change my password
+      reset_ignore: If you didn't request this, please ignore this email.
+      reset_unchanged: Your password won't change until you access the link above and create a new one.
+      confirm_body: "You can confirm your account email through the link below:"
+      confirm_link: Confirm my account
+      unlock_body: Your account has been locked due to an excessive number of unsuccessful sign in attempts.
+      unlock_prompt: "Click the link below to unlock your account:"
+      unlock_link: Unlock my account
+      email_changing: "We're contacting you to notify you that your email is being changed to %{email}."
+      email_changed: "We're contacting you to notify you that your email has been changed to %{email}."
+      password_changed: We're contacting you to notify you that your password has been changed.
+  activerecord:
+    models:
+      user:
+        one: User
+        other: Users
+    attributes:
+      user:
+        name: *user_name
+        email: *user_email
+        password: *user_password
+        password_confirmation: *user_password_confirmation
+        current_password: *user_current_password
+        remember_me: *user_remember_me
+        role: *user_role
+  helpers:
+    submit:
+      user:
+        create: Sign up
+        update: Update account

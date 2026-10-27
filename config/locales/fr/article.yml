@@ -1,0 +1,62 @@
+fr:
+  article:
+    title: &article_title Titre
+    slug: &article_slug Slug
+    description: &article_description Description
+    content: &article_content Contenu
+    status: &article_status Statut
+    published_at: &article_published_at Date de publication
+    locale: &article_locale Langue
+    cover_image: &article_cover_image Image de présentation
+    cover_image_url: &article_cover_image_url Image de présentation
+    remove_cover_image: Retirer l'image de présentation
+    heading: Articles
+    one: Article
+    new: Nouvel article
+    edit: Modifier l'article
+    create: Créer un article
+    empty: Aucun article pour le moment.
+    delete_confirm: Supprimer cet article ?
+    back: "← Articles"
+    blog_posts: "Articles de blog pour %{domain}"
+    slug_placeholder: généré depuis le titre si vide à la création
+    hints:
+      slug: Segment d'URL du site public. Laissez vide à la création pour le générer depuis le titre.
+      published_at: Obligatoire lorsque le statut est publié.
+      cover_image_html: 'Affichée sur le site vitrine. L''API publique la renvoie dans <code class="text-zinc-400">cover_image_url</code>. JPEG, PNG, WebP ou GIF, 8 Mo maximum.'
+      content_html: 'Utilisez le bouton de pièce jointe pour insérer une image dans le texte. Elle est envoyée vers Cloudinary et incluse dans <code class="text-zinc-400">content_html</code>.'
+    statuses:
+      draft: Brouillon
+      published: Publié
+      archived: Archivé
+    notices:
+      created: L'article a été créé.
+      updated: L'article a été mis à jour.
+      deleted: L'article a été supprimé.
+    images:
+      blank: Choisissez un fichier image.
+      invalid_type: Utilisez une image JPEG, PNG, WebP ou GIF.
+      too_large: L'image doit faire 8 Mo ou moins.
+      failed: L'envoi de l'image a échoué.
+      unconfigured: Cloudinary n'est pas configuré. Définissez CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY et CLOUDINARY_API_SECRET.
+  activerecord:
+    models:
+      article:
+        one: Article
+        other: Articles
+    attributes:
+      article:
+        title: *article_title
+        slug: *article_slug
+        description: *article_description
+        content: *article_content
+        status: *article_status
+        published_at: *article_published_at
+        locale: *article_locale
+        cover_image: *article_cover_image
+        cover_image_url: *article_cover_image_url
+  helpers:
+    submit:
+      article:
+        create: Créer l'article
+        update: Enregistrer l'article

@@ -21,7 +21,7 @@ class ArticlesController < ApplicationController
   def create
     @article = @website.articles.build(article_params)
     if @article.save
-      redirect_to [ @website, @article ], notice: "Article was successfully created."
+      redirect_to [ @website, @article ], notice: t("article.notices.created")
     else
       render :new, status: :unprocessable_entity
     end
@@ -32,7 +32,7 @@ class ArticlesController < ApplicationController
 
   def update
     if @article.update(article_params)
-      redirect_to [ @website, @article ], notice: "Article was successfully updated."
+      redirect_to [ @website, @article ], notice: t("article.notices.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -40,7 +40,7 @@ class ArticlesController < ApplicationController
 
   def destroy
     @article.destroy
-    redirect_to website_articles_url(@website), notice: "Article was successfully deleted."
+    redirect_to website_articles_url(@website), notice: t("article.notices.deleted")
   end
 
   private
@@ -54,7 +54,9 @@ class ArticlesController < ApplicationController
   end
 
   def article_params
-    params.require(:article).permit(:title, :slug, :description, :status, :published_at, :content, :locale)
+    params.require(:article).permit(
+      :title, :slug, :description, :status, :published_at, :content, :locale, :cover_image, :remove_cover_image
+    )
   end
 
   def prefill_article_translation
@@ -65,7 +67,9 @@ class ArticlesController < ApplicationController
       title: source.title,
       slug: source.slug,
       description: source.description,
-      locale: chosen_content_locale
+      locale: chosen_content_locale,
+      cover_image_public_id: source.cover_image_public_id,
+      cover_image_url: source.cover_image_url
     )
     @article.content = source.content.body if source.content.body.present?
   end

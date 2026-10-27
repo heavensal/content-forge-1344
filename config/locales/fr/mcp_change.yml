@@ -1,0 +1,57 @@
+fr:
+  mcp_change:
+    operation: &mcp_change_operation Opération
+    content_type: &mcp_change_content_type Type de contenu
+    website: Site
+    change: Changement
+    title: Relire le changement Forge
+    page_title: "Relire un changement — Forge"
+    back: "← Accès ChatGPT"
+    eyebrow: Proposition ChatGPT
+    nothing_saved: Rien n'est enregistré tant que vous n'approuvez pas cette proposition exacte.
+    public_warning: Ce changement concerne du contenu public et demande une reconstruction du site.
+    delete_warning: Cela supprime définitivement le contenu affiché ci-dessous.
+    proposed: Contenu proposé
+    html_hint: Le HTML de l'article est affiché en texte pour que vous puissiez l'inspecter.
+    applied: Ce changement a déjà été appliqué.
+    expired: Cette proposition a expiré. Demandez à ChatGPT d'en préparer une nouvelle.
+    approve: Approuver ce changement exact
+    decline: Pour refuser, fermez cette page. Rien n'est appliqué sans approbation.
+    notices:
+      approved: Changement approuvé et enregistré. L'envoi de la reconstruction du site est asynchrone.
+  mcp:
+    page_title: "Accès ChatGPT — Forge"
+    eyebrow: Intégration du compte
+    title: Accès ChatGPT
+    intro: Connectez votre compte Forge à ChatGPT pour gérer les articles, les avis et les FAQ des sites qui vous sont assignés.
+    connect: Connecter dans ChatGPT
+    steps:
+      url: Ajoutez un serveur MCP personnalisé dans ChatGPT et saisissez l'URL ci-dessous.
+      approve: Connectez-vous à Forge et approuvez les permissions demandées.
+      list: Demandez à ChatGPT de lister vos sites avant de créer du contenu.
+    server_url: URL du serveur
+    plugin: Description suggérée du plugin
+    plugin_body: Gérez les articles, les avis et les FAQ des sites assignés à votre compte Forge. Les changements exigent votre approbation dans Forge avant d'être enregistrés ou publiés.
+    footnote: ChatGPT génère le texte. Créer, modifier, supprimer ou publier prépare une proposition ; vous relisez et approuvez chaque proposition dans Forge. Le nouveau contenu commence en brouillon. Publier demande une approbation séparée.
+    connections: Connexions autorisées
+    empty: Aucune connexion ChatGPT n'est autorisée pour le moment.
+    fallback_client: Client MCP ChatGPT
+    authorized: "Autorisé le %{date} · %{scopes}"
+    revoke: Révoquer
+    revoke_confirm: Révoquer cette connexion ChatGPT ?
+    revoked: Accès ChatGPT révoqué.
+    authorize_title: "Autoriser l'accès ChatGPT — Forge"
+    authorize_eyebrow: Intégration ChatGPT
+    requesting_html: "<strong class=\"font-semibold text-zinc-100\">%{client}</strong> demande l'accès à votre compte Forge. Relisez les permissions avant de continuer."
+    limited: L'accès est limité aux sites assignés à votre compte. Les changements de contenu exigent une approbation séparée dans Forge. Vous pouvez révoquer cette connexion dans les réglages du compte.
+    error_title: "Erreur d'autorisation — Forge"
+    return: Retour à Forge
+  activerecord:
+    models:
+      mcp_change:
+        one: Changement MCP
+        other: Changements MCP
+    attributes:
+      mcp_change:
+        operation: *mcp_change_operation
+        content_type: *mcp_change_content_type

@@ -9,7 +9,7 @@
 #   SMTP_PORT                — SMTP port (465)
 #   SMTP_USER_NAME           — SMTP account username
 #   SMTP_PASSWORD            — SMTP account password
-# Optional GitHub secrets: MAILER_FROM, CORS_ALLOWED_ORIGINS
+# Optional GitHub secrets: MAILER_FROM, CORS_ALLOWED_ORIGINS, CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
 #
 name: Deploy
 
@@ -77,6 +77,9 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           MAILER_FROM: ${{ secrets.MAILER_FROM }}
           CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
         run: |
           mkdir -p .kamal
           ruby -e '
@@ -86,7 +89,7 @@ jobs:
               abort("Missing required GitHub Actions secret: #{k}") if v.nil? || v.strip.empty?
               %(#{k}=#{v.gsub("\n", "")})
             end
-            %w[MAILER_FROM CORS_ALLOWED_ORIGINS].each do |k|
+            %w[MAILER_FROM CORS_ALLOWED_ORIGINS CLOUDINARY_CLOUD_NAME CLOUDINARY_API_KEY CLOUDINARY_API_SECRET].each do |k|
               v = ENV[k]
               next if v.nil? || v.strip.empty?
               lines << %(#{k}=#{v.gsub("\n", "")})

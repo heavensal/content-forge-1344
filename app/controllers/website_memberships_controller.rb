@@ -7,13 +7,13 @@ class WebsiteMembershipsController < ApplicationController
   def create
     user = User.find_by(email: params[:email].to_s.strip.downcase)
     unless user
-      redirect_to @website, alert: "No account with that email."
+      redirect_to @website, alert: t("website_membership.alerts.missing_email")
       return
     end
 
     membership = @website.website_memberships.build(user: user, role: membership_role)
     if membership.save
-      redirect_to @website, notice: "#{user.email} can now open this website."
+      redirect_to @website, notice: t("website_membership.notices.assigned", email: user.email)
     else
       redirect_to @website, alert: membership.errors.full_messages.to_sentence
     end
@@ -21,7 +21,7 @@ class WebsiteMembershipsController < ApplicationController
 
   def destroy
     @website.website_memberships.find(params[:id]).destroy!
-    redirect_to @website, notice: "Website access removed."
+    redirect_to @website, notice: t("website_membership.notices.removed")
   end
 
   private
@@ -29,7 +29,7 @@ class WebsiteMembershipsController < ApplicationController
   def require_admin!
     return if current_user.admin?
 
-    redirect_to websites_path, alert: "Only an admin can assign a website."
+    redirect_to websites_path, alert: t("website_membership.alerts.admin_only")
   end
 
   def set_website

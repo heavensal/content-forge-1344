@@ -72,6 +72,35 @@ class WebsitesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "the sidebar keeps account links and shows the role on a website" do
+    sign_in @admin
+
+    get website_path(@website)
+
+    assert_response :success
+    assert_select "[data-sidebar-role]", text: "admin"
+    assert_select "aside a", text: "Edit account"
+    assert_select "aside button", text: "Sign out"
+    assert_select "a[href='#{admin_users_path}']", text: "Users"
+    assert_select "a[href='#{admin_websites_path}']", text: "Websites"
+    assert_select "aside" do |aside|
+      assert_no_match(/lg:h-auto/, aside.first["class"])
+    end
+  end
+
+  test "a client sees their role and account links without the database" do
+    @client.website_memberships.create!(website: @website, role: "owner")
+    sign_in @client
+
+    get website_path(@website)
+
+    assert_response :success
+    assert_select "[data-sidebar-role]", text: "user"
+    assert_select "aside a", text: "Edit account"
+    assert_select "aside button", text: "Sign out"
+    assert_select "a[href='#{admin_users_path}']", count: 0
+  end
+
   test "a client cannot delete a website" do
     @client.website_memberships.create!(website: @website, role: "owner")
     sign_in @client

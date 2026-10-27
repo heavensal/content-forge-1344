@@ -6,7 +6,7 @@ class WebsiteMembership < ApplicationRecord
 
   enum :role, { owner: "owner", editor: "editor" }, default: :owner, validate: true
 
-  validates :user_id, uniqueness: { message: "already has a website" }
+  validates :user_id, uniqueness: { message: :already_has_website }
   validate :admin_uses_role_not_membership
   validate :single_owner
 
@@ -15,7 +15,7 @@ class WebsiteMembership < ApplicationRecord
   def admin_uses_role_not_membership
     return if user.blank? || !user.admin?
 
-    errors.add(:user, "is an admin and already sees every website")
+    errors.add(:user, :admin_sees_every_website)
   end
 
   def single_owner
@@ -26,6 +26,6 @@ class WebsiteMembership < ApplicationRecord
     scope = scope.where.not(id: id) if id.present?
     return unless scope.exists?
 
-    errors.add(:website, "already has an owner")
+    errors.add(:website, :already_has_owner)
   end
 end

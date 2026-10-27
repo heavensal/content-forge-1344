@@ -1,18 +1,18 @@
-New message for <%= @website.name %> (<%= @website.domain %>)
+<%= t("contact_form.mailer.new_message", name: @website.name) %> (<%= @website.domain %>)
 
 <% w = 20 %>
 <% if @from_name.present? %>
-<%= "Name".ljust(w) %> | <%= @from_name %>
+<%= t("contact_form.mailer.name").ljust(w) %> | <%= @from_name %>
 <% end %>
 <% if @from_email.present? %>
-<%= "Email".ljust(w) %> | <%= @from_email %>
+<%= t("contact_form.mailer.email").ljust(w) %> | <%= @from_email %>
 <% end %>
 <% if @inquiry_subject.present? %>
-<%= "Subject".ljust(w) %> | <%= @inquiry_subject %>
+<%= t("contact_form.mailer.subject").ljust(w) %> | <%= @inquiry_subject %>
 <% end %>
-<%= "Message".ljust(w) %> | <%= @message.presence || "—" %>
+<%= t("contact_form.mailer.message").ljust(w) %> | <%= @message.presence || t("common.blank") %>
 <% @fields.each do |key, value| %>
 <%= key.to_s.ljust(w) %> | <%= value %>
 <% end %>
 
-— Sent via Forge contact API
+— <%= t("contact_form.mailer.sent_via") %>

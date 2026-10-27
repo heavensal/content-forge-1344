@@ -1,20 +1,20 @@
-<% content_for :title, "FAQs — #{@website.name}" %>
+<% content_for :title, "#{t("faq.title")} — #{@website.name}" %>
 
 <div class="mx-auto w-full max-w-5xl">
   <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
     <div class="min-w-0">
       <%= link_to @website.name, @website, class: "text-xs font-medium uppercase tracking-wider text-emerald-500/90 hover:text-emerald-400" %>
-      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl">FAQs</h1>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl"><%= t("faq.title") %></h1>
     </div>
-    <%= link_to "New FAQ", new_website_faq_path(@website), class: primary_button_classes %>
+    <%= link_to t("faq.new"), new_website_faq_path(@website), class: primary_button_classes %>
   </div>
 
-  <%= render "shared/public_api_fetch", endpoint: "faqs", resource_label: "FAQs" %>
+  <%= render "shared/public_api_fetch", endpoint: "faqs", resource_label: t("faq.title") %>
 
   <% if @faqs.empty? %>
     <div class="<%= content_section_card_classes %> mt-10 text-center">
-      <p class="text-zinc-400">No FAQs yet.</p>
-      <%= link_to "Create FAQ", new_website_faq_path(@website), class: "#{primary_button_classes} mt-4" %>
+      <p class="text-zinc-400"><%= t("faq.empty") %></p>
+      <%= link_to t("faq.create"), new_website_faq_path(@website), class: "#{primary_button_classes} mt-4" %>
     </div>
   <% else %>
     <ul class="mt-10 divide-y divide-zinc-800 rounded-xl border border-zinc-800 bg-zinc-900/40">
@@ -22,11 +22,11 @@
         <li class="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <div class="min-w-0 flex-1">
             <%= link_to faq.question, [@website, faq], class: "break-words font-medium text-zinc-100 hover:text-emerald-400" %>
-            <p class="mt-0.5 break-all text-xs text-zinc-500 sm:break-normal">#<%= faq.position %> · <%= content_locale_label(faq.locale) %> · <%= faq.slug %> · <%= faq.status %></p>
+            <p class="mt-0.5 break-all text-xs text-zinc-500 sm:break-normal">#<%= faq.position %> · <%= content_locale_label(faq.locale) %> · <%= faq.slug %> · <%= status_label(faq) %></p>
           </div>
           <div class="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
-            <%= link_to "Edit", edit_website_faq_path(@website, faq), class: secondary_button_classes %>
-            <%= button_to "Delete", [@website, faq], method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: "Delete this FAQ?" } }, class: danger_button_classes %>
+            <%= link_to t("common.edit"), edit_website_faq_path(@website, faq), class: secondary_button_classes %>
+            <%= button_to t("common.delete"), [@website, faq], method: :delete, form: { class: "block w-full sm:inline-block", data: { turbo_confirm: t("faq.delete_confirm") } }, class: danger_button_classes %>
           </div>
         </li>
       <% end %>

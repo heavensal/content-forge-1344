@@ -7,6 +7,15 @@ deploy_timeout: 120
 servers:
   web:
     - 51.75.124.208
+  job:
+    hosts:
+      - 51.75.124.208
+    cmd: bin/jobs
+    env:
+      clear:
+        FORGE_PROCESS: job
+        RAILS_MAX_THREADS: "5"
+        SIDEKIQ_CONCURRENCY: "5"
 
 proxy:
   ssl: true
@@ -24,6 +33,8 @@ env:
   clear:
     MCP_ENABLED: "true"
     MCP_RESOURCE_URL: https://forge.1344.fr/mcp
+    # Kamal accessory hostname: <service>-<accessory>
+    REDIS_URL: redis://forge-redis:6379/0
   secret:
     - RAILS_MASTER_KEY
     - DATABASE_URL
@@ -38,7 +49,7 @@ env:
       require "dotenv"
       optional_secrets = File.file?(".kamal/secrets") ? Dotenv.parse(".kamal/secrets") : {}
     -%>
-    <%- %w[MAILER_FROM CORS_ALLOWED_ORIGINS].each do |key| -%>
+    <%- %w[MAILER_FROM CORS_ALLOWED_ORIGINS CLOUDINARY_CLOUD_NAME CLOUDINARY_API_KEY CLOUDINARY_API_SECRET].each do |key| -%>
     <%- if optional_secrets[key].to_s.strip != "" -%>
     - <%= key %>
     <%- end -%>
@@ -46,3 +57,12 @@ env:
 
 ssh:
   user: ubuntu
+
+# Boot once before the first deploy that enqueues jobs: bin/kamal accessory boot redis
+accessories:
+  redis:
+    image: redis:7
+    host: 51.75.124.208
+    cmd: redis-server --appendonly yes --dir /data
+    directories:
+      - data:/data

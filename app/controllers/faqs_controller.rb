@@ -21,7 +21,7 @@ class FaqsController < ApplicationController
   def create
     @faq = @website.faqs.build(faq_params)
     if @faq.save
-      redirect_to [ @website, @faq ], notice: "FAQ was successfully created."
+      redirect_to [ @website, @faq ], notice: t("faq.notices.created")
     else
       render :new, status: :unprocessable_entity
     end
@@ -32,7 +32,7 @@ class FaqsController < ApplicationController
 
   def update
     if @faq.update(faq_params)
-      redirect_to [ @website, @faq ], notice: "FAQ was successfully updated."
+      redirect_to [ @website, @faq ], notice: t("faq.notices.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -40,7 +40,7 @@ class FaqsController < ApplicationController
 
   def destroy
     @faq.destroy
-    redirect_to website_faqs_url(@website), notice: "FAQ was successfully deleted."
+    redirect_to website_faqs_url(@website), notice: t("faq.notices.deleted")
   end
 
   private

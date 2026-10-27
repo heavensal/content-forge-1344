@@ -27,7 +27,7 @@ class WebsitesController < ApplicationController
         @website.save!
         membership&.save!
       end
-      redirect_to @website, notice: "Website was successfully created."
+      redirect_to @website, notice: t("website.notices.created")
     else
       membership&.errors&.full_messages&.each { |message| @website.errors.add(:base, message) }
       render :new, status: :unprocessable_entity
@@ -39,7 +39,7 @@ class WebsitesController < ApplicationController
 
   def update
     if @website.update(website_params)
-      redirect_to @website, notice: "Website was successfully updated."
+      redirect_to @website, notice: t("website.notices.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -47,12 +47,12 @@ class WebsitesController < ApplicationController
 
   def destroy
     unless current_user.admin?
-      redirect_to @website, alert: "Only an admin can delete a website."
+      redirect_to @website, alert: t("website.alerts.admin_delete")
       return
     end
 
     @website.destroy
-    redirect_to websites_url, notice: "Website was successfully deleted."
+    redirect_to websites_url, notice: t("website.notices.deleted")
   end
 
   private
@@ -64,7 +64,7 @@ class WebsitesController < ApplicationController
   def require_website_slot
     return if current_user.can_create_website?
 
-    redirect_to current_user.websites.first, alert: "You already have a website."
+    redirect_to current_user.websites.first, alert: t("website.alerts.already_have")
   end
 
   def website_params

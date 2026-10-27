@@ -1,0 +1,100 @@
+fr:
+  website:
+    name: &website_name Nom
+    domain: &website_domain Domaine
+    email: &website_email E-mail
+    description: &website_description Description
+    default_locale: &website_default_locale Langue par défaut
+    status: &website_status Statut
+    imports_articles: &website_imports_articles Articles de blog
+    imports_faqs: &website_imports_faqs FAQ
+    imports_reviews: &website_imports_reviews Avis
+    rebuild_webhook_url: &website_rebuild_webhook_url URL du webhook de reconstruction
+    rebuild_webhook_token: &website_rebuild_webhook_token Jeton bearer de reconstruction
+    title: Sites
+    one: Site
+    new: Nouveau site
+    edit: Modifier le site
+    edit_named: "Modifier %{name}"
+    empty: Aucun site pour le moment.
+    empty_hint: Créez-en un pour publier des articles, des FAQ et des avis.
+    create_first: Créer votre premier site
+    intro: Gérez les sites vitrines et l'accès API de chaque domaine.
+    token_hint: Un jeton API est généré automatiquement à l'enregistrement.
+    delete_confirm: Supprimer ce site et tout son contenu ?
+    default_language: "Langue par défaut : %{language}"
+    statuses:
+      active: Actif
+      archived: Archivé
+    notices:
+      created: Le site a été créé.
+      updated: Le site a été mis à jour.
+      deleted: Le site a été supprimé.
+    alerts:
+      admin_delete: Seul un administrateur peut supprimer un site.
+      already_have: Vous avez déjà un site.
+    hints:
+      domain: Nom d'hôte uniquement, sans protocole. Sert à identifier ce site pour le front externe.
+      email: E-mail de contact facultatif. Même format que les e-mails de compte (un @, sans espace).
+      default_locale: Utilisée lorsqu'une page demande une langue sans contenu publié. Les éléments en anglais sont facultatifs.
+      imports: Une création, une mise à jour ou une suppression ne reconstruit le site que pour un type récupéré au moment du build. Alignez FORGE_ARTICLES_ENABLED, FORGE_FAQ_ENABLED et FORGE_REVIEWS_ENABLED. Les types décochés ne déclenchent pas de build.
+      imports_legend: Contenu affiché par ce site
+      rebuild_url: Point de terminaison HTTPS qui lance le build. Pour GitHub Actions, utilisez l'URL de repository dispatch et écoutez forge-rebuild.
+      rebuild_token: "Envoyé dans Authorization: Bearer. Requis pour GitHub (PAT affiné avec Contents : lecture et écriture). Laissez vide pour conserver le jeton enregistré."
+      rebuild_token_saved: Enregistré — laissez vide pour le conserver
+      rebuild_token_blank: PAT GitHub ou autre jeton bearer
+    placeholders:
+      domain: exemple.com
+      email: contact@exemple.com
+      email_title: "Format : local@domaine"
+      rebuild_url: https://api.github.com/repos/OWNER/REPO/dispatches
+    show:
+      api_access: Accès API
+      api_help_html: 'Envoyez cette valeur dans <code class="rounded bg-zinc-950 px-1.5 py-0.5 font-mono text-xs text-emerald-300/90">Authorization: Bearer &lt;token&gt;</code> depuis votre site externe.'
+      api_token: Jeton API
+      copy_token: Copier le jeton
+      api_secret: Gardez-le secret — quiconque possède le jeton peut gérer le contenu de ce site via l'API.
+      rebuild: Reconstruction du site
+      rebuild_help: Créer, modifier ou supprimer un type importé envoie un webhook signé et lance un build. Les types que ce site n'affiche pas sont ignorés.
+      imported: importé
+      not_imported: non importé
+      blog_articles: "Articles de blog : %{state}"
+      faqs: "FAQ : %{state}"
+      reviews: "Avis : %{state}"
+      no_rebuild_url: Pas encore d'URL de reconstruction.
+      bearer_saved: Jeton bearer enregistré.
+      no_bearer: Aucun jeton bearer.
+      signature_html: 'Secret de signature. La requête signe <code class="font-mono text-xs text-zinc-400">{timestamp}.{raw body}</code> avec HMAC-SHA256. En-têtes : <code class="font-mono text-xs text-zinc-400">X-Forge-Timestamp</code> et <code class="font-mono text-xs text-zinc-400">X-Forge-Signature: v1=…</code>.'
+      rebuild_secret: Secret du webhook de reconstruction
+      copy_secret: Copier le secret
+    errors:
+      https: must be an https URL
+  activerecord:
+    models:
+      website:
+        one: Site
+        other: Sites
+    attributes:
+      website:
+        name: *website_name
+        domain: *website_domain
+        email: *website_email
+        description: *website_description
+        default_locale: *website_default_locale
+        status: *website_status
+        imports_articles: *website_imports_articles
+        imports_faqs: *website_imports_faqs
+        imports_reviews: *website_imports_reviews
+        rebuild_webhook_url: *website_rebuild_webhook_url
+        rebuild_webhook_token: *website_rebuild_webhook_token
+    errors:
+      models:
+        website:
+          attributes:
+            rebuild_webhook_url:
+              https: doit être une URL https
+  helpers:
+    submit:
+      website:
+        create: Créer le site
+        update: Enregistrer le site

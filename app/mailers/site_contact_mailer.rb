@@ -9,7 +9,7 @@ class SiteContactMailer < ApplicationMailer
     @message = message.to_s
     @fields = fields.is_a?(Hash) ? fields.stringify_keys : {}
 
-    safe_subject = subject.presence || "Message from #{website.domain}"
+    safe_subject = subject.presence || I18n.t("contact_form.mailer.fallback_subject", domain: website.domain)
     mail(
       to: website.email,
       subject: "[#{website.name}] #{safe_subject}",

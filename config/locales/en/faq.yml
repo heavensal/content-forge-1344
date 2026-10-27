@@ -1,0 +1,48 @@
+en:
+  faq:
+    question: &faq_question Question
+    slug: &faq_slug Slug
+    answer: &faq_answer Answer
+    position: &faq_position Position
+    status: &faq_status Status
+    published_at: &faq_published_at Published at
+    locale: &faq_locale Language
+    title: FAQs
+    one: FAQ
+    new: New FAQ
+    edit: Edit FAQ
+    create: Create FAQ
+    empty: No FAQs yet.
+    delete_confirm: Delete this FAQ?
+    back: "← FAQs"
+    questions: "Questions & answers"
+    position_label: "position %{position}"
+    hints:
+      slug: Optional override; otherwise generated from the question on create.
+    statuses:
+      draft: Draft
+      published: Published
+      archived: Archived
+    notices:
+      created: FAQ was successfully created.
+      updated: FAQ was successfully updated.
+      deleted: FAQ was successfully deleted.
+  activerecord:
+    models:
+      faq:
+        one: FAQ
+        other: FAQs
+    attributes:
+      faq:
+        question: *faq_question
+        slug: *faq_slug
+        answer: *faq_answer
+        position: *faq_position
+        status: *faq_status
+        published_at: *faq_published_at
+        locale: *faq_locale
+  helpers:
+    submit:
+      faq:
+        create: Create FAQ
+        update: Update FAQ

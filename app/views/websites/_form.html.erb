@@ -2,69 +2,69 @@
 
 <%= form_with model: website, class: "space-y-6" do |f| %>
   <div>
-    <%= f.label :name, class: label_classes %>
+    <%= f.label :name, t("website.name"), class: label_classes %>
     <%= f.text_field :name, class: input_classes, required: true, autocomplete: "organization" %>
   </div>
 
   <div>
-    <%= f.label :domain, class: label_classes %>
-    <%= f.text_field :domain, class: input_classes, required: true, placeholder: "example.com", autocomplete: "url" %>
-    <p class="mt-1 text-xs text-zinc-500">Hostname only, no protocol. Used to identify this site for your external front end.</p>
+    <%= f.label :domain, t("website.domain"), class: label_classes %>
+    <%= f.text_field :domain, class: input_classes, required: true, placeholder: t("website.placeholders.domain"), autocomplete: "url" %>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("website.hints.domain") %></p>
   </div>
 
   <div>
-    <%= f.label :email, class: label_classes %>
-    <%= f.email_field :email, class: input_classes, autocomplete: "email", placeholder: "contact@example.com", title: "Format: local@domain", pattern: "[^@\\s]+@[^@\\s]+" %>
-    <p class="mt-1 text-xs text-zinc-500">Optional contact email for this site. Must match the same format as account emails (one @, no spaces).</p>
+    <%= f.label :email, t("website.email"), class: label_classes %>
+    <%= f.email_field :email, class: input_classes, autocomplete: "email", placeholder: t("website.placeholders.email"), title: t("website.placeholders.email_title"), pattern: "[^@\\s]+@[^@\\s]+" %>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("website.hints.email") %></p>
   </div>
 
   <div>
-    <%= f.label :description, class: label_classes %>
+    <%= f.label :description, t("website.description"), class: label_classes %>
     <%= f.text_area :description, class: "#{input_classes} min-h-[100px]", rows: 4 %>
   </div>
 
   <div>
-    <%= f.label :default_locale, "Default language", class: label_classes %>
+    <%= f.label :default_locale, t("website.default_locale"), class: label_classes %>
     <%= f.select :default_locale, content_locale_options, {}, class: input_classes %>
-    <p class="mt-1 text-xs text-zinc-500">Used when a page asks for a language that has no published content. English items are optional.</p>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("website.hints.default_locale") %></p>
   </div>
 
   <div>
-    <%= f.label :status, class: label_classes %>
-    <%= f.select :status, Website.statuses.keys.map { |k| [k.humanize, k] }, {}, class: input_classes %>
+    <%= f.label :status, t("website.status"), class: label_classes %>
+    <%= f.select :status, status_options(Website), {}, class: input_classes %>
   </div>
 
   <fieldset class="space-y-3">
-    <legend class="<%= label_classes %>">Content this site displays</legend>
-    <p class="text-xs text-zinc-500">A create, update, or delete rebuilds the site only for a type it fetches at build time. Match <code class="font-mono text-zinc-400">FORGE_ARTICLES_ENABLED</code>, <code class="font-mono text-zinc-400">FORGE_FAQ_ENABLED</code>, and <code class="font-mono text-zinc-400">FORGE_REVIEWS_ENABLED</code>. Unticked types do not trigger a build.</p>
+    <legend class="<%= label_classes %>"><%= t("website.hints.imports_legend") %></legend>
+    <p class="text-xs text-zinc-500"><%= t("website.hints.imports") %></p>
     <label class="flex items-center gap-3 text-sm text-zinc-200">
       <%= f.check_box :imports_articles, class: "size-4 rounded border-zinc-600 bg-zinc-900 text-emerald-500 focus:ring-emerald-500/40" %>
-      Blog articles
+      <%= t("website.imports_articles") %>
     </label>
     <label class="flex items-center gap-3 text-sm text-zinc-200">
       <%= f.check_box :imports_faqs, class: "size-4 rounded border-zinc-600 bg-zinc-900 text-emerald-500 focus:ring-emerald-500/40" %>
-      FAQs
+      <%= t("website.imports_faqs") %>
     </label>
     <label class="flex items-center gap-3 text-sm text-zinc-200">
       <%= f.check_box :imports_reviews, class: "size-4 rounded border-zinc-600 bg-zinc-900 text-emerald-500 focus:ring-emerald-500/40" %>
-      Reviews
+      <%= t("website.imports_reviews") %>
     </label>
   </fieldset>
 
   <div>
-    <%= f.label :rebuild_webhook_url, "Rebuild webhook URL", class: label_classes %>
-    <%= f.url_field :rebuild_webhook_url, class: input_classes, placeholder: "https://api.github.com/repos/OWNER/REPO/dispatches", inputmode: "url" %>
-    <p class="mt-1 text-xs text-zinc-500">HTTPS endpoint that starts the site build. For GitHub Actions, use the repository dispatch URL and listen for <code class="font-mono text-zinc-400">forge-rebuild</code>.</p>
+    <%= f.label :rebuild_webhook_url, t("website.rebuild_webhook_url"), class: label_classes %>
+    <%= f.url_field :rebuild_webhook_url, class: input_classes, placeholder: t("website.placeholders.rebuild_url"), inputmode: "url" %>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("website.hints.rebuild_url") %></p>
   </div>
 
   <div>
-    <%= f.label :rebuild_webhook_token, "Rebuild bearer token", class: label_classes %>
-    <%= f.password_field :rebuild_webhook_token, class: input_classes, autocomplete: "off", placeholder: website.rebuild_webhook_token.present? ? "Saved — leave blank to keep it" : "GitHub PAT or other bearer token" %>
-    <p class="mt-1 text-xs text-zinc-500">Sent as <code class="font-mono text-zinc-400">Authorization: Bearer</code>. Required for GitHub (fine-grained PAT with Contents: Read and write). Leave blank to keep the saved token.</p>
+    <%= f.label :rebuild_webhook_token, t("website.rebuild_webhook_token"), class: label_classes %>
+    <%= f.password_field :rebuild_webhook_token, class: input_classes, autocomplete: "off", placeholder: website.rebuild_webhook_token.present? ? t("website.hints.rebuild_token_saved") : t("website.hints.rebuild_token_blank") %>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("website.hints.rebuild_token") %></p>
   </div>
 
   <div class="<%= form_footer_actions_classes %> pt-2">
     <%= f.submit class: primary_button_classes %>
-    <%= link_to "Cancel", website.persisted? ? website : websites_path, class: secondary_button_classes %>
+    <%= link_to t("common.cancel"), website.persisted? ? website : websites_path, class: secondary_button_classes %>
   </div>
 <% end %>

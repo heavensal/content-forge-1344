@@ -1,0 +1,18 @@
+<% content_for :title, "#{@label} ##{@record.id} — Forge" %>
+
+<div class="mx-auto w-full max-w-4xl">
+  <p class="text-xs font-medium uppercase tracking-wider text-emerald-500/90"><%= t("admin.database") %></p>
+  <div class="mt-1 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <h1 class="text-2xl font-semibold tracking-tight text-zinc-50 sm:text-3xl"><%= @label %> #<%= @record.id %></h1>
+    <%= link_to t("admin.all", label: @label.downcase), send(:"admin_#{@entity}_path"), class: secondary_button_classes %>
+  </div>
+
+  <dl class="mt-8 divide-y divide-zinc-800 overflow-hidden rounded-xl border border-zinc-800">
+    <% admin_display_columns.each do |column| %>
+      <div class="grid gap-1 bg-zinc-900/40 px-4 py-3 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-4">
+        <dt class="text-xs font-medium uppercase tracking-wide text-zinc-500"><%= @model.human_attribute_name(column) %></dt>
+        <dd class="min-w-0 break-all font-mono text-sm text-zinc-200"><%= admin_cell(admin_attribute(@record, column)) %></dd>
+      </div>
+    <% end %>
+  </dl>
+</div>

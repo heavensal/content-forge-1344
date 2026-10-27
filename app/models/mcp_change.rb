@@ -24,9 +24,15 @@ class McpChange < ApplicationRecord
         when "delete" then record.destroy!
         when "publish" then record.update!(status: "published", published_at: Time.current)
         else
-          record.assign_attributes(Mcp::Content.attributes(content_type, payload))
+          attributes = Mcp::Content.attributes(content_type, payload)
+          attributes = Mcp::ArticleImages.import!(site, attributes) if content_type == "articles"
+          previous_cover = record.cover_image_public_id if content_type == "articles"
+          record.assign_attributes(attributes)
           record.status = "draft" if operation == "create"
           record.save!
+          if content_type == "articles" && previous_cover.present? && previous_cover != record.cover_image_public_id
+            Article.release_cover_image(previous_cover)
+          end
         end
         update!(applied_at: Time.current, record_id: record.id)
       end

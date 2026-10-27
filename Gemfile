@@ -25,11 +25,8 @@ gem "jbuilder"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
-# --- Solid (Rails 8 default: cache + jobs + cable in PostgreSQL) — désactivé pour l’instant.
-# Décommenter les 3 gems + restaurer config (voir docs/SOLID_OPTIONAL.md).
-# gem "solid_cache"
-# gem "solid_queue"
-# gem "solid_cable"
+# Background jobs (contact email, website rebuilds). Requires Redis — see REDIS_URL.
+gem "sidekiq", "~> 8.0"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -72,6 +69,7 @@ group :test do
 end
 
 gem "devise"
+gem "rails-i18n", "~> 8.0"
 gem "cloudinary"
 
 gem "rack-cors", "~> 3.0"

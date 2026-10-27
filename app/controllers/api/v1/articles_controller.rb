@@ -36,7 +36,8 @@ module Api
           description: article.description,
           published_at: article.published_at&.iso8601,
           updated_at: article.updated_at.iso8601,
-          content_html: article.content.present? ? article.content.body.to_html : nil
+          cover_image_url: article.cover_image_url,
+          content_html: article.public_content_html
         }
       end
     end

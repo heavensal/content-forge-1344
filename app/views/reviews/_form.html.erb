@@ -4,39 +4,39 @@
   <%= render "shared/locale_field", form: f %>
 
   <div>
-    <%= f.label :author, class: label_classes %>
+    <%= f.label :author, t("review.author"), class: label_classes %>
     <%= f.text_field :author, class: input_classes, autocomplete: "name" %>
-    <p class="mt-1 text-xs text-zinc-500">Displayed name (required when published).</p>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("review.hints.author") %></p>
   </div>
 
   <div>
-    <%= f.label :content, class: label_classes %>
+    <%= f.label :content, t("review.content"), class: label_classes %>
     <%= f.text_area :content, class: "#{input_classes} min-h-[140px]", rows: 6 %>
   </div>
 
   <div>
-    <%= f.label :rating, class: label_classes %>
-    <%= f.select :rating, (1..5).map { |n| [ "#{n} / 5", n ] }, { include_blank: "—" }, class: input_classes %>
-    <p class="mt-1 text-xs text-zinc-500">Required when published.</p>
+    <%= f.label :rating, t("review.rating"), class: label_classes %>
+    <%= f.select :rating, (1..5).map { |n| [ t("review.rating_option", count: n), n ] }, { include_blank: t("common.blank") }, class: input_classes %>
+    <p class="mt-1 text-xs text-zinc-500"><%= t("review.hints.rating") %></p>
   </div>
 
   <div>
-    <%= f.label :position, class: label_classes %>
+    <%= f.label :position, t("review.position"), class: label_classes %>
     <%= f.number_field :position, class: input_classes, min: 0, step: 1 %>
   </div>
 
   <div>
-    <%= f.label :status, class: label_classes %>
-    <%= f.select :status, Review.statuses.keys.map { |k| [k.humanize, k] }, {}, class: input_classes %>
+    <%= f.label :status, t("review.status"), class: label_classes %>
+    <%= f.select :status, status_options(Review), {}, class: input_classes %>
   </div>
 
   <div>
-    <%= f.label :published_at, class: label_classes %>
+    <%= f.label :published_at, t("review.published_at"), class: label_classes %>
     <%= f.datetime_field :published_at, class: input_classes %>
   </div>
 
   <div class="<%= form_footer_actions_classes %> pt-2">
     <%= f.submit class: primary_button_classes %>
-    <%= link_to "Cancel", review.persisted? ? [@website, review] : website_reviews_path(@website), class: secondary_button_classes %>
+    <%= link_to t("common.cancel"), review.persisted? ? [@website, review] : website_reviews_path(@website), class: secondary_button_classes %>
   </div>
 <% end %>

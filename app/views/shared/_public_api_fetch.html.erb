@@ -2,7 +2,7 @@
 <%
   example_responses = {
     "articles" => [
-      { id: 1, title: "Mon premier article", slug: "mon-premier-article", locale: "fr", description: "Un court résumé...", published_at: "2024-03-20T12:00:00Z", content_html: "<p>Contenu HTML riche</p>" }
+      { id: 1, title: "Mon premier article", slug: "mon-premier-article", locale: "fr", description: "Un court résumé...", published_at: "2024-03-20T12:00:00Z", cover_image_url: "https://res.cloudinary.com/demo/image/upload/forge/arm-services/2f1c0c3e-1b4a-4e2a-9c1a-0b6e8a1d4f20.jpg", content_html: "<p>Contenu HTML riche</p><figure><img src=\"https://res.cloudinary.com/demo/image/upload/forge/arm-services/9ab3e6d1-5c44-4a1e-8f20-7d1c2b9e0a11.jpg\" alt=\"\"></figure>" }
     ],
     "faqs" => [
       { id: 1, question: "Comment ça marche ?", slug: "comment-ca-marche", locale: "fr", answer: "Réponse détaillée...", position: 0, published_at: "2024-03-20T12:00:00Z" }
@@ -14,12 +14,9 @@
   example_json = example_responses[endpoint]&.to_json
 %>
 <div class="<%= content_section_card_classes %> mt-8">
-  <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Public API · <%= resource_label %></h2>
+  <h2 class="text-xs font-semibold uppercase tracking-wider text-zinc-500"><%= t("public_api.heading", resource: resource_label) %></h2>
   <p class="mt-2 text-sm leading-relaxed text-zinc-500">
-    Returns <strong class="font-medium text-zinc-400">published</strong> items for one language.
-    <code class="font-mono text-zinc-400">?locale=fr</code> or <code class="font-mono text-zinc-400">?locale=en</code>.
-    If that language has no published items, the response uses the site default (<%= content_locale_label(@website.default_locale) %>).
-    Use your website’s API token (same as on the <%= link_to "website page", @website, class: "text-emerald-400 hover:text-emerald-300 underline decoration-emerald-500/40" %>).
+    <%= t("public_api.intro_html", default_locale: content_locale_label(@website.default_locale), website_link: link_to(t("public_api.website_page"), @website, class: "text-emerald-400 hover:text-emerald-300 underline decoration-emerald-500/40")) %>
   </p>
   <pre class="mt-4 max-h-[min(50vh,24rem)] overflow-auto overscroll-x-contain rounded-lg border border-zinc-700 bg-zinc-950 p-3 text-left font-mono text-[10px] leading-relaxed text-emerald-100/90 shadow-inner sm:p-4 sm:text-[11px]"><code class="break-all whitespace-pre-wrap sm:break-normal sm:whitespace-pre">const response = await fetch(&quot;<%= request.base_url %>/api/v1/<%= endpoint %>?locale=fr&quot;, {
   headers: {
@@ -30,12 +27,11 @@
 const <%= endpoint %> = await response.json();</code></pre>
   <% if endpoint == "articles" %>
     <p class="mt-3 text-sm leading-relaxed text-zinc-500">
-      One published article: <code class="text-emerald-400">GET /api/v1/articles/:slug?locale=fr</code>.
-      Same JSON object. If the slug exists only in the site default language, that version is returned. Missing, draft, or not-yet-published slugs return 404.
+      <%= t("public_api.article_one_html") %>
     </p>
   <% end %>
   <% if example_json.present? %>
-    <p class="mt-4 text-xs font-medium uppercase tracking-wider text-zinc-500">Exemple de réponse</p>
+    <p class="mt-4 text-xs font-medium uppercase tracking-wider text-zinc-500"><%= t("public_api.example") %></p>
     <pre class="mt-2 max-h-[min(40vh,20rem)] overflow-auto overscroll-x-contain rounded-lg border border-zinc-700 bg-zinc-950 p-3 text-left font-mono text-[10px] leading-relaxed text-amber-100/90 shadow-inner sm:p-4 sm:text-[11px]"><code class="break-all whitespace-pre-wrap sm:break-normal sm:whitespace-pre"><%= JSON.pretty_generate(JSON.parse(example_json)) %></code></pre>
   <% end %>
 </div>
